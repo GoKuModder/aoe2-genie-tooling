@@ -29,5 +29,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: genie-rust-windows
-          path: Genie-Rust/target/release/*.dll # If this is a library
-          # path: Genie-Rust/target/release/*.exe # Use this if it's a tool
+          path: Genie-Rust/target/release/*.dll
