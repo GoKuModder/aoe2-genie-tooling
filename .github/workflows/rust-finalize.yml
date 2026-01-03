@@ -1,4 +1,4 @@
-name: Genie-Rust Finalize
+name: Jules Finalizer
 
 on:
   push:
@@ -6,27 +6,28 @@ on:
   workflow_dispatch:
 
 jobs:
-  build-and-test:
+  finalize:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install Rust
+      - name: Setup Rust Environment
         uses: dtolnay/rust-toolchain@stable
-        with:
-          toolchain: stable
-          components: clippy
 
-      - name: Build Genie-Rust (Release)
+      - name: Compile Release Build
         working-directory: ./Genie-Rust
         run: cargo build --release
 
-      - name: Run Rust Tests
+      - name: Execute Data Finalization
         working-directory: ./Genie-Rust
-        run: cargo test
+        run: cargo run --release -- ./empires2_x2_p1_RUST_TEST.dat
 
-      - name: Upload Compiled Binary
+      - name: Archive Results
         uses: actions/upload-artifact@v4
         with:
-          name: genie-rust-windows
-          path: Genie-Rust/target/release/*.dll
+          name: finalized-genie-output
+          path: |
+            Genie-Rust/target/release/*.dll
+            Genie-Rust/target/release/*.exe
+            Genie-Rust/*.dll
+            *.dll
