@@ -1,0 +1,75 @@
+# --- Ignore these repo-root directories ---
+/.venv/
+/genieutils/
+/My_Examples/
+/src/
+/tests/
+
+# --- Python bytecode / caches ---
+__pycache__/
+*.py[cod]
+*$py.class
+
+# --- Test / coverage ---
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+.nox/
+
+# --- Type checker / linter caches ---
+.mypy_cache/
+.pyright/
+.ruff_cache/
+
+# --- Packaging / build outputs ---
+build/
+dist/
+*.egg-info/
+*.whl
+
+# --- IDE / editor ---
+.vscode/
+.idea/
+*.iml
+
+# --- OS junk ---
+.DS_Store
+Thumbs.db
+
+# --- Logs / temp ---
+*.log
+*.tmp
+
+# --- Secrets ---
+.env
+.env.*
+secrets/
+*.pem
+*.key
+
+*.txt
+*.dat
+
+
+!empires2_x2_p1_RUST_TEST.dat
+
+
+/Genie-Rust/target/
+
+.git/info/exclude
+
+# Rust build artifacts (The biggest culprit)
+Genie-Rust/target/
+**/target/
+
+# Generated documentation/website files
+site/
+
+
+
+# Windows-specific junk
+
+desktop.ini
+

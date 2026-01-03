@@ -1,0 +1,73 @@
+site_name: aoe2-genie-tooling
+site_description: High-level Python toolkit for editing AoE2 DE DAT files
+site_author: GoKuModder
+repo_url: https://github.com/GoKuModder/aoe2-genie-tooling
+repo_name: GoKuModder/aoe2-genie-tooling
+
+theme:
+  name: material
+  palette:
+    - scheme: slate
+      primary: deep purple
+      accent: amber
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+    - scheme: default
+      primary: deep purple
+      accent: amber
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - search.highlight
+    - content.code.copy
+
+nav:
+  - Home: index.md
+  - Getting Started:
+    - Installation: getting-started/installation.md
+    - Quick Start: getting-started/quickstart.md
+  - API Reference:
+    - Units:
+      - Overview: api/units/overview.md
+      - UnitHandle: api/units/unit-handle.md
+      - GenieUnitManager: api/units/unit-manager.md
+      - Wrappers: api/units/wrappers.md
+      - Handles: api/units/handles.md
+    - Graphics:
+      - Overview: api/graphics/overview.md
+      - GraphicManager: api/graphics/graphic-manager.md
+      - GraphicHandle: api/graphics/graphic-handle.md
+      - Deltas: api/graphics/deltas.md
+    - Sounds: api/sounds.md
+    - Techs: api/techs.md
+    - Datasets: api/datasets.md
+  - Examples:
+    - Unit Examples: examples/units.md
+    - Graphics Examples: examples/graphics.md
+  - Code Notes: code_notes.md
+
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - admonition
+  - pymdownx.details
+  - attr_list
+  - md_in_html
+  - tables
+
+plugins:
+  - search
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/GoKuModder/aoe2-genie-tooling

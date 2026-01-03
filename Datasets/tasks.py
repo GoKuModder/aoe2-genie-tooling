@@ -1,0 +1,55 @@
+from enum import IntEnum
+
+
+class Task(IntEnum):
+    """
+    Genie Editor Task IDs.
+    
+    Source: https://ageofempires.fandom.com/wiki/Genie_Editor#Tasks
+    """
+    NONE = 0
+    MOVE_TO = 1
+    FOLLOW = 2
+    GARRISON = 3
+    EXPLORE = 4
+    GATHER_REBUILD = 5
+    GRAZE = 6
+    COMBAT = 7
+    SHOOT = 8
+    ATTACK = 9
+    FLY = 10
+    SCARE_HUNT = 11
+    UNLOAD_BOAT_LIKE = 12
+    GUARD = 13
+    SIEGE_TOWER_ABILITY = 14
+    ESCAPE = 20
+    MAKE_FARM_TRAP = 21
+    BUILD = 101
+    MAKE_UNIT = 102
+    MAKE_TECH = 103
+    CONVERT = 104
+    HEAL = 105
+    REPAIR = 106
+    GET_AUTO_CONVERTED = 107
+    DISCOVERY_ARTIFACT = 108
+    HUNT = 110
+    TRADE = 111
+    GENERATE_WONDER_VICTORY = 120
+    DESELECT_WHEN_TASKED = 121
+    LOOT_GATHER = 122
+    HOUSING = 123
+    PACK = 124
+    UNPACK_AND_ATTACK = 125
+    OFF_MAP_TRADE = 131
+    PICKUP_UNIT = 132
+    SPEED_CHARGE = 133
+    TRANSFORM_UNIT = 134
+    KIDNAP_UNIT = 135
+    DEPOSIT_UNIT = 136
+    SHEAR = 149
+    REGENERATION = 150
+    RESOURCE_GENERATION = 151
+    MOVEMENT_DAMAGE = 152
+    MOVEABLE_DROP_SITE = 153
+    PILLAGE = 154
+    INFLUENCE_ABILITY = 155
