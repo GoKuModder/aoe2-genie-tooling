@@ -53,8 +53,8 @@ secrets/
 *.dat
 
 
-!empires2_x2_p1_RUST_TEST.dat
-
+!empires2_x2_p1_Shortened.dat
+!Genie-Rust/empires2_x2_p1_RUST_TEST.dat
 
 /Genie-Rust/target/
 
