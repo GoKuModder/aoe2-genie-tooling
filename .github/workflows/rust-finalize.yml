@@ -20,7 +20,7 @@ jobs:
 
       - name: Execute Data Finalization
         working-directory: ./Genie-Rust
-        run: cargo run --release -- ./empires2_x2_p1_RUST_TEST.dat
+        run: cargo test --release -- --nocapture
 
       - name: Archive Results
         uses: actions/upload-artifact@v4

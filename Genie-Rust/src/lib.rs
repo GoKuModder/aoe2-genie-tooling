@@ -51,11 +51,10 @@ mod tests {
 
     #[test]
     fn test_parse_file() {
-        let path = Path::new("../empires2_x2_p1_RUST_TEST.dat");
-        if !path.exists() {
-            println!("Test file not found at {:?}, skipping test.", path);
-            return;
-        }
+        let path = Path::new("empires2_x2_p1_RUST_TEST.dat");
+if !path.exists() {
+    panic!("CRITICAL: Test file not found at {:?}. Jules cannot finalize!", path.canonicalize());
+}
 
         println!("Parsing {:?}", path);
         // We can call DatFile::from_file via PyO3 wrapper, or better, access the rust method if exposed.
