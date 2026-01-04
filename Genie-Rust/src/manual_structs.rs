@@ -751,6 +751,8 @@ pub struct Unit {
     #[pyo3(get, set)] pub id: i16,
     #[pyo3(get, set)] pub name: String,
     #[pyo3(get, set)] pub hit_points: i16,
+    #[pyo3(get, set)] pub line_of_sight: f32,
+    #[pyo3(get, set)] pub speed: f32,
     #[pyo3(get, set)] pub dead_fish: Option<DeadFish>,
     #[pyo3(get, set)] pub bird: Option<Bird>,
     #[pyo3(get, set)] pub type_50: Option<Type50>,
@@ -775,7 +777,7 @@ impl Unit {
         let _undead_mode = reader.read_i8()?;
         
         let hit_points = reader.read_i16::<LittleEndian>()?;
-        let _los = reader.read_f32::<LittleEndian>()?;
+        let line_of_sight = reader.read_f32::<LittleEndian>()?;
         let _garrison = reader.read_i8()?;
         let _col_x = reader.read_f32::<LittleEndian>()?;
         let _col_y = reader.read_f32::<LittleEndian>()?;
@@ -857,7 +859,7 @@ impl Unit {
         let _copy_id = reader.read_i16::<LittleEndian>()?;
         let _base_id = reader.read_i16::<LittleEndian>()?;
 
-        let mut speed = None;
+        let mut speed = 0.0;
         let mut dead_fish = None;
         let mut bird = None;
         let mut type_50 = None;
@@ -867,8 +869,7 @@ impl Unit {
 
         if type_ != 10 && type_ != 90 { // Not AoeTrees
             if type_ >= 20 { // Flag
-                 let _speed = reader.read_f32::<LittleEndian>()?;
-                 speed = Some(_speed);
+                 speed = reader.read_f32::<LittleEndian>()?;
                  if type_ >= 30 { // DeadFish
                      dead_fish = Some(DeadFish::read_from(reader)?);
                  }
@@ -890,7 +891,28 @@ impl Unit {
             }
         }
         
-        Ok(Self { type_, id, name, hit_points, dead_fish, bird, type_50, projectile, creatable, building })
+        Ok(Self { type_, id, name, hit_points, line_of_sight, speed, dead_fish, bird, type_50, projectile, creatable, building })
+    }
+}
+
+#[pymethods]
+impl Unit {
+    #[getter]
+    fn attacks(&self) -> PyResult<Vec<AttackOrArmor>> {
+        if let Some(type_50) = &self.type_50 {
+            Ok(type_50.attacks.clone())
+        } else {
+            Ok(vec![])
+        }
+    }
+
+    #[getter]
+    fn armours(&self) -> PyResult<Vec<AttackOrArmor>> {
+        if let Some(type_50) = &self.type_50 {
+            Ok(type_50.armours.clone())
+        } else {
+            Ok(vec![])
+        }
     }
 }
 

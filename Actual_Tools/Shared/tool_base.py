@@ -123,10 +123,10 @@ class ToolBase:
     # Auto-tracking (manual call when decorator not suitable)
     # -------------------------
     
-    def _track_unit(self, name: str, unit_id: int, base_unit_id: Optional[int] = None) -> None:
+    def _track_unit(self, name: str, unit_id: int, src_unit_id: Optional[int] = None) -> None:
         """Log and register a unit creation."""
         logger.unit_created(name, unit_id)
-        registry.register_unit(name, unit_id, base_unit_id=base_unit_id)
+        registry.register_unit(name, unit_id, base_unit_id=src_unit_id)
     
     def _track_unit_clone(self, name: str, unit_id: int, source_id: int) -> None:
         """Log and register a unit clone."""
