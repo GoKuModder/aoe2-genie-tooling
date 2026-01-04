@@ -10,8 +10,8 @@ from typing import TYPE_CHECKING, List, Optional
 
 from genieutils.civ import Civ
 
-from Actual_Tools.Civilizations.civ_handle import CivHandle
-from Actual_Tools.Shared.tool_base import ToolBase
+from .civ_handle import CivHandle
+from ..Shared.tool_base import ToolBase
 
 if TYPE_CHECKING:
     from genieutils.datfile import DatFile

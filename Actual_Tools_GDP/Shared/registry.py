@@ -5,7 +5,7 @@ Tracks units, graphics, sounds, techs, and effects created during a session.
 Also supports dependency linking between objects.
 
 Usage:
-    from Actual_Tools.Shared.registry import registry
+    from Actual_Tools_GDP.Shared.registry import registry
     
     # Items are auto-registered by managers
     workspace.units.create("My Unit", base_unit_id=4)

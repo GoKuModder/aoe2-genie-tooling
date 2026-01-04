@@ -7,7 +7,7 @@ This module provides:
 - TwoPassSerializer: Validates all deferred references at save time
 
 Usage:
-    from Actual_Tools.Shared.manifest_loader import manifest, DeferredReference
+    from Actual_Tools_GDP.Shared.manifest_loader import manifest, DeferredReference
     
     # Set a reference attribute - accepts int or Handle
     unit.standing_graphic = 1000  # int - validated at save
@@ -322,7 +322,7 @@ class TwoPassSerializer:
         # Check units (same ID in multiple civs is OK, but None gaps are checked)
         # Units are special - they exist in each civ's unit list
         # For now, we check if registry has duplicate names mapped to same ID
-        from Actual_Tools.Shared.registry import registry
+        from .registry import registry
         
         # Check for duplicate unit names
         unit_names: Dict[str, List[int]] = {}
@@ -473,7 +473,7 @@ class TwoPassSerializer:
             # Get the actual ID value
             if isinstance(ref.value, str):
                 # UUID - need to look up in registry
-                from Actual_Tools.Shared.registry import registry
+                from .registry import registry
                 actual_id = registry.get_id_by_uuid(
                     ref.target_type.lower().replace("handle", "s"), 
                     ref.value

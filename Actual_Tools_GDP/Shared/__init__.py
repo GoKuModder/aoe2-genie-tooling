@@ -9,12 +9,12 @@ This module provides:
 - serializer: TwoPassSerializer for deferred validation
 """
 
-from Actual_Tools.Shared.tool_base import ToolBase, tracks_creation
-from Actual_Tools.Shared.logger import logger, Logger
-from Actual_Tools.Shared.registry import registry, Registry
-from Actual_Tools.Shared.manifest_loader import (
-    manifest, 
-    serializer, 
+from .tool_base import ToolBase, tracks_creation
+from .logger import logger, Logger
+from .registry import registry, Registry
+from .manifest_loader import (
+    manifest,
+    serializer,
     DeferredReference,
     ValidationError,
     ReferenceNotFoundError,
@@ -24,11 +24,11 @@ from Actual_Tools.Shared.manifest_loader import (
 )
 
 __all__ = [
-    "ToolBase", 
+    "ToolBase",
     "tracks_creation",
-    "logger", 
-    "Logger", 
-    "registry", 
+    "logger",
+    "Logger",
+    "registry",
     "Registry",
     "manifest",
     "serializer",
@@ -39,4 +39,3 @@ __all__ = [
     "CircularReferenceError",
     "DuplicateIdError",
 ]
-

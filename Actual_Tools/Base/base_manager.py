@@ -21,11 +21,11 @@ from genieutils.datfile import DatFile
 from Actual_Tools.Units.unit_manager import GenieUnitManager
 from Actual_Tools.Graphics.graphic_manager import GraphicManager
 from Actual_Tools.Sounds.sound_manager import SoundManager
-from Actual_Tools.Techs.tech_manager import TechManager
+from Actual_Tools_GDP.Techs.tech_manager import TechManager
 from Actual_Tools.Effects.effect_manager import EffectManager
-from Actual_Tools.Civilizations.civ_manager import CivilizationsManager
-from Actual_Tools.Shared.logger import logger
-from Actual_Tools.Shared.registry import registry
+from Actual_Tools_GDP.Civilizations.civ_manager import CivilizationsManager
+from Actual_Tools_GDP.Shared.logger import logger
+from Actual_Tools_GDP.Shared.registry import registry
 from Actual_Tools.exceptions import ValidationError
 
 __all__ = ["GenieWorkspace"]
@@ -124,7 +124,7 @@ class GenieWorkspace:
         Raises:
             ValidationError: If deferred references are invalid
         """
-        from Actual_Tools.Shared.manifest_loader import serializer, ReferenceNotFoundError
+        from Actual_Tools_GDP.Shared.manifest_loader import serializer, ReferenceNotFoundError
         
         out = Path(target_path)
         

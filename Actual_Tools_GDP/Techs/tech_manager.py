@@ -11,8 +11,8 @@ from typing import TYPE_CHECKING, Optional
 
 from genieutils.tech import Tech
 
-from Actual_Tools.Techs.tech_handle import TechHandle
-from Actual_Tools.Shared.tool_base import ToolBase, tracks_creation
+from .tech_handle import TechHandle
+from ..Shared.tool_base import ToolBase, tracks_creation
 from Actual_Tools.exceptions import InvalidIdError, TemplateNotFoundError
 
 if TYPE_CHECKING:

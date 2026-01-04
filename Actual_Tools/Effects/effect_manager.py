@@ -12,7 +12,7 @@ from typing import TYPE_CHECKING, List, Optional
 from genieutils.effect import Effect, EffectCommand
 
 from Actual_Tools.Effects.effect_handle import EffectHandle
-from Actual_Tools.Shared.tool_base import ToolBase, tracks_creation
+from Actual_Tools_GDP.Shared.tool_base import ToolBase, tracks_creation
 from Actual_Tools.exceptions import InvalidIdError, TemplateNotFoundError
 
 if TYPE_CHECKING:

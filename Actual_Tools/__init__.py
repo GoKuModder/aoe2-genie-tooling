@@ -31,8 +31,8 @@ Public API:
 
 from Actual_Tools.Base.base_manager import GenieWorkspace
 from Actual_Tools.Units.unit_handle import UnitHandle
-from Actual_Tools.Shared.logger import logger
-from Actual_Tools.Shared.registry import registry
+from Actual_Tools_GDP.Shared.logger import logger
+from Actual_Tools_GDP.Shared.registry import registry
 from Actual_Tools.exceptions import (
     GenieToolsError,
     GapNotAllowedError,

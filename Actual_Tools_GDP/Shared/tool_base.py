@@ -9,8 +9,8 @@ import copy
 from functools import wraps
 from typing import TYPE_CHECKING, Any, Callable, List, Optional, TypeVar
 
-from Actual_Tools.Shared.logger import logger
-from Actual_Tools.Shared.registry import registry
+from .logger import logger
+from .registry import registry
 from Actual_Tools.exceptions import (
     GapNotAllowedError,
     InvalidIdError,
