@@ -31,7 +31,7 @@ try:
     from sections.civilization.civilization import Civilization as _G_Civ
     from sections.tech.tech import Tech as _G_Tech
     from sections.sprite_data.sprite import Sprite as _G_Sprite
-    
+
     BACKEND_NAME = "GenieDatParser"
 
     class UnitWrapper:
@@ -48,15 +48,15 @@ try:
             # 1. Try direct attribute (id, name, hit_points)
             if hasattr(self._wrapped, name):
                 return getattr(self._wrapped, name)
-            
+
             # 2. Try sub-structs (order matters for precedence)
             # Common ones first for performance
-            for sub in ('movement_info', 'combat_info', 'creation_info', 
+            for sub in ('movement_info', 'combat_info', 'creation_info',
                         'building_info', 'projectile_info', 'task_info'):
                 sub_obj = getattr(self._wrapped, sub, None)
                 if sub_obj and hasattr(sub_obj, name):
                     return getattr(sub_obj, name)
-            
+
             raise AttributeError(f"'Unit' object has no attribute '{name}'")
 
         def __setattr__(self, name: str, value: Any) -> None:
@@ -70,13 +70,13 @@ try:
                 return
 
             # 2. Try sub-structs
-            for sub in ('movement_info', 'combat_info', 'creation_info', 
+            for sub in ('movement_info', 'combat_info', 'creation_info',
                         'building_info', 'projectile_info', 'task_info'):
                 sub_obj = getattr(self._wrapped, sub, None)
                 if sub_obj and hasattr(sub_obj, name):
                     setattr(sub_obj, name, value)
                     return
-            
+
             # If not found, maybe set it on _wrapped anyway (dynamic attrs?)
             # or raise helper error
             super().__setattr__(name, value)
@@ -95,7 +95,7 @@ try:
         @classmethod
         def parse(cls, path: str) -> 'DatFileWrapper':
             return cls(_G_DatFile.from_file(path))
-        
+
         @classmethod
         def from_file(cls, path: str) -> 'DatFileWrapper':
             return cls(_G_DatFile.from_file(path))
@@ -110,22 +110,48 @@ try:
         @property
         def civs(self) -> List[_G_Civ]:
             return self._wrapped.civilizations
-        
+
         @property
         def techs(self) -> List[_G_Tech]:
             return self._wrapped.techs
-            
+
         @property
         def graphics(self) -> List[_G_Sprite]:
             return self._wrapped.sprites
-            
+
         @property
         def terrains(self):
             return self._wrapped.terrain_data.terrains
 
-        # Proxy everything else
-        def __getattr__(self, name):
-            return getattr(self._wrapped, name)
+        def __getattr__(self, name: str) -> Any:
+            # 1. Try direct attribute on the wrapped object
+            if hasattr(self._wrapped, name):
+                return getattr(self._wrapped, name)
+
+            # 2. Try sub-structs for nested properties
+            # Based on genieutils-py structure and likely mappings
+            sub_struct_map = {
+                'terrain_data': [
+                    'float_ptr_terrain_tables', 'terrain_pass_graphic_pointers',
+                    'terrain_restrictions', 'terrain_block'
+                ],
+                'player_data': ['player_colours'],
+                'map_data': ['random_maps'],
+                'kill_stats': [
+                    'razing_kill_rate', 'razing_kill_total',
+                    'unit_hit_point_rate', 'unit_hit_point_total',
+                    'unit_kill_rate', 'unit_kill_total'
+                ]
+            }
+
+            for sub_name, properties in sub_struct_map.items():
+                if name in properties:
+                    sub_obj = getattr(self._wrapped, sub_name, None)
+                    if sub_obj and hasattr(sub_obj, name):
+                        return getattr(sub_obj, name)
+
+            # 3. If nothing is found, raise an error
+            raise AttributeError(f"'DatFile' object has no attribute '{name}'")
 
     # Expose the Wrappers as the standard names
     DatFile = DatFileWrapper
@@ -144,9 +170,9 @@ except ImportError:
         from genieutils.civilization import Civilizations as Civ
         from genieutils.tech import Tech
         from genieutils.graphic import Graphic
-        
+
         BACKEND_NAME = "genieutils-py"
-    
+
     except ImportError:
         # No backend found
         BACKEND_NAME = "none"
