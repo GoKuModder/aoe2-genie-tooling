@@ -1,21 +1,26 @@
 """
-Extract all attributes from genieutils Unit class hierarchy.
+Extract all attributes from genie_rust Unit class hierarchy.
 
 This script inspects the Unit, Bird, DeadFish, Type50, Projectile,
-Creatable, and Building dataclasses to find all attributes.
+Creatable, and Building classes to find all attributes.
 """
-import csv
-from dataclasses import fields
+import inspect
 from pathlib import Path
 from typing import Dict, List, Set
 
-# Import genieutils types
-from genieutils.unit import Unit, Bird, DeadFish, Type50, Projectile, Creatable, Building
+# Import genie_rust types
+from genie_rust import Unit, Bird, DeadFish, Type50, Projectile, Creatable, Building
 
 # Import our Attribute enum
-import sys
-sys.path.insert(0, str(Path(__file__).parent))
 from attributes import Attribute
+
+
+def get_attributes(cls):
+    """Get all public, non-callable attributes from a PyO3 class."""
+    return sorted([
+        name for name, val in inspect.getmembers(cls)
+        if not name.startswith('__') and not callable(val)
+    ])
 
 
 def get_all_unit_attributes() -> Dict[str, List[str]]:
@@ -23,7 +28,7 @@ def get_all_unit_attributes() -> Dict[str, List[str]]:
     result = {}
 
     # Main Unit class
-    result["Unit"] = [f.name for f in fields(Unit)]
+    result["Unit"] = get_attributes(Unit)
 
     # Component classes
     component_classes = {
@@ -36,11 +41,7 @@ def get_all_unit_attributes() -> Dict[str, List[str]]:
     }
 
     for name, cls in component_classes.items():
-        try:
-            result[name] = [f.name for f in fields(cls)]
-        except TypeError:
-            # Not a dataclass
-            result[name] = dir(cls)
+        result[name] = get_attributes(cls)
 
     return result
 
@@ -52,12 +53,12 @@ def get_manifest_attribute_names() -> Set[str]:
 
 def main():
     print("=" * 70)
-    print("GENIEUTILS UNIT ATTRIBUTES VS MANIFEST COMPARISON")
+    print("GENIE-RUST UNIT ATTRIBUTES VS MANIFEST COMPARISON")
     print("=" * 70)
     print()
 
     # Get all unit attributes
-    print("Extracting attributes from genieutils Unit classes...")
+    print("Extracting attributes from genie-rust Unit classes...")
     unit_attrs = get_all_unit_attributes()
 
     # Get manifest attribute names (lowercase for comparison)
