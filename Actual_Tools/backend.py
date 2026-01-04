@@ -26,7 +26,7 @@ BACKEND_NAME = "unknown"
 
 try:
     # -------------------------------------------------------------------------
-    # OPTION 1: GenieDatParser (High Performance)
+    # OPTION 1: Genie-Rust (High Performance)
     # -------------------------------------------------------------------------
     from sections.datfile_sections import DatFile as _G_DatFile
     from sections.civilization.unit import Unit as _G_Unit
@@ -35,12 +35,12 @@ try:
     from sections.sprite_data.sprite import Sprite as _G_Sprite
     from sections.sound.sound import Sound as _G_Sound, SoundItem as _G_SoundItem
     
-    BACKEND_NAME = "GenieDatParser"
+    BACKEND_NAME = "genie-rust"
 
     class UnitWrapper:
         """
-        Wraps GenieDatParser.Unit to provide a flat API matching genieutils-py.
-        Forward attributes to sub-structs (movement_info, combat_info, etc.)
+        Wraps Genie-Rust.Unit to provide a flat API matching genieutils-py.
+        Forward attributes to sub-structs (type_50, creatable, etc.)
         """
         __slots__ = ('_wrapped',)
 
@@ -48,14 +48,13 @@ try:
             self._wrapped = wrapped_unit
 
         def __getattr__(self, name: str) -> Any:
-            # 1. Try direct attribute (id, name, hit_points)
+            # 1. Try direct attribute (id, name, hit_points, speed)
             if hasattr(self._wrapped, name):
                 return getattr(self._wrapped, name)
             
             # 2. Try sub-structs (order matters for precedence)
             # Common ones first for performance
-            for sub in ('movement_info', 'combat_info', 'creation_info', 
-                        'building_info', 'projectile_info', 'task_info'):
+            for sub in ('type_50', 'creatable', 'building', 'bird', 'dead_fish', 'projectile'):
                 sub_obj = getattr(self._wrapped, sub, None)
                 if sub_obj and hasattr(sub_obj, name):
                     return getattr(sub_obj, name)
@@ -73,8 +72,7 @@ try:
                 return
 
             # 2. Try sub-structs
-            for sub in ('movement_info', 'combat_info', 'creation_info', 
-                        'building_info', 'projectile_info', 'task_info'):
+            for sub in ('type_50', 'creatable', 'building', 'bird', 'dead_fish', 'projectile'):
                 sub_obj = getattr(self._wrapped, sub, None)
                 if sub_obj and hasattr(sub_obj, name):
                     setattr(sub_obj, name, value)

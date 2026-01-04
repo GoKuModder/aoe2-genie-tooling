@@ -59,7 +59,7 @@ class GenieUnitManager(ToolBase):
     def create(
         self,
         name: str,
-        base_unit_id: Optional[int] = None,
+        src_unit_id: Optional[int] = None,
         unit_id: Optional[int] = None,
         enable_for_civs: Optional[List[int]] = None,
         on_conflict: Literal["error", "overwrite"] = "error",
@@ -70,7 +70,7 @@ class GenieUnitManager(ToolBase):
         
         Args:
             name: Name for the new unit
-            base_unit_id: Unit ID to clone from. If None, uses first valid unit.
+            src_unit_id: Unit ID to clone from. If None, uses first valid unit.
             unit_id: Target unit ID. If None, appends to end.
             enable_for_civs: List of civ IDs to enable for. If None, all civs.
             on_conflict: "error" to raise if ID exists, "overwrite" to replace
@@ -107,7 +107,7 @@ class GenieUnitManager(ToolBase):
             # overwrite -> proceed
         
         # Get or create template
-        template = self._get_template(base_unit_id)
+        template = self._get_template(src_unit_id)
         
         # Create new unit from template
         new_unit = copy.deepcopy(template)
@@ -122,14 +122,14 @@ class GenieUnitManager(ToolBase):
             # Note: For civs not in enable_for_civs, we keep existing value or placeholder
         
         # Log and register
-        self._track_unit(name, unit_id, base_unit_id)
+        self._track_unit(name, unit_id, src_unit_id)
         
         return UnitHandle(unit_id, self.dat_file, enable_for_civs)
 
     def clone_into(
         self,
-        dest_unit_id: int,
-        base_unit_id: int,
+        src_unit_id: int,
+        dst_unit_id: int,
         name: Optional[str] = None,
         enable_for_civs: Optional[List[int]] = None,
         on_conflict: Literal["error", "overwrite"] = "error",
@@ -142,8 +142,8 @@ class GenieUnitManager(ToolBase):
         with full control over placement.
         
         Args:
-            dest_unit_id: Target unit ID for the clone
-            base_unit_id: Source unit ID to clone from
+            src_unit_id: Source unit ID to clone from
+            dst_unit_id: Target unit ID for the clone
             name: Name for the clone. If None, keeps original name.
             enable_for_civs: List of civ IDs. If None, all civs.
             on_conflict: "error" to raise if dest exists, "overwrite" to replace
@@ -152,49 +152,49 @@ class GenieUnitManager(ToolBase):
         Returns:
             UnitHandle for editing the cloned unit
         """
-        self.validate_id_positive(dest_unit_id, "dest_unit_id")
-        self.validate_id_positive(base_unit_id, "base_unit_id")
+        self.validate_id_positive(dst_unit_id, "dst_unit_id")
+        self.validate_id_positive(src_unit_id, "src_unit_id")
         
         # Determine civs
         if enable_for_civs is None:
             enable_for_civs = list(range(len(self.dat_file.civs)))
         
         # Ensure capacity
-        self._ensure_capacity_all_civs(dest_unit_id, fill_gaps)
+        self._ensure_capacity_all_civs(dst_unit_id, fill_gaps)
         
         # Check conflict
-        if self.exists(dest_unit_id):
+        if self.exists(dst_unit_id):
             if on_conflict == "error":
                 raise UnitIdConflictError(
-                    f"Unit ID {dest_unit_id} already exists. Use on_conflict='overwrite' to replace."
+                    f"Unit ID {dst_unit_id} already exists. Use on_conflict='overwrite' to replace."
                 )
         
         # Get source unit
-        source = self.get_unit(base_unit_id)
+        source = self.get_unit(src_unit_id)
         if source is None:
-            raise InvalidIdError(f"Base unit ID {base_unit_id} not found.")
+            raise InvalidIdError(f"Base unit ID {src_unit_id} not found.")
         
         # Clone into each civ
         for civ_id, civ in enumerate(self.dat_file.civs):
             if civ_id in enable_for_civs:
                 # Get civ-specific source if available
-                civ_source = civ.units[base_unit_id] if base_unit_id < len(civ.units) else None
+                civ_source = civ.units[src_unit_id] if src_unit_id < len(civ.units) else None
                 if civ_source is None:
                     civ_source = source
                 
                 new_unit = copy.deepcopy(civ_source)
-                new_unit.id = dest_unit_id
+                new_unit.id = dst_unit_id
                 if name is not None:
                     new_unit.name = name
                 new_unit.enabled = 1
                 
-                civ.units[dest_unit_id] = new_unit
+                civ.units[dst_unit_id] = new_unit
         
         # Log and register
         final_name = name if name else source.name
-        self._track_unit_clone(final_name, dest_unit_id, base_unit_id)
+        self._track_unit_clone(final_name, dst_unit_id, src_unit_id)
         
-        return UnitHandle(dest_unit_id, self.dat_file, enable_for_civs)
+        return UnitHandle(dst_unit_id, self.dat_file, enable_for_civs)
 
     def move(
         self,
@@ -280,27 +280,57 @@ class GenieUnitManager(ToolBase):
     # Query Operations
     # -------------------------
 
-    def get(self, unit_id: int, civ_ids: Optional[List[int]] = None) -> UnitHandle:
+    def get(self, unit_id: int | str, civ_ids: Optional[List[int]] = None, safe: bool = False) -> UnitHandle:
         """
         Get a handle for an existing unit.
         
         Args:
-            unit_id: The unit ID to get
+            unit_id: The unit ID or name to get
             civ_ids: List of civ IDs to include. If None, all civs.
+            safe: If True, returns None if unit not found, otherwise raises error.
         
         Returns:
             UnitHandle for the unit
         
         Raises:
-            InvalidIdError: If unit doesn't exist
+            InvalidIdError: If unit doesn't exist and safe is False
         """
+        if isinstance(unit_id, str):
+            found_id = self.find(unit_id)
+            if found_id is None:
+                if safe:
+                    return None
+                raise InvalidIdError(f"Unit with name '{unit_id}' not found.")
+            unit_id = found_id
+
         if not self.exists(unit_id):
+            if safe:
+                return None
             raise InvalidIdError(f"Unit ID {unit_id} does not exist.")
         
         if civ_ids is None:
             civ_ids = list(range(len(self.dat_file.civs)))
         
         return UnitHandle(unit_id, self.dat_file, civ_ids)
+
+    def find(self, name: str, civ_id: int = 0) -> Optional[int]:
+        """
+        Find a unit by name.
+
+        Args:
+            name: The unit name to search for (case-insensitive)
+            civ_id: The civ to search in (default 0)
+
+        Returns:
+            The unit ID if found, otherwise None
+        """
+        if civ_id < 0 or civ_id >= len(self.dat_file.civs):
+            return None
+
+        for unit in self.dat_file.civs[civ_id].units:
+            if unit is not None and unit.name.lower() == name.lower():
+                return unit.id
+        return None
 
     def get_unit(self, unit_id: int, civ_id: int = 0) -> Optional[Unit]:
         """
@@ -328,6 +358,8 @@ class GenieUnitManager(ToolBase):
         A "placeholder" unit is detected by: enabled=0 AND name="" AND hit_points=1
         This allows distinguishing real units from capacity placeholders.
         """
+        if not isinstance(unit_id, int) or unit_id < 0:
+             return False
         for civ in self.dat_file.civs:
             if 0 <= unit_id < len(civ.units):
                 unit = civ.units[unit_id]
@@ -392,17 +424,17 @@ class GenieUnitManager(ToolBase):
                 placeholder.id = len(civ.units)
                 civ.units.append(placeholder)
 
-    def _get_template(self, base_unit_id: Optional[int]) -> Unit:
+    def _get_template(self, src_unit_id: Optional[int]) -> Unit:
         """
         Get a template unit for cloning.
         
-        If base_unit_id is specified, returns that unit.
+        If src_unit_id is specified, returns that unit.
         Otherwise, finds the first valid non-placeholder unit.
         """
-        if base_unit_id is not None:
-            template = self.get_unit(base_unit_id)
+        if src_unit_id is not None:
+            template = self.get_unit(src_unit_id)
             if template is None:
-                raise InvalidIdError(f"Base unit ID {base_unit_id} not found.")
+                raise InvalidIdError(f"Source unit ID {src_unit_id} not found.")
             return template
         
         # Find first valid non-placeholder unit
