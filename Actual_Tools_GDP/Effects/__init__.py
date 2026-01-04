@@ -6,7 +6,7 @@ Provides:
 - EffectHandle: Wrapper with command management
 - EffectCommandHandle: Wrapper for individual commands
 """
-from Actual_Tools_GDP.Effects.effect_manager import EffectManager
-from Actual_Tools_GDP.Effects.effect_handle import EffectHandle, EffectCommandHandle
+from .effect_handle import EffectCommandHandle, EffectHandle
+from .effect_manager import EffectManager
 
 __all__ = ["EffectManager", "EffectHandle", "EffectCommandHandle"]
