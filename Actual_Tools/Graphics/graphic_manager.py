@@ -15,7 +15,7 @@ from typing import TYPE_CHECKING, Optional
 
 from Actual_Tools.backend import DatFile, Graphic
 from Actual_Tools.Graphics.graphic_handle import GraphicHandle
-from Actual_Tools.Shared.tool_base import ToolBase, tracks_creation
+from Actual_Tools_GDP.Shared.tool_base import ToolBase, tracks_creation
 from Actual_Tools.exceptions import InvalidIdError
 
 if TYPE_CHECKING:

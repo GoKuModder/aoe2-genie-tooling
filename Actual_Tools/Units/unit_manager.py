@@ -20,7 +20,7 @@ from __future__ import annotations
 import copy
 from typing import TYPE_CHECKING, List, Literal, Optional
 
-from Actual_Tools.Shared.tool_base import ToolBase
+from Actual_Tools_GDP.Shared.tool_base import ToolBase
 from Actual_Tools.Units.unit_handle import UnitHandle
 from Actual_Tools.exceptions import (
     GapNotAllowedError,

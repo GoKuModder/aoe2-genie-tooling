@@ -10,10 +10,17 @@ from .store_modes import StoreMode
 from .unit_classes import UnitClass
 from .unit_types import UnitType
 from .attributes import (
+<<<<<<< HEAD
     Attribute,
     GarrisonType,
     HeroStatus,
     UnitTrait,
+=======
+    Attribute, 
+    GarrisonType, 
+    HeroStatus, 
+    UnitTrait, 
+>>>>>>> origin/refactor-port-managers-to-gdp-783808832176151754
     ChargeType,
     CombatAbility,
     ObstructionType,

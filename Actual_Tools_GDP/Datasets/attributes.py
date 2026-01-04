@@ -4,7 +4,11 @@ from enum import IntEnum
 class Attribute(IntEnum):
     """
     Genie Editor Attributes.
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> origin/refactor-port-managers-to-gdp-783808832176151754
     Source: https://ageofempires.fandom.com/wiki/Genie_Editor#Attributes
     """
     HIT_POINTS = 0
@@ -299,7 +303,11 @@ class OcclusionMode(IntEnum):
 class BlastAttackLevel(IntEnum):
     """
     Values for Blast Attack Level attribute (44).
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> origin/refactor-port-managers-to-gdp-783808832176151754
     Combine one primary (0-3) and one secondary (0/64/128) effect.
     """
     # Primary effects (unique, cannot be combined)
@@ -367,3 +375,8 @@ class TrackingUnitMode(IntEnum):
     NOT_USED = 0
     APPEARS_WHILE_MOVING_AND_START = 1
     APPEARS_WHILE_MOVING_DENSITY = 2  # Based on density
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> origin/refactor-port-managers-to-gdp-783808832176151754

@@ -5,7 +5,7 @@ Provides:
 - CivilizationsManager: Query and access civilizations
 - CivHandle: Wrapper with attribute access
 """
-from Actual_Tools_GDP.Civilizations.civ_manager import CivilizationsManager
-from Actual_Tools_GDP.Civilizations.civ_handle import CivHandle
+from .civ_manager import CivilizationsManager
+from .civ_handle import CivHandle
 
 __all__ = ["CivilizationsManager", "CivHandle"]

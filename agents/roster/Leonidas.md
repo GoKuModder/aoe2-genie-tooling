@@ -6,8 +6,8 @@
 **Motto**: "Efficiency in all things."
 
 ## Session Information
-- **Current Session ID**: None
-- **Status**: Idle (Branch Published)
+- **Current Session ID**: `6925591745067366576`
+- **Status**: **Active**
 - **Original Alias**: `migration-agent-units`
 
 ## Responsibilities
@@ -24,7 +24,7 @@
 - **Reason**: To prevent merge conflicts with backend.py changes from other agents.
 
 ## Active Tasks
-- (None)
+- [ ] Port `unit_manipulation.py` or equivalent logic [Session: 6925591745067366576]
 
 ## Completed Tasks
 - [x] Port `GenieUnitManager` and unit logic [Branch: feat-port-unit-manager-3408563265722343247]

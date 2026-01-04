@@ -8,8 +8,8 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any, List, Optional, Tuple
 
 if TYPE_CHECKING:
-    from Actual_Tools_GDP.Shared.dat_adapter import DatFile
-    from Actual_Tools_GDP.Shared.dat_adapter import Tech
+    from genieutils.datfile import DatFile
+    from genieutils.tech import Tech
 
 __all__ = ["TechHandle"]
 

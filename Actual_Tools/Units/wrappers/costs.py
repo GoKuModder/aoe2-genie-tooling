@@ -12,7 +12,7 @@ if TYPE_CHECKING:
     from genieutils.unit import Unit
 
 __all__ = ["CostWrapper"]
-from Datasets.resources import Resource
+from Actual_Tools_GDP.Datasets.resources import Resource
 
 # Resource type IDs from AoE2
 RESOURCE_FOOD = Resource.FOOD_STORAGE

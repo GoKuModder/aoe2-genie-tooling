@@ -9,17 +9,28 @@ import copy
 from functools import wraps
 from typing import TYPE_CHECKING, Any, Callable, List, Optional, TypeVar
 
+<<<<<<< HEAD
 from Actual_Tools_GDP.Shared.logger import logger
 from Actual_Tools_GDP.Shared.registry import registry
 from Actual_Tools_GDP.exceptions import (
+=======
+from .logger import logger
+from .registry import registry
+from Actual_Tools.exceptions import (
+>>>>>>> origin/refactor-port-managers-to-gdp-783808832176151754
     GapNotAllowedError,
     InvalidIdError,
     TemplateNotFoundError,
 )
 
 if TYPE_CHECKING:
+<<<<<<< HEAD
     from genie_rust.datfile import DatFile
     from genie_rust.unit import Unit
+=======
+    from genieutils.datfile import DatFile
+    from genieutils.unit import Unit
+>>>>>>> origin/refactor-port-managers-to-gdp-783808832176151754
 
 __all__ = ["ToolBase", "tracks_creation"]
 
@@ -29,6 +40,7 @@ T = TypeVar("T")
 def tracks_creation(item_type: str, name_param: str = "name"):
     """
     Decorator that auto-logs and registers created items.
+<<<<<<< HEAD
 
     Apply to manager methods that create new items (units, graphics, sounds, techs).
     The decorated method must return an object with `.id` attribute.
@@ -37,6 +49,16 @@ def tracks_creation(item_type: str, name_param: str = "name"):
         item_type: Type of item ("unit", "graphic", "sound", "tech")
         name_param: Parameter name containing the item's name (default: "name")
 
+=======
+    
+    Apply to manager methods that create new items (units, graphics, sounds, techs).
+    The decorated method must return an object with `.id` attribute.
+    
+    Args:
+        item_type: Type of item ("unit", "graphic", "sound", "tech")
+        name_param: Parameter name containing the item's name (default: "name")
+    
+>>>>>>> origin/refactor-port-managers-to-gdp-783808832176151754
     Example:
         @tracks_creation("graphic", name_param="file_name")
         def add_graphic(self, file_name: str, ...) -> Graphic:
@@ -47,7 +69,11 @@ def tracks_creation(item_type: str, name_param: str = "name"):
         def wrapper(self, *args, **kwargs) -> T:
             # Call the actual method
             result = func(self, *args, **kwargs)
+<<<<<<< HEAD
 
+=======
+            
+>>>>>>> origin/refactor-port-managers-to-gdp-783808832176151754
             # Extract name from args/kwargs
             # Try kwargs first, then positional
             sig_params = list(func.__code__.co_varnames[1:])  # Skip 'self'
@@ -56,6 +82,7 @@ def tracks_creation(item_type: str, name_param: str = "name"):
                 idx = sig_params.index(name_param)
                 if idx < len(args):
                     name = args[idx]
+<<<<<<< HEAD
 
             if name is None:
                 name = getattr(result, "name", str(result.id))
@@ -66,6 +93,18 @@ def tracks_creation(item_type: str, name_param: str = "name"):
             _log_creation(self, item_type, name, item_id)
             _register_creation(item_type, name, item_id)
 
+=======
+            
+            if name is None:
+                name = getattr(result, "name", str(result.id))
+            
+            item_id = result.id
+            
+            # Auto-log and register
+            _log_creation(self, item_type, name, item_id)
+            _register_creation(item_type, name, item_id)
+            
+>>>>>>> origin/refactor-port-managers-to-gdp-783808832176151754
             return result
         return wrapper
     return decorator
@@ -75,11 +114,19 @@ def _log_creation(manager, item_type: str, name: str, item_id: int) -> None:
     """Internal: log item creation based on type."""
     component = {
         "unit": "units",
+<<<<<<< HEAD
         "graphic": "graphics",
         "sound": "sounds",
         "tech": "techs",
     }.get(item_type, "workspace")
 
+=======
+        "graphic": "graphics", 
+        "sound": "sounds",
+        "tech": "techs",
+    }.get(item_type, "workspace")
+    
+>>>>>>> origin/refactor-port-managers-to-gdp-783808832176151754
     if item_type == "unit":
         logger.unit_created(name, item_id)
     elif item_type == "graphic":
@@ -105,14 +152,22 @@ def _register_creation(item_type: str, name: str, item_id: int, **extra) -> None
 class ToolBase:
     """
     Base class for domain managers providing shared utilities.
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> origin/refactor-port-managers-to-gdp-783808832176151754
     Key responsibilities:
     - List capacity management with placeholder support
     - ID allocation utilities
     - Validation helpers
     - Auto-tracking (logging and registry) via decorator or manual call
     """
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> origin/refactor-port-managers-to-gdp-783808832176151754
     # Subclasses can override for logging
     COMPONENT_NAME: str = "manager"
 
@@ -122,17 +177,30 @@ class ToolBase:
     # -------------------------
     # Auto-tracking (manual call when decorator not suitable)
     # -------------------------
+<<<<<<< HEAD
 
     def _track_unit(self, name: str, unit_id: int, base_unit_id: Optional[int] = None) -> None:
         """Log and register a unit creation."""
         logger.unit_created(name, unit_id)
         registry.register_unit(name, unit_id, base_unit_id=base_unit_id)
 
+=======
+    
+    def _track_unit(self, name: str, unit_id: int, src_unit_id: Optional[int] = None) -> None:
+        """Log and register a unit creation."""
+        logger.unit_created(name, unit_id)
+        registry.register_unit(name, unit_id, base_unit_id=src_unit_id)
+    
+>>>>>>> origin/refactor-port-managers-to-gdp-783808832176151754
     def _track_unit_clone(self, name: str, unit_id: int, source_id: int) -> None:
         """Log and register a unit clone."""
         logger.unit_cloned(name, unit_id, source_id)
         registry.register_unit(name, unit_id, base_unit_id=source_id)
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> origin/refactor-port-managers-to-gdp-783808832176151754
     def _track_unit_move(self, src_id: int, dst_id: int) -> None:
         """Log a unit move (no registry needed)."""
         logger.unit_moved(src_id, dst_id)
@@ -178,7 +246,11 @@ class ToolBase:
     ) -> None:
         """
         Extends the list with `default_value` to ensure `required_index` is valid.
+<<<<<<< HEAD
 
+=======
+        
+>>>>>>> origin/refactor-port-managers-to-gdp-783808832176151754
         WARNING: Using None may violate "no gaps" policy for units.
         """
         if required_index < 0:
@@ -218,17 +290,29 @@ class ToolBase:
     def create_placeholder_unit(self, template: Optional[Unit] = None) -> Unit:
         """
         Creates a disabled but serializable placeholder unit.
+<<<<<<< HEAD
 
+=======
+        
+>>>>>>> origin/refactor-port-managers-to-gdp-783808832176151754
         Placeholder: enabled=0, name="", hit_points=1
         """
         if template is None:
             template = self.find_first_valid_unit()
+<<<<<<< HEAD
 
+=======
+        
+>>>>>>> origin/refactor-port-managers-to-gdp-783808832176151754
         if template is None:
             raise TemplateNotFoundError(
                 "Cannot create placeholder unit: no valid template unit found."
             )
+<<<<<<< HEAD
 
+=======
+        
+>>>>>>> origin/refactor-port-managers-to-gdp-783808832176151754
         placeholder = copy.deepcopy(template)
         placeholder.name = ""
         placeholder.enabled = 0
@@ -239,19 +323,31 @@ class ToolBase:
         """Returns a factory function that creates placeholder units."""
         if template is None:
             template = self.find_first_valid_unit()
+<<<<<<< HEAD
 
+=======
+        
+>>>>>>> origin/refactor-port-managers-to-gdp-783808832176151754
         if template is None:
             raise TemplateNotFoundError(
                 "Cannot create placeholder factory: no valid template unit found."
             )
+<<<<<<< HEAD
 
+=======
+        
+>>>>>>> origin/refactor-port-managers-to-gdp-783808832176151754
         def factory() -> Unit:
             placeholder = copy.deepcopy(template)
             placeholder.name = ""
             placeholder.enabled = 0
             placeholder.hit_points = 1
             return placeholder
+<<<<<<< HEAD
 
+=======
+        
+>>>>>>> origin/refactor-port-managers-to-gdp-783808832176151754
         return factory
 
     # -------------------------

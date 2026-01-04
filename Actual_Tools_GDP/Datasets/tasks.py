@@ -4,7 +4,11 @@ from enum import IntEnum
 class Task(IntEnum):
     """
     Genie Editor Task IDs.
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> origin/refactor-port-managers-to-gdp-783808832176151754
     Source: https://ageofempires.fandom.com/wiki/Genie_Editor#Tasks
     """
     NONE = 0

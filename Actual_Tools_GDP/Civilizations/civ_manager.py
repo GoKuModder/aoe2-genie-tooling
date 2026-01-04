@@ -8,13 +8,13 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, List, Optional
 
-from Actual_Tools_GDP.Shared.dat_adapter import Civ
+from genieutils.civ import Civ
 
-from Actual_Tools_GDP.Civilizations.civ_handle import CivHandle
-from Actual_Tools_GDP.Shared.tool_base import ToolBase
+from .civ_handle import CivHandle
+from ..Shared.tool_base import ToolBase
 
 if TYPE_CHECKING:
-    from Actual_Tools_GDP.Shared.dat_adapter import DatFile
+    from genieutils.datfile import DatFile
 
 __all__ = ["CivilizationsManager"]
 

@@ -11,7 +11,11 @@ __all__ = ["TerrainType"]
 class TerrainType(IntEnum):
     """
     Terrain type IDs for foundation_terrain, placement_terrain, terrain_restriction.
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> origin/refactor-port-managers-to-gdp-783808832176151754
     Note: Full terrain list can have 100+ terrains depending on the dataset.
     These are common base game terrains.
     """

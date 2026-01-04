@@ -652,7 +652,7 @@ class UnitHandle:
     def _validated_set(self, name: str, value: Any, units: List) -> None:
         """Set attribute with validation for references and enums."""
         import traceback
-        from Actual_Tools.Shared.manifest_loader import manifest, serializer, DeferredReference
+        from Actual_Tools_GDP.Shared.manifest_loader import manifest, serializer, DeferredReference
         
         # Get manifest entry for this attribute
         entry = manifest.get_by_name(name)

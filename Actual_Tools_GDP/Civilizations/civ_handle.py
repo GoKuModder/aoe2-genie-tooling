@@ -7,11 +7,11 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any, List, Optional, Tuple
 
-from Actual_Tools_GDP.Shared.dat_adapter import Civ
+from genieutils.civ import Civ
 
 if TYPE_CHECKING:
-    from Actual_Tools_GDP.Shared.dat_adapter import DatFile
-    from Actual_Tools_GDP.Shared.dat_adapter import Unit
+    from genieutils.datfile import DatFile
+    from genieutils.unit import Unit
 
 __all__ = ["CivHandle"]
 

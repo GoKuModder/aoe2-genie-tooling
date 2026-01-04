@@ -12,7 +12,11 @@ import traceback
 from typing import TYPE_CHECKING, Any, List, Optional, Union
 
 if TYPE_CHECKING:
+<<<<<<< HEAD
     from Actual_Tools_GDP.Shared.dat_adapter import Unit
+=======
+    from genieutils.unit import Unit
+>>>>>>> origin/refactor-port-managers-to-gdp-783808832176151754
 
 __all__ = ["ValidationMixin"]
 
@@ -49,7 +53,11 @@ class ValidationMixin:
         Raises:
             TypeError: If value is not int or expected Handle type
         """
+<<<<<<< HEAD
         from Actual_Tools_GDP.Shared.manifest_loader import serializer, DeferredReference
+=======
+        from Actual_Tools.Shared.manifest_loader import serializer, DeferredReference
+>>>>>>> origin/refactor-port-managers-to-gdp-783808832176151754
         
         # Extract ID from Handle if needed
         actual_id = value
@@ -96,7 +104,11 @@ class ValidationMixin:
         Raises:
             EnumValueError: If value is not valid for the enum/bitmask
         """
+<<<<<<< HEAD
         from Actual_Tools_GDP.Shared.manifest_loader import manifest
+=======
+        from Actual_Tools.Shared.manifest_loader import manifest
+>>>>>>> origin/refactor-port-managers-to-gdp-783808832176151754
         
         # Get manifest entry
         entry = None

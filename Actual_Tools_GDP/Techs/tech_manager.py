@@ -9,14 +9,14 @@ from __future__ import annotations
 import copy
 from typing import TYPE_CHECKING, Optional
 
-from Actual_Tools_GDP.Shared.dat_adapter import Tech
+from genieutils.tech import Tech
 
-from Actual_Tools_GDP.Techs.tech_handle import TechHandle
-from Actual_Tools_GDP.Shared.tool_base import ToolBase, tracks_creation
-from Actual_Tools_GDP.exceptions import InvalidIdError, TemplateNotFoundError
+from .tech_handle import TechHandle
+from ..Shared.tool_base import ToolBase, tracks_creation
+from Actual_Tools.exceptions import InvalidIdError, TemplateNotFoundError
 
 if TYPE_CHECKING:
-    from Actual_Tools_GDP.Shared.dat_adapter import DatFile
+    from genieutils.datfile import DatFile
 
 __all__ = ["TechManager"]
 

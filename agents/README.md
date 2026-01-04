@@ -14,6 +14,13 @@ This directory contains configuration files for the specialized agents working o
 | **[Tess](roster/Tess.md)** | QA/Testing | **Active** | `6420709257444961590` |
 | **[Sam](roster/Sam.md)** | Maintenance | Idle | None |
 | **[Oscar](roster/Oscar.md)** | Cleanup | Idle | None |
+| **[Atlas](roster/Atlas.md)** | Terrains | Idle | None |
+| **[Ajax](roster/Ajax.md)** | Effects | Idle | None |
+| **[Orion](roster/Orion.md)** | Benchmarks | Idle | None |
+| **[Iris](roster/Iris.md)** | CLI/Tools | Idle | None |
+| **[Diana](roster/Diana.md)** | Documentation | Idle | None |
+| **[Felix](roster/Felix.md)** | Refactor/Lint | Idle | None |
+| **[Castor](roster/Castor.md)** | Shared Utils | Idle | None |
 
 ## Usage
 
