@@ -4,11 +4,7 @@ from enum import IntEnum
 class StoreMode(IntEnum):
     """
     Genie Editor Store Modes.
-<<<<<<< HEAD
-
-=======
     
->>>>>>> origin/refactor-port-managers-to-gdp-783808832176151754
     Source: https://ageofempires.fandom.com/wiki/Genie_Editor#Store_Mode
     """
     KEEP_DECAYABLE = 0  # Resource decays based on decay time

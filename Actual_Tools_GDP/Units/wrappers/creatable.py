@@ -55,15 +55,15 @@ class CreatableWrapper:
 
     def _get_creatable(self) -> Optional[Any]:
         """Get Creatable from first unit."""
-        if self._units and self._units[0].creatable:
-            return self._units[0].creatable
+        if self._units and hasattr(self._units[0], "creation_info") and self._units[0].creation_info:
+            return self._units[0].creation_info
         return None
 
     def _set_all(self, attr: str, value: Any) -> None:
         """Set attribute on all units' creatable."""
         for unit in self._units:
-            if unit.creatable:
-                setattr(unit.creatable, attr, value)
+            if hasattr(unit, "creation_info") and unit.creation_info:
+                setattr(unit.creation_info, attr, value)
 
     # -------------------------
     # Training Properties
@@ -73,57 +73,57 @@ class CreatableWrapper:
     def train_time(self) -> int:
         """Training time in seconds."""
         c = self._get_creatable()
-        if c and c.train_locations:
-            return c.train_locations[0].train_time
+        if c and c.train_locations_new:
+            return c.train_locations_new[0].train_time
         return 0
 
     @train_time.setter
     def train_time(self, value: int) -> None:
         for unit in self._units:
-            if unit.creatable and unit.creatable.train_locations:
-                unit.creatable.train_locations[0].train_time = value
+            if unit.creation_info and unit.creation_info.train_locations_new:
+                unit.creation_info.train_locations_new[0].train_time = value
 
     @property
     def train_location_id(self) -> int:
         """Building ID where unit is trained."""
         c = self._get_creatable()
-        if c and c.train_locations:
-            return c.train_locations[0].unit_id
+        if c and c.train_locations_new:
+            return c.train_locations_new[0].unit_id
         return -1
 
     @train_location_id.setter
     def train_location_id(self, value: int) -> None:
         for unit in self._units:
-            if unit.creatable and unit.creatable.train_locations:
-                unit.creatable.train_locations[0].unit_id = value
+            if unit.creation_info and unit.creation_info.train_locations_new:
+                unit.creation_info.train_locations_new[0].unit_id = value
 
     @property
     def button_id(self) -> int | Effect:
         """Button position in training building."""
         c = self._get_creatable()
-        if c and c.train_locations:
-            return c.train_locations[0].button_id
+        if c and c.train_locations_new:
+            return c.train_locations_new[0].button_id
         return 0
 
     @button_id.setter
     def button_id(self, value: int | Effect) -> None:
         for unit in self._units:
-            if unit.creatable and unit.creatable.train_locations:
-                unit.creatable.train_locations[0].button_id = value
+            if unit.creation_info and unit.creation_info.train_locations_new:
+                unit.creation_info.train_locations_new[0].button_id = value
 
     @property
     def hot_key_id(self) -> int:
         """Hotkey ID for training."""
         c = self._get_creatable()
-        if c and c.train_locations:
-            return c.train_locations[0].hot_key_id
+        if c and c.train_locations_new:
+            return c.train_locations_new[0].hot_key_id
         return 16000
 
     @hot_key_id.setter
     def hot_key_id(self, value: int) -> None:
         for unit in self._units:
-            if unit.creatable and unit.creatable.train_locations:
-                unit.creatable.train_locations[0].hot_key_id = value
+            if unit.creation_info and unit.creation_info.train_locations_new:
+                unit.creation_info.train_locations_new[0].hot_key_id = value
 
     # -------------------------
     # Lists (Read-Only access references)
@@ -133,13 +133,13 @@ class CreatableWrapper:
     def train_locations(self) -> List:
         """List of TrainLocation objects."""
         c = self._get_creatable()
-        return c.train_locations if c else []
+        return c.train_locations_new if c else []
 
     @property
     def resource_costs(self) -> Any:
         """List/Tuple of ResourceCost objects."""
         c = self._get_creatable()
-        return c.resource_costs if c else []
+        return c.costs if c else []
 
     # -------------------------
     # Graphics
@@ -149,41 +149,41 @@ class CreatableWrapper:
     def garrison_graphic(self) -> int:
         """Garrison graphic ID."""
         c = self._get_creatable()
-        return c.garrison_graphic if c else -1
+        return c.garrisoned_sprite_id if c else -1
 
     @garrison_graphic.setter
     def garrison_graphic(self, value: int) -> None:
-        self._set_all("garrison_graphic", value)
+        self._set_all("garrisoned_sprite_id", value)
 
     @property
     def spawning_graphic(self) -> int:
         """Spawning/creation graphic ID."""
         c = self._get_creatable()
-        return c.spawning_graphic if c else -1
+        return c.spawning_sprite_id if c else -1
 
     @spawning_graphic.setter
     def spawning_graphic(self, value: int) -> None:
-        self._set_all("spawning_graphic", value)
+        self._set_all("spawning_sprite_id", value)
 
     @property
     def upgrade_graphic(self) -> int:
         """Upgrade graphic ID."""
         c = self._get_creatable()
-        return c.upgrade_graphic if c else -1
+        return c.upgrading_sprite_id if c else -1
 
     @upgrade_graphic.setter
     def upgrade_graphic(self, value: int) -> None:
-        self._set_all("upgrade_graphic", value)
+        self._set_all("upgrading_sprite_id", value)
 
     @property
     def hero_glow_graphic(self) -> int:
         """Hero glow graphic ID."""
         c = self._get_creatable()
-        return c.hero_glow_graphic if c else -1
+        return c.hero_glowing_sprite_id if c else -1
 
     @hero_glow_graphic.setter
     def hero_glow_graphic(self, value: int) -> None:
-        self._set_all("hero_glow_graphic", value)
+        self._set_all("hero_glowing_sprite_id", value)
 
     @property
     def idle_attack_graphic(self) -> int:
@@ -199,11 +199,11 @@ class CreatableWrapper:
     def special_graphic(self) -> int:
         """Special ability graphic ID."""
         c = self._get_creatable()
-        return c.special_graphic if c else -1
+        return c.special_graphic_id if c else -1
 
     @special_graphic.setter
     def special_graphic(self, value: int) -> None:
-        self._set_all("special_graphic", value)
+        self._set_all("special_graphic_id", value)
 
     # -------------------------
     # Charge Properties
@@ -473,8 +473,8 @@ class CreatableWrapper:
     def displayed_pierce_armour(self) -> int:
         """Displayed pierce armor in UI."""
         c = self._get_creatable()
-        return c.displayed_pierce_armour if c else 0
+        return c.displayed_pierce_armor if c else 0
 
     @displayed_pierce_armour.setter
     def displayed_pierce_armour(self, value: int) -> None:
-        self._set_all("displayed_pierce_armour", value)
+        self._set_all("displayed_pierce_armor", value)

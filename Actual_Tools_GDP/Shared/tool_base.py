@@ -228,9 +228,64 @@ class ToolBase:
 
         placeholder = copy.deepcopy(template)
         placeholder.name = ""
-        placeholder.enabled = 0
+        placeholder.enabled = False
         placeholder.hit_points = 1
         return placeholder
+
+    def _clone_struct(self, obj: Any) -> Any:
+        """
+        Manually clones a struct object by copying all public attributes.
+        This bypasses pickling issues with Rust-backed objects.
+        """
+        # Create new instance of the same class
+        cls = type(obj)
+        
+        # Method 1: Try .from_base() (common in sections/structures for cloning/upgrading)
+        if hasattr(cls, "from_base"):
+            try:
+                return cls.from_base(obj)
+            except Exception:
+                pass
+
+        # Method 2: Try no-arg constructor + attribute copy
+        try:
+             new_obj = cls()
+        except TypeError:
+             # Fallback if no-arg constructor fails: Try copy.copy, then deepcopy
+             try:
+                 return copy.copy(obj)
+             except Exception:
+                 return copy.deepcopy(obj)
+
+        # Copy attributes
+        # CRITICAL: Copy 'ver' (version) first to ensure version-gated properties work
+        if hasattr(obj, 'ver'):
+            try:
+                new_obj.ver = obj.ver
+            except (AttributeError, Exception):
+                pass
+
+        # We start with __dir__ to get all properties
+        for name in dir(obj):
+            if name.startswith("_"):
+                continue
+            
+            # Skip callables/methods
+            try:
+                attr = getattr(obj, name)
+                if callable(attr):
+                    continue
+                
+                # Try setting it on new_obj
+                # Note: Some attributes might be read-only properties
+                try:
+                    setattr(new_obj, name, attr)
+                except AttributeError:
+                    pass  # Read-only or setterless
+            except Exception:
+                pass
+                
+        return new_obj
 
     def create_unit_placeholder_factory(self, template: Optional[Unit] = None) -> Callable[[], Unit]:
         """Returns a factory function that creates placeholder units."""
@@ -243,9 +298,10 @@ class ToolBase:
             )
 
         def factory() -> Unit:
-            placeholder = copy.deepcopy(template)
+            # Use manual clone instead of deepcopy
+            placeholder = self._clone_struct(template)
             placeholder.name = ""
-            placeholder.enabled = 0
+            placeholder.enabled = False
             placeholder.hit_points = 1
             return placeholder
 

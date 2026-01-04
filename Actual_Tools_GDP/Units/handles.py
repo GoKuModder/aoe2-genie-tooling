@@ -14,8 +14,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any, Optional
 
 if TYPE_CHECKING:
-    from genieutils.task import Task
-    from genieutils.unit import AttackOrArmor, DamageGraphic, TrainLocation
+    from ..Shared.dat_adapter import Task, AttackOrArmor, DamageGraphic, TrainLocation
 
 __all__ = [
     "TaskHandle",

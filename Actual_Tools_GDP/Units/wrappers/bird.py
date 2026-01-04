@@ -38,15 +38,15 @@ class BirdWrapper:
 
     def _get_bird(self) -> Optional[Any]:
         """Get Bird from first unit."""
-        if self._units and self._units[0].bird:
-            return self._units[0].bird
+        if self._units and hasattr(self._units[0], "task_info") and self._units[0].task_info:
+            return self._units[0].task_info
         return None
 
     def _set_all(self, attr: str, value: Any) -> None:
         """Set attribute on all units' bird."""
         for unit in self._units:
-            if unit.bird:
-                setattr(unit.bird, attr, value)
+            if hasattr(unit, "task_info") and unit.task_info:
+                setattr(unit.task_info, attr, value)
 
     @property
     def tasks(self) -> TasksWrapper:
@@ -89,11 +89,11 @@ class BirdWrapper:
     def drop_sites(self) -> list:
         """Drop site building IDs."""
         b = self._get_bird()
-        return list(b.drop_sites) if b else []
+        return list(b.drop_site_unit_ids) if b else []
 
     @drop_sites.setter
     def drop_sites(self, value: list) -> None:
-        self._set_all("drop_sites", value)
+        self._set_all("drop_site_unit_ids", value)
 
     @property
     def task_swap_group(self) -> int:
@@ -109,21 +109,21 @@ class BirdWrapper:
     def attack_sound(self) -> int:
         """Attack sound ID."""
         b = self._get_bird()
-        return b.attack_sound if b else -1
+        return b.attack_sound_id if b else -1
 
     @attack_sound.setter
     def attack_sound(self, value: int) -> None:
-        self._set_all("attack_sound", value)
+        self._set_all("attack_sound_id", value)
 
     @property
     def move_sound(self) -> int:
         """Move sound ID."""
         b = self._get_bird()
-        return b.move_sound if b else -1
+        return b.move_sound_id if b else -1
 
     @move_sound.setter
     def move_sound(self, value: int) -> None:
-        self._set_all("move_sound", value)
+        self._set_all("move_sound_id", value)
 
     @property
     def wwise_attack_sound_id(self) -> int:
@@ -149,8 +149,8 @@ class BirdWrapper:
     def run_pattern(self) -> int:
         """Run pattern mode."""
         b = self._get_bird()
-        return b.run_pattern if b else 0
+        return b.run_mode if b else 0
 
     @run_pattern.setter
     def run_pattern(self, value: int) -> None:
-        self._set_all("run_pattern", value)
+        self._set_all("run_mode", value)

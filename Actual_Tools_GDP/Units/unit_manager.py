@@ -110,15 +110,15 @@ class GenieUnitManager(ToolBase):
         template = self._get_template(base_unit_id)
 
         # Create new unit from template
-        new_unit = copy.deepcopy(template)
+        new_unit = self._clone_struct(template)
         new_unit.id = unit_id
         new_unit.name = name
-        new_unit.enabled = 1
+        new_unit.enabled = True
 
         # Insert into civs
         for civ_id, civ in enumerate(self.dat_file.civs):
             if civ_id in enable_for_civs:
-                civ.units[unit_id] = copy.deepcopy(new_unit)
+                civ.units[unit_id] = self._clone_struct(new_unit)
             # Note: For civs not in enable_for_civs, we keep existing value or placeholder
 
         # Log and register
@@ -182,11 +182,11 @@ class GenieUnitManager(ToolBase):
                 if civ_source is None:
                     civ_source = source
 
-                new_unit = copy.deepcopy(civ_source)
+                new_unit = self._clone_struct(civ_source)
                 new_unit.id = dest_unit_id
                 if name is not None:
                     new_unit.name = name
-                new_unit.enabled = 1
+                new_unit.enabled = True
 
                 civ.units[dest_unit_id] = new_unit
 

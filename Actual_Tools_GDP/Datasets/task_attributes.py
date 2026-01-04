@@ -4,11 +4,7 @@ from enum import IntEnum
 class TargetDiplomacy(IntEnum):
     """
     Target Diplomacy values for Tasks/Effects.
-<<<<<<< HEAD
-
-=======
     
->>>>>>> origin/refactor-port-managers-to-gdp-783808832176151754
     Source: https://ageofempires.fandom.com/wiki/Genie_Editor#Task_attributes
     """
     ALL_OBJECTS = 0

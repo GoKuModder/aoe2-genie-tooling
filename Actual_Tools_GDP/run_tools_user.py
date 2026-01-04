@@ -1,42 +1,48 @@
+from pathlib import Path
+import sys
+
+# Adjust if GenieDatParser is elsewhere; this assumes it is alongside resolve_conflicts.py
+repo_root = Path(__file__).resolve().parent
+genie_dat_parser_src = repo_root / "GenieDatParser" / "src"
+
+sys.path.insert(0, str(genie_dat_parser_src))
+
+
 from Actual_Tools_GDP.Base import GenieWorkspace
 
 
-input_dat = r"F:\Games\AOE II DE Scirpting Python Projects\1 GenieUtils Python Tools  Library\empires2_x2_p1_RUST_TEST.dat"
+import argparse
 
-ws = GenieWorkspace.load(input_dat)
-print(f'Graphics: {len(ws.dat.graphics)}')
+# Setup argument parser for portable path handling
+parser = argparse.ArgumentParser(description="GenieUtils Tool Runner")
+parser.add_argument("input_dat", nargs="?", default=None, help="Path to input .dat file")
+args = parser.parse_args()
 
-um = ws.genie_unit_manager()
-unit = um.get(4)
-print(f'Unit: {unit}')
+# Determine input path
+if args.input_dat:
+    input_dat = Path(args.input_dat).resolve()
+else:
+    # Look for dat file in typical locations
+    possible_paths = [
+        Path.cwd() / "empires2_x2_p1.dat",
+        Path(__file__).parent / "empires2_x2_p1.dat",
+    ]
+    input_dat = next((p for p in possible_paths if p.exists()), None)
 
-#unit.attack_graphic = 20000 Works now and throws error
+if not input_dat or not input_dat.exists():
+    print(f"Error: Input file 'empires2_x2_p1.dat' not found.")
+    print(f"Usage: python {Path(__file__).name} [path_to_dat_file]")
+    sys.exit(1)
 
-#unit.projectile_unit_id = 500 # Doesnt work to throw error even tho this unit doesn't exist
+print(f"Using input file: {input_dat}")
 
-
-
-try:
-    ws.save('test_output.dat')
-except Exception as e:
-    print(f'')
-
-'''
-from Actual_Tools import GenieWorkspace
-
-# Paths
-
-input_dat = "empires2_x2_p1.dat"
-output_dat = "empires2_x2_p1_output.dat"
+workspace = GenieWorkspace.load(str(input_dat))
+print(f'Graphics: {len(workspace.dat.graphics)}')
 
 registry_json = "genie_edits.json"
 
 
 
-# ============================
-# Load
-# ============================
-workspace = GenieWorkspace.load(input_dat)
 
 unit_manager = workspace.genie_unit_manager()
 graphics_manager = workspace.graphic_manager()
@@ -93,6 +99,34 @@ unit1.attack_graphic = 20000    # This line should throw error. Graphics 20000 d
 
 
 
+
+
+
+
+try:
+    workspace.save('test_output.dat')
+    workspace.save_registry(registry_json)
+except Exception as e:
+    print(f'')
+
+'''
+from Actual_Tools import GenieWorkspace
+
+# Paths
+
+input_dat = "empires2_x2_p1.dat"
+output_dat = "empires2_x2_p1_output.dat"
+
+
+
+
+
+# ============================
+# Load
+# ============================
+workspace = GenieWorkspace.load(input_dat)
+
+
 # ============================
 # Save DAT
 # ============================
@@ -101,5 +135,5 @@ workspace.save(output_dat)
 # ============================
 # Save registry for ASP
 # ============================
-workspace.save_registry(registry_json)
+
 '''

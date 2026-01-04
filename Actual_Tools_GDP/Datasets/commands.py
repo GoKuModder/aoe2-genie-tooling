@@ -4,47 +4,27 @@ from enum import IntEnum
 class Effect(IntEnum):
     """
     Genie Editor Effect (Command) Types.
-<<<<<<< HEAD
-
-=======
     
->>>>>>> origin/refactor-port-managers-to-gdp-783808832176151754
     Source: https://ageofempires.fandom.com/wiki/Genie_Editor#Commands
     """
     # Attribute Modifiers
     SET_ATTRIBUTE = 0
     ADD_ATTRIBUTE = 4
     MULTIPLY_ATTRIBUTE = 5
-<<<<<<< HEAD
-
-    # Resource Modifiers
-    SET_RESOURCE = 1
-    MULTIPLY_RESOURCE = 6
-
-=======
     
     # Resource Modifiers
     SET_RESOURCE = 1
     MULTIPLY_RESOURCE = 6
     
->>>>>>> origin/refactor-port-managers-to-gdp-783808832176151754
     # Unit State
     ENABLE_UNIT = 2
     UPGRADE_UNIT = 3
     SPAWN_UNIT = 7
-<<<<<<< HEAD
-
-    # Technology
-    MODIFY_TECH = 8
-    SET_PLAYER_DATA_CIV_NAME = 9
-
-=======
     
     # Technology
     MODIFY_TECH = 8
     SET_PLAYER_DATA_CIV_NAME = 9
     
->>>>>>> origin/refactor-port-managers-to-gdp-783808832176151754
     # Team Effects (10-19)
     SET_ATTRIBUTE_TEAM = 10
     SET_RESOURCE_TEAM = 11
@@ -56,11 +36,7 @@ class Effect(IntEnum):
     SPAWN_UNIT_TEAM = 17
     MODIFY_TECH_TEAM = 18
     SET_PLAYER_DATA_CIV_NAME_TEAM = 19
-<<<<<<< HEAD
-
-=======
     
->>>>>>> origin/refactor-port-managers-to-gdp-783808832176151754
     # Enemy Effects (20-29)
     SET_ATTRIBUTE_ENEMY = 20
     SET_RESOURCE_ENEMY = 21
@@ -72,11 +48,7 @@ class Effect(IntEnum):
     SPAWN_UNIT_ENEMY = 27
     MODIFY_TECH_ENEMY = 28
     SET_PLAYER_DATA_CIV_NAME_ENEMY = 29
-<<<<<<< HEAD
-
-=======
     
->>>>>>> origin/refactor-port-managers-to-gdp-783808832176151754
     # Neutral Effects (30-39)
     SET_ATTRIBUTE_NEUTRAL = 30
     SET_RESOURCE_NEUTRAL = 31
@@ -88,11 +60,7 @@ class Effect(IntEnum):
     SPAWN_UNIT_NEUTRAL = 37
     MODIFY_TECH_NEUTRAL = 38
     SET_PLAYER_DATA_CIV_NAME_NEUTRAL = 39
-<<<<<<< HEAD
-
-=======
     
->>>>>>> origin/refactor-port-managers-to-gdp-783808832176151754
     # Gaia Effects (40-48)
     SET_ATTRIBUTE_GAIA = 40
     SET_RESOURCE_GAIA = 41
@@ -103,20 +71,12 @@ class Effect(IntEnum):
     MULTIPLY_RESOURCE_GAIA = 46
     SPAWN_UNIT_GAIA = 47
     MODIFY_TECH_GAIA = 48
-<<<<<<< HEAD
-
-=======
     
->>>>>>> origin/refactor-port-managers-to-gdp-783808832176151754
     # Technology Specific
     TECH_COST_MODIFIER = 101
     DISABLE_TECH = 102
     TECH_TIME_MODIFIER = 103
-<<<<<<< HEAD
-
-=======
     
->>>>>>> origin/refactor-port-managers-to-gdp-783808832176151754
     # Local Building Effects
     SET_ATTRIBUTE_LOCAL_BUILDING = 200
     ADD_ATTRIBUTE_LOCAL_BUILDING = 201

@@ -7,11 +7,11 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any, List, Optional, Tuple
 
-from genieutils.civ import Civ
+from ..backend import Civ
 
 if TYPE_CHECKING:
-    from genieutils.datfile import DatFile
-    from genieutils.unit import Unit
+    from ..backend import DatFile
+    from ..backend import Unit
 
 __all__ = ["CivHandle"]
 

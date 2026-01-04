@@ -4,6 +4,8 @@
 /My_Examples/
 /src/
 /tests/
+/.agent/
+/agents/
 
 # --- Python bytecode / caches ---
 __pycache__/
@@ -69,7 +71,13 @@ site/
 
 
 
-# Windows-specific junk
-
-desktop.ini
+# --- Agent / AI Files ---
+Actual_Tools_GDP/Datasets/AGENTS.md
+GEMINI.md
+Actual_Tools/AGENTS.md
+docs/AGENTS.md
+MIGRATION_PLAN_GenieDatParser.md
+Actual_Tools_GDP/Datasets/manifest_review.md
+Actual_Tools_GDP/Datasets/unit_vs_manifest_comparison.md
+docs/code_notes.md
 

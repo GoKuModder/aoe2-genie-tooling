@@ -9,9 +9,7 @@ class UnitProtocol(Protocol):
     hit_points: int
     # ... adds stability for type checkers
 
-# =============================================================================
 # BACKEND SELECTION
-# =============================================================================
 
 # Default to None, will be populated below
 DatFile = None
@@ -21,6 +19,8 @@ Tech = None
 Graphic = None
 Sound = None
 SoundItem = None
+Effect = None
+EffectCommand = None
 
 BACKEND_NAME = "unknown"
 
@@ -33,14 +33,10 @@ try:
     from sections.civilization.civilization import Civilization as _G_Civ
     from sections.tech.tech import Tech as _G_Tech
     from sections.sprite_data.sprite import Sprite as _G_Sprite
-<<<<<<<< HEAD:Actual_Tools/backend.py
-    from sections.sound.sound import Sound as _G_Sound, SoundItem as _G_SoundItem
-    
-    BACKEND_NAME = "genie-rust"
-========
+    from sections.tech_effect.tech_effect import TechEffect as _G_Effect
+    from sections.tech_effect.effect_command import EffectCommand as _G_EffectCommand
 
     BACKEND_NAME = "GenieDatParser"
->>>>>>>> origin/migrate-backend-3748755310644147131:Actual_Tools_GDP/backend.py
 
     class UnitWrapper:
         """
@@ -59,12 +55,8 @@ try:
 
             # 2. Try sub-structs (order matters for precedence)
             # Common ones first for performance
-<<<<<<<< HEAD:Actual_Tools/backend.py
-            for sub in ('type_50', 'creatable', 'building', 'bird', 'dead_fish', 'projectile'):
-========
-            for sub in ('movement_info', 'combat_info', 'creation_info',
-                        'building_info', 'projectile_info', 'task_info'):
->>>>>>>> origin/migrate-backend-3748755310644147131:Actual_Tools_GDP/backend.py
+            # Based on genie-rust/sections logic, these are the sub-structs
+            for sub in ('type_50', 'creatable', 'building', 'projectile'):
                 sub_obj = getattr(self._wrapped, sub, None)
                 if sub_obj and hasattr(sub_obj, name):
                     return getattr(sub_obj, name)
@@ -82,19 +74,13 @@ try:
                 return
 
             # 2. Try sub-structs
-<<<<<<<< HEAD:Actual_Tools/backend.py
-            for sub in ('type_50', 'creatable', 'building', 'bird', 'dead_fish', 'projectile'):
-========
-            for sub in ('movement_info', 'combat_info', 'creation_info',
-                        'building_info', 'projectile_info', 'task_info'):
->>>>>>>> origin/migrate-backend-3748755310644147131:Actual_Tools_GDP/backend.py
+            for sub in ('type_50', 'creatable', 'building', 'projectile'):
                 sub_obj = getattr(self._wrapped, sub, None)
                 if sub_obj and hasattr(sub_obj, name):
                     setattr(sub_obj, name, value)
                     return
 
-            # If not found, maybe set it on _wrapped anyway (dynamic attrs?)
-            # or raise helper error
+            # If not found, set on wrapper (though this might vanish)
             super().__setattr__(name, value)
 
         # Proxy connection for equality checks
@@ -126,14 +112,34 @@ try:
         @property
         def civs(self) -> List[_G_Civ]:
             return self._wrapped.civilizations
+        
+        @civs.setter
+        def civs(self, value):
+            self._wrapped.civilizations = value
 
         @property
         def techs(self) -> List[_G_Tech]:
             return self._wrapped.techs
 
+        @techs.setter
+        def techs(self, value):
+             self._wrapped.techs = value
+
         @property
         def graphics(self) -> List[_G_Sprite]:
             return self._wrapped.sprites
+        
+        @graphics.setter
+        def graphics(self, value):
+             self._wrapped.sprites = value
+             
+        @property
+        def effects(self) -> List[_G_Effect]:
+             return self._wrapped.effects
+             
+        @effects.setter
+        def effects(self, value):
+             self._wrapped.effects = value
 
         @property
         def terrains(self):
@@ -175,46 +181,37 @@ try:
     Civ = _G_Civ
     Tech = _G_Tech
     Graphic = _G_Sprite
-    Sound = _G_Sound
-    SoundItem = _G_SoundItem
+    Sound = None # Placeholder if Sound not available
+    SoundItem = None
+    Effect = _G_Effect
+    EffectCommand = _G_EffectCommand
+
 
 except ImportError:
     # -------------------------------------------------------------------------
     # OPTION 2: genieutils-py (Legacy / Fallback)
     # -------------------------------------------------------------------------
     try:
-<<<<<<<< HEAD:Actual_Tools/backend.py
-        from genieutils.datfile import DatFile as _DatFile
-        from genieutils.unit import Unit as _Unit
-        from genieutils.civilization import Civilizations as _Civ
-        from genieutils.tech import Tech as _Tech
-        from genieutils.graphic import Graphic as _Graphic
-        from genieutils.sound import Sound as _Sound, SoundItem as _SoundItem
-        
-        # Assign to module-level variables
-        DatFile = _DatFile
-        Unit = _Unit
-        Civ = _Civ
-        Tech = _Tech
-        Graphic = _Graphic
-        Sound = _Sound
-        SoundItem = _SoundItem
-        
-========
         from genieutils.datfile import DatFile
         from genieutils.unit import Unit
         from genieutils.civilization import Civilizations as Civ
         from genieutils.tech import Tech
         from genieutils.graphic import Graphic
+        # genieutils might not have Effect exposed top-level in same way, 
+        # but let's try to grab whatever we can or set None
+        try:
+             from genieutils.tech import Effect, EffectCommand
+        except ImportError:
+             Effect = None
+             EffectCommand = None
 
->>>>>>>> origin/migrate-backend-3748755310644147131:Actual_Tools_GDP/backend.py
         BACKEND_NAME = "genieutils-py"
-
+        Sound = None
+        SoundItem = None
+        
     except ImportError:
         # No backend found
         BACKEND_NAME = "none"
 
-# =============================================================================
 # EXPORTS
-# =============================================================================
-__all__ = ["DatFile", "Unit", "Civ", "Tech", "Graphic", "Sound", "SoundItem", "BACKEND_NAME"]
+__all__ = ["DatFile", "Unit", "Civ", "Tech", "Graphic", "Sound", "SoundItem", "Effect", "EffectCommand", "BACKEND_NAME"]

@@ -11,7 +11,7 @@ import copy
 from functools import cached_property
 from typing import TYPE_CHECKING, Any, List, Optional, Tuple
 
-from genie_rust import AttackOrArmor, DamageGraphic, TrainLocation, Task
+from genie_rust import AttackOrArmor, TrainLocation
 
 from Actual_Tools_GDP.Units.handles import (
     TaskHandle, AttackHandle, ArmourHandle, DamageGraphicHandle,
@@ -217,25 +217,27 @@ class UnitHandle:
     def resource_costs(self) -> Tuple:
         """Creatable resource_costs tuple."""
         u = self._primary_unit
-        return u.creatable.resource_costs if u and u.creatable else ()
+        return u.creation_info.costs if u and hasattr(u, "creation_info") and u.creation_info else ()
 
     @resource_costs.setter
     def resource_costs(self, value: Tuple) -> None:
         for u in self._get_units():
-            if u.creatable:
-                u.creatable.resource_costs = value
+            if hasattr(u, "creation_info") and u.creation_info:
+                u.creation_info.costs = value
 
     @property
     def train_locations(self) -> List:
         """Creatable train_locations list."""
         u = self._primary_unit
-        return u.creatable.train_locations if u and u.creatable else []
+        return u.creation_info.train_locations_new if u and hasattr(u, "creation_info") and u.creation_info else []
 
     @train_locations.setter
     def train_locations(self, value: List) -> None:
+        if not isinstance(value, list):
+            raise TypeError(f"train_locations must be a list, got {type(value).__name__}")
         for u in self._get_units():
-            if u.creatable:
-                u.creatable.train_locations = value
+            if hasattr(u, "creation_info") and u.creation_info:
+                u.creation_info.train_locations_new = value
 
     @property
     def annexes(self) -> Tuple:
@@ -245,9 +247,14 @@ class UnitHandle:
 
     @annexes.setter
     def annexes(self, value: Tuple) -> None:
+        if not isinstance(value, (tuple, list)):
+             raise TypeError(f"annexes must be a tuple, got {type(value).__name__}")
+        # Convert to tuple if list provided, as underlying likely expects immutable or specific type
+        val_tuple = tuple(value) if isinstance(value, list) else value
+        
         for u in self._get_units():
             if u.building:
-                u.building.annexes = value
+                u.building.annexes = val_tuple
 
     @property
     def looting_table(self) -> Tuple:
@@ -265,13 +272,13 @@ class UnitHandle:
     def drop_sites(self) -> List[int]:
         """Bird drop_sites list."""
         u = self._primary_unit
-        return u.bird.drop_sites if u and u.bird else []
+        return u.task_info.drop_site_unit_ids if u and hasattr(u, "task_info") and u.task_info else []
 
     @drop_sites.setter
     def drop_sites(self, value: List[int]) -> None:
         for u in self._get_units():
-            if u.bird:
-                u.bird.drop_sites = value
+            if hasattr(u, "task_info") and u.task_info:
+                u.task_info.drop_site_unit_ids = value
 
     # =========================================================================
     # RESOURCE STORAGE METHODS
@@ -468,7 +475,7 @@ class UnitHandle:
         """Add task to all units. Returns handle for primary unit's task."""
         task_id = -1
         for u in self._get_units():
-            if u.bird:
+            if hasattr(u, "task_info") and u.task_info:
                 new_task = Task(
                     task_type=task_type,
                     id=id,
@@ -495,20 +502,20 @@ class UnitHandle:
                     wwise_resource_deposit_sound_id=kwargs.get('wwise_resource_deposit_sound_id', 0),
                     enabled=enabled,
                 )
-                u.bird.tasks.append(new_task)
+                u.task_info.tasks.append(new_task)
                 if task_id == -1:
-                    task_id = len(u.bird.tasks) - 1
+                    task_id = len(u.task_info.tasks) - 1
 
         u = self._primary_unit
-        if u and u.bird and task_id >= 0:
-            return TaskHandle(u.bird.tasks[task_id], task_id)
+        if u and hasattr(u, "task_info") and u.task_info and task_id >= 0:
+            return TaskHandle(u.task_info.tasks[task_id], task_id)
         return None
 
     def get_task(self, task_id: int) -> Optional[TaskHandle]:
         """Get task by index."""
         u = self._primary_unit
-        if u and u.bird and 0 <= task_id < len(u.bird.tasks):
-            return TaskHandle(u.bird.tasks[task_id], task_id)
+        if u and hasattr(u, "task_info") and u.task_info and 0 <= task_id < len(u.task_info.tasks):
+            return TaskHandle(u.task_info.tasks[task_id], task_id)
         return None
 
     def get_tasks_list(self) -> List[TaskHandle]:
@@ -524,8 +531,8 @@ class UnitHandle:
         """Remove task by index from all units."""
         removed = False
         for u in self._get_units():
-            if u.bird and 0 <= task_id < len(u.bird.tasks):
-                u.bird.tasks.pop(task_id)
+            if hasattr(u, "task_info") and u.task_info and 0 <= task_id < len(u.task_info.tasks):
+                u.task_info.tasks.pop(task_id)
                 removed = True
         return removed
 
@@ -543,20 +550,20 @@ class UnitHandle:
         """Add train location to all units. Returns handle."""
         loc_id = -1
         for u in self._get_units():
-            if u.creatable:
+            if hasattr(u, "creation_info") and u.creation_info:
                 new_loc = TrainLocation(
                     train_time=train_time,
                     unit_id=unit_id,
                     button_id=button_id,
                     hot_key_id=hot_key_id,
                 )
-                u.creatable.train_locations.append(new_loc)
+                u.creation_info.train_locations_new.append(new_loc)
                 if loc_id == -1:
-                    loc_id = len(u.creatable.train_locations) - 1
+                    loc_id = len(u.creation_info.train_locations_new) - 1
 
         u = self._primary_unit
-        if u and u.creatable and loc_id >= 0:
-            return TrainLocationHandle(u.creatable.train_locations[loc_id], loc_id)
+        if u and hasattr(u, "creation_info") and u.creation_info and loc_id >= 0:
+            return TrainLocationHandle(u.creation_info.train_locations_new[loc_id], loc_id)
         return None
 
     def get_train_location(self, train_location_id: int) -> Optional[TrainLocationHandle]:
@@ -570,8 +577,8 @@ class UnitHandle:
         """Remove train location by index from all units."""
         removed = False
         for u in self._get_units():
-            if u.creatable and 0 <= train_location_id < len(u.creatable.train_locations):
-                u.creatable.train_locations.pop(train_location_id)
+            if hasattr(u, "creation_info") and u.creation_info and 0 <= train_location_id < len(u.creation_info.train_locations_new):
+                u.creation_info.train_locations_new.pop(train_location_id)
                 removed = True
         return removed
 
@@ -583,14 +590,14 @@ class UnitHandle:
         """Add drop site to all units. Returns handle."""
         site_id = -1
         for u in self._get_units():
-            if u.bird:
-                u.bird.drop_sites.append(unit_id)
+            if hasattr(u, "task_info") and u.task_info:
+                u.task_info.drop_site_unit_ids.append(unit_id)
                 if site_id == -1:
-                    site_id = len(u.bird.drop_sites) - 1
+                    site_id = len(u.task_info.drop_site_unit_ids) - 1
 
         u = self._primary_unit
-        if u and u.bird and site_id >= 0:
-            return DropSiteHandle(u.bird.drop_sites, site_id)
+        if u and hasattr(u, "task_info") and u.task_info and site_id >= 0:
+            return DropSiteHandle(u.task_info.drop_site_unit_ids, site_id)
         return None
 
     def get_drop_site(self, drop_site_id: int) -> Optional[DropSiteHandle]:
@@ -614,13 +621,15 @@ class UnitHandle:
     # =========================================================================
 
     def _find_component(self, name: str) -> Optional[str]:
-        """Find which component contains the attribute."""
-        u = self._primary_unit
-        if not u:
-            return None
+        """Find which component has the given attribute."""
+        # Use wrappers instead of raw unit struct
         for comp in _COMPONENTS:
-            obj = getattr(u, comp, None)
-            if obj is not None and hasattr(obj, name):
+            # Get wrapper instance (e.g. self.bird)
+            if not hasattr(self, comp): continue
+            wrapper = getattr(self, comp)
+            
+            # Check if wrapper has the attribute
+            if wrapper is not None and hasattr(wrapper, name):
                 return comp
         return None
 
@@ -636,7 +645,8 @@ class UnitHandle:
         # Sub-component attribute
         comp = self._find_component(name)
         if comp:
-            return getattr(getattr(u, comp), name)
+            # Use the wrapper instance from self
+            return getattr(getattr(self, comp), name)
 
         raise AttributeError(f"'{type(self).__name__}' has no attribute '{name}'")
 

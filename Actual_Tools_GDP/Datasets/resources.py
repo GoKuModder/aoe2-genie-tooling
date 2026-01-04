@@ -4,11 +4,7 @@ from enum import IntEnum
 class Resource(IntEnum):
     """
     Genie Editor Resource IDs.
-<<<<<<< HEAD
-
-=======
     
->>>>>>> origin/refactor-port-managers-to-gdp-783808832176151754
     Source: https://ageofempires.fandom.com/wiki/Genie_Editor#Resources
     """
     # Storage
@@ -17,11 +13,7 @@ class Resource(IntEnum):
     STONE_STORAGE = 2
     GOLD_STORAGE = 3
     POPULATION_HEADROOM = 4
-<<<<<<< HEAD
-
-=======
     
->>>>>>> origin/refactor-port-managers-to-gdp-783808832176151754
     # Game State
     CURRENT_AGE = 6  # 0: Dark, 1: Feudal, 2: Castle, 3: Imperial
     RELICS_CAPTURED = 7
@@ -33,30 +25,18 @@ class Resource(IntEnum):
     MEAT_STORAGE = 15
     BERRY_STORAGE = 16
     FISH_STORAGE = 17
-<<<<<<< HEAD
-
-=======
     
->>>>>>> origin/refactor-port-managers-to-gdp-783808832176151754
     # Stats
     TOTAL_UNITS_OWNED = 19
     UNITS_KILLED = 20
     TECHNOLOGY_COUNT = 21
     PERCENT_MAP_EXPLORED = 22
-<<<<<<< HEAD
-
-=======
     
->>>>>>> origin/refactor-port-managers-to-gdp-783808832176151754
     # Tech IDs
     CASTLE_AGE_TECH_ID = 23
     IMPERIAL_AGE_TECH_ID = 24
     FEUDAL_AGE_TECH_ID = 25
-<<<<<<< HEAD
-
-=======
     
->>>>>>> origin/refactor-port-managers-to-gdp-783808832176151754
     # Mechanics
     ATTACK_WARNING_SOUND_ID = 26
     ENABLE_MONK_CONVERSION = 27
@@ -81,11 +61,7 @@ class Resource(IntEnum):
     TOWN_CENTER_UNAVAILABLE = 48
     GOLD_COUNTER = 49
     REVEAL_ALLY = 50
-<<<<<<< HEAD
-
-=======
     
->>>>>>> origin/refactor-port-managers-to-gdp-783808832176151754
     # More Stats
     MONASTERIES = 52
     TRIBUTE_SENT = 53
@@ -94,11 +70,7 @@ class Resource(IntEnum):
     ORE_STORAGE = 56
     KIDNAP_STORAGE = 57
     DARK_AGE_TECH_ID = 58
-<<<<<<< HEAD
-
-=======
     
->>>>>>> origin/refactor-port-managers-to-gdp-783808832176151754
     # Gathering/Production Rates
     BUILDING_HOUSING_RATE = 62
     TAX_GATHER_RATE = 63
@@ -124,11 +96,7 @@ class Resource(IntEnum):
     FISH_TRAP_FOOD_AMOUNT = 88
     HEAL_RATE_MODIFIER = 89
     HEALING_RANGE = 90
-<<<<<<< HEAD
-
-=======
     
->>>>>>> origin/refactor-port-managers-to-gdp-783808832176151754
     # Starting Resources
     STARTING_FOOD = 91
     STARTING_WOOD = 92
@@ -141,11 +109,7 @@ class Resource(IntEnum):
     TECH_COST_SUM = 99
     RELIC_INCOME_SUM = 100
     TRADE_INCOME_SUM = 101
-<<<<<<< HEAD
-
-=======
     
->>>>>>> origin/refactor-port-managers-to-gdp-783808832176151754
     # 134-197
     STANDING_CASTLES = 134
     HIT_POINTS_RAZED = 135
@@ -187,11 +151,7 @@ class Resource(IntEnum):
     CONSTRUCTION_RATE_MODIFIER = 195
     HUN_WONDER_BONUS = 196
     SPIES_DISCOUNT = 197
-<<<<<<< HEAD
-
-=======
     
->>>>>>> origin/refactor-port-managers-to-gdp-783808832176151754
     # 200+ Special
     REVEAL_MAP = 203  # 1: Explored, 2: Visible
     REVEAL_UNIT_ON_MAP = 204
@@ -272,11 +232,7 @@ class Resource(IntEnum):
     ANIMAL_DECAY_PREVENTION = 292
     HERDER_FOOD_PRODUCTIVITY = 293
     SHEPHERD_FOOD_PRODUCTIVITY_ALT = 294
-<<<<<<< HEAD
-
-=======
     
->>>>>>> origin/refactor-port-managers-to-gdp-783808832176151754
     # 500+ (Chronicles and others)
     POLEMARCH_LIMIT = 501
     LUMBERING_FOOD_PRODUCTIVITY = 502

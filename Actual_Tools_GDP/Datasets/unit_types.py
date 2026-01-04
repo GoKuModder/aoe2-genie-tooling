@@ -4,11 +4,7 @@ from enum import IntEnum
 class UnitType(IntEnum):
     """
     Genie Editor Unit Types.
-<<<<<<< HEAD
-
-=======
     
->>>>>>> origin/refactor-port-managers-to-gdp-783808832176151754
     Source: https://ageofempires.fandom.com/wiki/Genie_Editor#Unit_type
     """
     EYE_CANDY = 10

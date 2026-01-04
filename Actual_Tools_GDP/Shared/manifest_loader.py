@@ -177,7 +177,7 @@ class ManifestLoader:
     def load(self, path: Optional[Path] = None) -> None:
         """Load manifest.csv from disk."""
         if path is None:
-            path = self._manifest_path or Path(__file__).parent.parent.parent / "Datasets" / "manifest.csv"
+            path = self._manifest_path or Path(__file__).parent.parent / "Datasets" / "manifest.csv"
 
         if not path.exists():
             raise FileNotFoundError(f"Manifest not found: {path}")

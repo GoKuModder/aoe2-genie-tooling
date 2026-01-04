@@ -146,3 +146,6 @@ ID,Name,Storage_Type,Link_Target,Data_Type,Description
 155,DAMAGE_GRAPHICS_TOTAL_NUM,Value,None,int,Total damage graphics
 156,DAMAGE_GRAPHIC_PERCENT,Value,None,int,Damage threshold %
 157,DAMAGE_GRAPHIC_APPLY_MODE,Value,None,int,Damage apply mode
+158,PROJECTILE_UNIT_ID,Reference,UnitHandle,int,Projectile unit ID
+159,SELECTION_EFFECT,Reference,EffectHandle,int,Selection effect ID
+160,VANISH_MODE,Enum,Enum:VanishMode,int,Projectile vanish mode

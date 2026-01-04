@@ -1,37 +1,4 @@
 """
-<<<<<<< HEAD
-Extract all attributes from genie_rust Unit class hierarchy.
-
-This script inspects the Unit, Bird, DeadFish, Type50, Projectile,
-Creatable, and Building classes to find all attributes.
-"""
-import inspect
-from pathlib import Path
-from typing import Dict, List, Set
-
-# Import genie_rust types
-from genie_rust import Unit, Bird, DeadFish, Type50, Projectile, Creatable, Building
-
-# Import our Attribute enum
-from attributes import Attribute
-
-
-def get_attributes(cls):
-    """Get all public, non-callable attributes from a PyO3 class."""
-    return sorted([
-        name for name, val in inspect.getmembers(cls)
-        if not name.startswith('__') and not callable(val)
-    ])
-
-
-def get_all_unit_attributes() -> Dict[str, List[str]]:
-    """Extract all attributes from Unit and its components."""
-    result = {}
-
-    # Main Unit class
-    result["Unit"] = get_attributes(Unit)
-
-=======
 Extract all attributes from genieutils Unit class hierarchy.
 
 This script inspects the Unit, Bird, DeadFish, Type50, Projectile, 
@@ -58,7 +25,6 @@ def get_all_unit_attributes() -> Dict[str, List[str]]:
     # Main Unit class
     result["Unit"] = [f.name for f in fields(Unit)]
     
->>>>>>> origin/refactor-port-managers-to-gdp-783808832176151754
     # Component classes
     component_classes = {
         "Bird": Bird,
@@ -68,12 +34,6 @@ def get_all_unit_attributes() -> Dict[str, List[str]]:
         "Creatable": Creatable,
         "Building": Building,
     }
-<<<<<<< HEAD
-
-    for name, cls in component_classes.items():
-        result[name] = get_attributes(cls)
-
-=======
     
     for name, cls in component_classes.items():
         try:
@@ -82,7 +42,6 @@ def get_all_unit_attributes() -> Dict[str, List[str]]:
             # Not a dataclass
             result[name] = dir(cls)
     
->>>>>>> origin/refactor-port-managers-to-gdp-783808832176151754
     return result
 
 
@@ -93,22 +52,6 @@ def get_manifest_attribute_names() -> Set[str]:
 
 def main():
     print("=" * 70)
-<<<<<<< HEAD
-    print("GENIE-RUST UNIT ATTRIBUTES VS MANIFEST COMPARISON")
-    print("=" * 70)
-    print()
-
-    # Get all unit attributes
-    print("Extracting attributes from genie-rust Unit classes...")
-    unit_attrs = get_all_unit_attributes()
-
-    # Get manifest attribute names (lowercase for comparison)
-    manifest_names = get_manifest_attribute_names()
-
-    # Track all unique attribute names
-    all_attrs: Set[str] = set()
-
-=======
     print("GENIEUTILS UNIT ATTRIBUTES VS MANIFEST COMPARISON")
     print("=" * 70)
     print()
@@ -123,7 +66,6 @@ def main():
     # Track all unique attribute names
     all_attrs: Set[str] = set()
     
->>>>>>> origin/refactor-port-managers-to-gdp-783808832176151754
     # Print each component
     for component, attrs in unit_attrs.items():
         print(f"\n### {component} ({len(attrs)} attributes)")
@@ -135,34 +77,16 @@ def main():
                 in_manifest = attr.upper() in {a.name for a in Attribute}
                 marker = "✓" if in_manifest else "✗ NOT IN MANIFEST"
                 print(f"  {attr}: {marker}")
-<<<<<<< HEAD
-
-=======
     
->>>>>>> origin/refactor-port-managers-to-gdp-783808832176151754
     # Summary
     print("\n" + "=" * 70)
     print("ATTRIBUTES NOT IN MANIFEST (need review)")
     print("=" * 70)
-<<<<<<< HEAD
-
-=======
     
->>>>>>> origin/refactor-port-managers-to-gdp-783808832176151754
     missing = []
     for attr in sorted(all_attrs):
         if attr.upper() not in {a.name for a in Attribute}:
             missing.append(attr)
-<<<<<<< HEAD
-
-    for attr in missing:
-        print(f"  - {attr}")
-
-    print(f"\nTotal unit attributes: {len(all_attrs)}")
-    print(f"In manifest: {len(all_attrs) - len(missing)}")
-    print(f"NOT in manifest: {len(missing)}")
-
-=======
     
     for attr in missing:
         print(f"  - {attr}")
@@ -171,7 +95,6 @@ def main():
     print(f"In manifest: {len(all_attrs) - len(missing)}")
     print(f"NOT in manifest: {len(missing)}")
     
->>>>>>> origin/refactor-port-managers-to-gdp-783808832176151754
     # Write to file for review
     output_path = Path(__file__).parent / "unit_vs_manifest_comparison.md"
     with open(output_path, "w", encoding="utf-8") as f:
@@ -179,22 +102,14 @@ def main():
         f.write(f"**Total unique attributes:** {len(all_attrs)}\n")
         f.write(f"**In manifest:** {len(all_attrs) - len(missing)}\n")
         f.write(f"**NOT in manifest:** {len(missing)}\n\n")
-<<<<<<< HEAD
-
-=======
         
->>>>>>> origin/refactor-port-managers-to-gdp-783808832176151754
         f.write("## Attributes NOT in Manifest (need review)\n\n")
         f.write("| Attribute | Source Component |\n")
         f.write("|-----------|------------------|\n")
         for attr in missing:
             sources = [comp for comp, attrs in unit_attrs.items() if attr in attrs]
             f.write(f"| `{attr}` | {', '.join(sources)} |\n")
-<<<<<<< HEAD
-
-=======
         
->>>>>>> origin/refactor-port-managers-to-gdp-783808832176151754
         f.write("\n## All Attributes by Component\n\n")
         for component, attrs in unit_attrs.items():
             f.write(f"### {component}\n\n")
@@ -204,11 +119,7 @@ def main():
                     marker = "✓" if in_manifest else "❌"
                     f.write(f"- {marker} `{attr}`\n")
             f.write("\n")
-<<<<<<< HEAD
-
-=======
     
->>>>>>> origin/refactor-port-managers-to-gdp-783808832176151754
     print(f"\nWritten to: {output_path}")
 
 
