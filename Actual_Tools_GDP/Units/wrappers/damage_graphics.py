@@ -14,7 +14,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any, List, Optional
 
 if TYPE_CHECKING:
-    from Actual_Tools_GDP.Shared.dat_adapter import Unit, DamageGraphic
+    from genie_rust import Unit, DamageGraphic
 
 __all__ = ["DamageGraphicsWrapper"]
 
@@ -22,16 +22,16 @@ __all__ = ["DamageGraphicsWrapper"]
 class DamageGraphicsWrapper:
     """
     Wrapper for managing Unit.damage_graphics collection.
-    
+
     Provides methods to add and manipulate damage graphics.
     Changes propagate to all units in the provided list.
     """
-    
+
     __slots__ = ("_units",)
-    
+
     def __init__(self, units: List[Unit]) -> None:
         object.__setattr__(self, "_units", units)
-    
+
     def add_damage_graphic(
         self,
         graphic_id: int,
@@ -40,31 +40,31 @@ class DamageGraphicsWrapper:
     ) -> None:
         """
         Add a new damage graphic to all units.
-        
+
         Args:
             graphic_id: Graphic ID to display
             damage_percent: Damage percentage at which to show (0-100)
             apply_mode: Apply mode
         """
-        from Actual_Tools_GDP.Shared.dat_adapter import DamageGraphic
-        
+        from genie_rust import DamageGraphic
+
         new_damage_graphic = DamageGraphic(
             graphic_id=graphic_id,
             damage_percent=damage_percent,
             apply_mode=apply_mode,
         )
-        
+
         for unit in self._units:
             import copy
             unit.damage_graphics.append(copy.deepcopy(new_damage_graphic))
-    
+
     def remove_damage_graphic(self, graphic_id: int) -> bool:
         """
         Remove damage graphics with specified graphic ID.
-        
+
         Args:
             graphic_id: Graphic ID to remove
-        
+
         Returns:
             True if any were removed, False otherwise
         """
@@ -77,30 +77,30 @@ class DamageGraphicsWrapper:
             if len(unit.damage_graphics) < original_len:
                 found = True
         return found
-    
+
     def get_damage_graphics(self) -> List[DamageGraphic]:
         """
         Get all damage graphics from primary unit.
-        
+
         Returns:
             List of DamageGraphic objects
         """
         if self._units and self._units[0]:
             return list(self._units[0].damage_graphics)
         return []
-    
+
     def clear_damage_graphics(self) -> None:
         """Remove all damage graphics from all units."""
         for unit in self._units:
             unit.damage_graphics.clear()
-    
+
     def get_by_damage_percent(self, damage_percent: int) -> Optional[DamageGraphic]:
         """
         Get damage graphic by damage percentage.
-        
+
         Args:
             damage_percent: Damage percentage to search for
-        
+
         Returns:
             DamageGraphic if found, None otherwise
         """

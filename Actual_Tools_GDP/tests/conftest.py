@@ -209,7 +209,7 @@ def fake_dat_file() -> FakeDatFile:
             units.append(unit)
         civ = FakeCiv(name=f"Civ {civ_id}", units=units)
         civs.append(civ)
-    
+
     return FakeDatFile(civs=civs)
 
 

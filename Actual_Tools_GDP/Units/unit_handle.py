@@ -11,8 +11,7 @@ import copy
 from functools import cached_property
 from typing import TYPE_CHECKING, Any, List, Optional, Tuple
 
-from Actual_Tools_GDP.Shared.dat_adapter import AttackOrArmor, DamageGraphic, TrainLocation
-from Actual_Tools_GDP.Shared.dat_adapter import Task
+from genie_rust import AttackOrArmor, DamageGraphic, TrainLocation, Task
 
 from Actual_Tools_GDP.Units.handles import (
     TaskHandle, AttackHandle, ArmourHandle, DamageGraphicHandle,
@@ -25,8 +24,8 @@ from Actual_Tools_GDP.Units.wrappers import (
 )
 
 if TYPE_CHECKING:
-    from Actual_Tools_GDP.Shared.dat_adapter import DatFile
-    from Actual_Tools_GDP.Shared.dat_adapter import Unit
+    from genie_rust.datfile import DatFile
+    from genie_rust.unit import Unit
 
 __all__ = ["UnitHandle"]
 
@@ -37,15 +36,15 @@ _COMPONENTS = ("bird", "dead_fish", "type_50", "projectile", "creatable", "build
 class UnitHandle:
     """
     High-level wrapper for Genie Unit objects with full attribute flattening.
-    
-    All attributes from Unit, Bird, DeadFish, Type50, Projectile, Creatable, 
+
+    All attributes from Unit, Bird, DeadFish, Type50, Projectile, Creatable,
     and Building are accessible directly on this object.
-    
+
     Args:
         unit_id: The unit ID to wrap.
         dat_file: The source DatFile.
         civ_ids: List of civilization IDs to affect. None = all civs.
-    
+
     Examples:
         >>> unit = UnitHandle(4, dat_file)  # Archer
         >>> unit.hit_points = 100           # Direct Unit attr
@@ -53,31 +52,31 @@ class UnitHandle:
         >>> attack = unit.add_attack(class_=4, amount=6)
         >>> print(attack.attack_id)         # Get index
     """
-    
+
     __slots__ = ("_unit_id", "_dat_file", "_civ_ids", "_units_cache")
-    
+
     def __init__(self, unit_id: int, dat_file: DatFile, civ_ids: Optional[List[int]] = None) -> None:
         if unit_id < 0:
             raise ValueError(f"unit_id must be non-negative, got {unit_id}")
-        
+
         object.__setattr__(self, "_unit_id", unit_id)
         object.__setattr__(self, "_dat_file", dat_file)
         object.__setattr__(self, "_civ_ids", civ_ids if civ_ids is not None else list(range(len(dat_file.civs))))
         object.__setattr__(self, "_units_cache", None)
-    
+
     def __repr__(self) -> str:
         name = self.name if self._primary_unit else "<no unit>"
         return f"UnitHandle(id={self._unit_id}, name={name!r}, civs={len(self._civ_ids)})"
-    
+
     # =========================================================================
     # CORE UNIT ACCESS
     # =========================================================================
-    
+
     def _get_units(self) -> List[Unit]:
         """Get all Unit objects for enabled civs. Cached for performance."""
         if self._units_cache is not None:
             return self._units_cache
-        
+
         units = []
         for civ_id in self._civ_ids:
             if 0 <= civ_id < len(self._dat_file.civs):
@@ -86,10 +85,10 @@ class UnitHandle:
                     unit = civ.units[self._unit_id]
                     if unit is not None:
                         units.append(unit)
-        
+
         object.__setattr__(self, "_units_cache", units)
         return units
-    
+
     def invalidate_cache(self) -> None:
         """Clear cached units. Call after changing civ_ids."""
         object.__setattr__(self, "_units_cache", None)
@@ -108,13 +107,18 @@ class UnitHandle:
     def id(self) -> int:
         """Unit ID."""
         return self._unit_id
-    
+
+    @property
+    def unit_id(self) -> int:
+        """Unit ID (alias for id)."""
+        return self._unit_id
+
     @property
     def name(self) -> str:
         """Unit name."""
         u = self._primary_unit
         return u.name if u else ""
-    
+
     @name.setter
     def name(self, value: str) -> None:
         for u in self._get_units():
@@ -123,57 +127,57 @@ class UnitHandle:
     # =========================================================================
     # WRAPPERS (lazy-initialized via cached_property pattern)
     # =========================================================================
-    
+
     @property
     def combat(self) -> Type50Wrapper:
         """Type50 (combat) wrapper."""
         return Type50Wrapper(self._get_units())
-    
+
     @property
     def creatable(self) -> CreatableWrapper:
         """Creatable wrapper."""
         return CreatableWrapper(self._get_units())
-    
+
     @property
     def cost(self) -> CostWrapper:
         """Cost wrapper."""
         return CostWrapper(self._get_units())
-    
+
     @property
     def dead_fish(self) -> DeadFishWrapper:
         """DeadFish wrapper."""
         return DeadFishWrapper(self._get_units())
-    
+
     @property
     def bird(self) -> BirdWrapper:
         """Bird wrapper."""
         return BirdWrapper(self._get_units())
-    
+
     @property
     def projectile(self) -> ProjectileWrapper:
         """Projectile wrapper."""
         return ProjectileWrapper(self._get_units())
-    
+
     @property
     def building(self) -> BuildingWrapper:
         """Building wrapper."""
         return BuildingWrapper(self._get_units())
-    
+
     @property
     def resource_storages(self) -> ResourceStoragesWrapper:
         """Resource storages wrapper."""
         return ResourceStoragesWrapper(self._get_units())
-    
+
     @property
     def damage_graphics(self) -> DamageGraphicsWrapper:
         """Damage graphics wrapper."""
         return DamageGraphicsWrapper(self._get_units())
-    
+
     @property
     def tasks(self) -> TasksWrapper:
         """Tasks wrapper."""
         return TasksWrapper(self._get_units())
-    
+
     @property
     def train_locations_wrapper(self):
         """Train locations wrapper for managing where unit can be trained."""
@@ -298,7 +302,7 @@ class UnitHandle:
                 u.type_50.attacks.append(copy.deepcopy(new_attack))
                 if attack_id == -1:
                     attack_id = len(u.type_50.attacks) - 1
-        
+
         u = self._primary_unit
         if u and u.type_50 and attack_id >= 0:
             return AttackHandle(u.type_50.attacks[attack_id], attack_id)
@@ -360,7 +364,7 @@ class UnitHandle:
                 u.type_50.armours.append(copy.deepcopy(new_armour))
                 if armour_id == -1:
                     armour_id = len(u.type_50.armours) - 1
-        
+
         u = self._primary_unit
         if u and u.type_50 and armour_id >= 0:
             return ArmourHandle(u.type_50.armours[armour_id], armour_id)
@@ -418,7 +422,7 @@ class UnitHandle:
             u.damage_graphics.append(new_dg)
             if dmg_id == -1:
                 dmg_id = len(u.damage_graphics) - 1
-        
+
         u = self._primary_unit
         if u and dmg_id >= 0:
             return DamageGraphicHandle(u.damage_graphics[dmg_id], dmg_id)
@@ -494,7 +498,7 @@ class UnitHandle:
                 u.bird.tasks.append(new_task)
                 if task_id == -1:
                     task_id = len(u.bird.tasks) - 1
-        
+
         u = self._primary_unit
         if u and u.bird and task_id >= 0:
             return TaskHandle(u.bird.tasks[task_id], task_id)
@@ -549,7 +553,7 @@ class UnitHandle:
                 u.creatable.train_locations.append(new_loc)
                 if loc_id == -1:
                     loc_id = len(u.creatable.train_locations) - 1
-        
+
         u = self._primary_unit
         if u and u.creatable and loc_id >= 0:
             return TrainLocationHandle(u.creatable.train_locations[loc_id], loc_id)
@@ -583,7 +587,7 @@ class UnitHandle:
                 u.bird.drop_sites.append(unit_id)
                 if site_id == -1:
                     site_id = len(u.bird.drop_sites) - 1
-        
+
         u = self._primary_unit
         if u and u.bird and site_id >= 0:
             return DropSiteHandle(u.bird.drop_sites, site_id)
@@ -628,7 +632,7 @@ class UnitHandle:
         # Direct Unit attribute
         if hasattr(u, name) and name not in _COMPONENTS:
             return getattr(u, name)
-        
+
         # Sub-component attribute
         comp = self._find_component(name)
         if comp:
@@ -653,10 +657,10 @@ class UnitHandle:
         """Set attribute with validation for references and enums."""
         import traceback
         from Actual_Tools_GDP.Shared.manifest_loader import manifest, serializer, DeferredReference
-        
+
         # Get manifest entry for this attribute
         entry = manifest.get_by_name(name)
-        
+
         # Capture source location for error messages
         stack = traceback.extract_stack()
         source_frame = None
@@ -667,7 +671,7 @@ class UnitHandle:
         if source_frame is None:
             source_frame = stack[-3] if len(stack) >= 3 else stack[-1]
         source_info = f"{source_frame.filename}:{source_frame.lineno} - {source_frame.line}"
-        
+
         # VALIDATION: Reference types (deferred to save time)
         if entry and entry.is_reference:
             # Extract ID from value
@@ -682,7 +686,7 @@ class UnitHandle:
                         f"{name}: Expected int or handle object, got {type(value).__name__}\n"
                         f"  Source: {source_info}"
                     )
-            
+
             # Create deferred reference for validation at save time
             ref = DeferredReference(
                 target_type=entry.link_target,
@@ -694,11 +698,11 @@ class UnitHandle:
             )
             serializer.add_deferred(ref)
             value = actual_id
-        
+
         # VALIDATION: Enum/Bitmask types (immediate)
         elif entry and entry.is_enum:
             manifest.validate_enum_value(entry, value, source_info)
-        
+
         # Set the value on component or unit
         comp = self._find_component(name)
         if comp:
@@ -715,4 +719,3 @@ class UnitHandle:
             return
 
         raise AttributeError(f"'{type(self).__name__}' has no attribute '{name}'")
-

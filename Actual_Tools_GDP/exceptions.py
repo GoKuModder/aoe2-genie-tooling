@@ -26,7 +26,7 @@ __all__ = [
 class GenieToolsError(Exception):
     """
     Base exception for all Actual_Tools errors.
-    
+
     All custom exceptions in this package inherit from this class,
     allowing catch-all error handling when desired.
     """
@@ -36,7 +36,7 @@ class GenieToolsError(Exception):
 class UnitIdConflictError(GenieToolsError):
     """
     Raised when attempting to create/move a unit to an ID that already exists.
-    
+
     This occurs when:
     - create() or clone_into() targets an occupied ID with on_conflict="error"
     - move() destination is occupied with on_conflict="error"
@@ -47,7 +47,7 @@ class UnitIdConflictError(GenieToolsError):
 class GapNotAllowedError(GenieToolsError):
     """
     Raised when an operation would create illegal None gaps in a table.
-    
+
     This occurs when:
     - Creating/cloning beyond current max ID with fill_gaps="error"
     - The "no gaps" policy prevents None values in unit tables
@@ -58,7 +58,7 @@ class GapNotAllowedError(GenieToolsError):
 class InvalidIdError(GenieToolsError):
     """
     Raised when an ID is invalid.
-    
+
     This occurs when:
     - ID is negative
     - ID doesn't exist when expected (e.g., get() on non-existent unit)
@@ -70,7 +70,7 @@ class InvalidIdError(GenieToolsError):
 class ValidationError(GenieToolsError):
     """
     Raised when workspace validation fails.
-    
+
     This occurs when:
     - Unit list lengths don't match across civs
     - None gaps detected in tables
@@ -82,7 +82,7 @@ class ValidationError(GenieToolsError):
 class TemplateNotFoundError(GenieToolsError):
     """
     Raised when no valid template can be found for cloning.
-    
+
     This occurs when:
     - DAT file has no valid units to use as template
     - Specified base_unit_id doesn't exist

@@ -15,8 +15,8 @@ import copy
 from typing import TYPE_CHECKING, Any, List, Optional
 
 if TYPE_CHECKING:
-    from Actual_Tools_GDP.Shared.dat_adapter import Unit
-    from Actual_Tools_GDP.Shared.dat_adapter import Task as GenieTask
+    from genie_rust import Unit
+    from genie_rust import Task as GenieTask
     from Datasets.tasks import Task
     from Datasets.task_attributes import TargetDiplomacy
     from Datasets.resources import Resource
@@ -27,22 +27,22 @@ __all__ = ["TasksWrapper"]
 class TasksWrapper:
     """
     Wrapper for managing Bird.tasks collection.
-    
+
     Provides methods to add, copy, and manipulate tasks.
     Changes propagate to all units in the provided list.
     """
-    
+
     __slots__ = ("_units",)
-    
+
     def __init__(self, units: List[Unit]) -> None:
         object.__setattr__(self, "_units", units)
-    
+
     def _get_bird(self) -> Optional[Any]:
         """Get Bird from first unit."""
         if self._units and self._units[0].bird:
             return self._units[0].bird
         return None
-    
+
     def add_task(
         self,
         task_type: int | Task = 0,
@@ -80,10 +80,10 @@ class TasksWrapper:
     ) -> None:
         """
         Add a new task to all units.
-        
+
         Creates a new Task object with the specified parameters and adds it
         to the Bird.tasks list for all units.
-        
+
         Args:
             task_type: Task type ID (use Datasets.tasks.Task)
             id: Task ID
@@ -118,8 +118,8 @@ class TasksWrapper:
             wwise_resource_deposit_sound_id: Wwise resource deposit sound ID
             enabled: Whether task is enabled
         """
-        from Actual_Tools_GDP.Shared.dat_adapter import Task
-        
+        from genie_rust import Task
+
         new_task = Task(
             task_type=task_type,
             id=id,
@@ -154,47 +154,47 @@ class TasksWrapper:
             wwise_resource_deposit_sound_id=wwise_resource_deposit_sound_id,
             enabled=enabled,
         )
-        
+
         for unit in self._units:
             if unit.bird:
                 unit.bird.tasks.append(copy.deepcopy(new_task))
-    
+
     def copy_task(self, task_id: int) -> None:
         """
         Copy an existing task by ID and append it.
-        
+
         Args:
             task_id: ID of the task to copy
-        
+
         Raises:
             ValueError: If task with specified ID not found
         """
         bird = self._get_bird()
         if not bird:
             raise ValueError("Unit does not have Bird component")
-        
+
         # Find task to copy
         task_to_copy = None
         for task in bird.tasks:
             if task.id == task_id:
                 task_to_copy = task
                 break
-        
+
         if task_to_copy is None:
             raise ValueError(f"Task with ID {task_id} not found")
-        
+
         # Copy to all units
         for unit in self._units:
             if unit.bird:
                 unit.bird.tasks.append(copy.deepcopy(task_to_copy))
-    
+
     def get_task(self, task_id: int) -> Optional[GenieTask]:
         """
         Get a task by ID from the primary unit.
-        
+
         Args:
             task_id: ID of the task to retrieve
-        
+
         Returns:
             Task object if found, None otherwise
         """
@@ -204,14 +204,14 @@ class TasksWrapper:
                 if task.id == task_id:
                     return task
         return None
-    
+
     def remove_task(self, task_id: int) -> bool:
         """
         Remove a task by ID from all units.
-        
+
         Args:
             task_id: ID of the task to remove
-        
+
         Returns:
             True if task was found and removed, False otherwise
         """
@@ -223,17 +223,17 @@ class TasksWrapper:
                 if len(unit.bird.tasks) < original_len:
                     found = True
         return found
-    
+
     def list_tasks(self) -> List[GenieTask]:
         """
         Get all tasks from the primary unit.
-        
+
         Returns:
             List of Task objects
         """
         bird = self._get_bird()
         return list(bird.tasks) if bird else []
-    
+
     def clear_tasks(self) -> None:
         """Remove all tasks from all units."""
         for unit in self._units:
