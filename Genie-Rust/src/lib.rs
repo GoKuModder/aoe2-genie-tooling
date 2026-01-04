@@ -17,6 +17,9 @@ fn genie_rust(_py: Python, m: &PyModule) -> PyResult<()> {
     m.add_class::<Graphic>()?;
     m.add_class::<Tech>()?;
     m.add_class::<Effect>()?;
+    m.add_class::<EffectCommand>()?;
+    m.add_class::<DamageGraphic>()?;
+    m.add_class::<Task>()?;
     m.add_class::<TerrainRestriction>()?;
     m.add_class::<PlayerColour>()?;
     m.add_class::<Sound>()?;
