@@ -9,14 +9,13 @@ from __future__ import annotations
 import copy
 from typing import TYPE_CHECKING, Optional
 
-from genieutils.sound import Sound, SoundItem
-
+from Actual_Tools.backend import DatFile, Sound, SoundItem
 from Actual_Tools.Sounds.sound_handle import SoundHandle
 from Actual_Tools.Shared.tool_base import ToolBase, tracks_creation
 from Actual_Tools.exceptions import InvalidIdError, TemplateNotFoundError
 
 if TYPE_CHECKING:
-    from genieutils.datfile import DatFile
+    pass
 
 __all__ = ["SoundManager"]
 

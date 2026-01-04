@@ -13,14 +13,13 @@ from __future__ import annotations
 import copy as copy_module
 from typing import TYPE_CHECKING, Optional
 
-from genieutils.graphic import Graphic
-
+from Actual_Tools.backend import DatFile, Graphic
 from Actual_Tools.Graphics.graphic_handle import GraphicHandle
 from Actual_Tools.Shared.tool_base import ToolBase, tracks_creation
 from Actual_Tools.exceptions import InvalidIdError
 
 if TYPE_CHECKING:
-    from genieutils.datfile import DatFile
+    pass
 
 __all__ = ["GraphicManager"]
 

@@ -94,12 +94,12 @@ class TestManagers(unittest.TestCase):
         self.dat_file.graphics = [None] * 12731
         self.dat_file.graphics[12730] = g_tpl
         
-        new_graphic = manager.add_graphic("new.smx", template_id=12730)
+        new_graphic = manager.add_graphic("new.smx")
         
         # Expect Graphic Object
         self.assertIsInstance(new_graphic, Graphic)
         self.assertEqual(new_graphic.file_name, "new.smx")
-        self.assertEqual(new_graphic.name, "Template") 
+        self.assertEqual(new_graphic.name, "new.smx")
         self.assertIn(new_graphic, self.dat_file.graphics)
 
     def test_tech_manager(self):
