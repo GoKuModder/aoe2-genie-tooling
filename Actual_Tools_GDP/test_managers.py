@@ -7,20 +7,20 @@ import os
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'src'))
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
-from genieutils.datfile import DatFile
-from genieutils.unit import Unit
-from genieutils.sound import Sound, SoundItem
-from genieutils.graphic import Graphic
-from genieutils.tech import Tech
-from genieutils.civ import Civ
+from Actual_Tools_GDP.Shared.dat_adapter import DatFile
+from Actual_Tools_GDP.Shared.dat_adapter import Unit
+from Actual_Tools_GDP.Shared.dat_adapter import Sound, SoundItem
+from Actual_Tools_GDP.Shared.dat_adapter import Graphic
+from Actual_Tools_GDP.Shared.dat_adapter import Tech
+from Actual_Tools_GDP.Shared.dat_adapter import Civ
 
 # New Import Paths
-from Actual_Tools.Base.base_manager import GenieWorkspace
-from Actual_Tools.Units.unit_manager import GenieUnitManager
-from Actual_Tools.Graphics.graphic_manager import GraphicManager
-from Actual_Tools.Sounds.sound_manager import SoundManager
-from Actual_Tools.Techs.tech_manager import TechManager
-from Actual_Tools.Civilizations.civ_manager import CivilizationsManager
+from Actual_Tools_GDP.Base.base_manager import GenieWorkspace
+from Actual_Tools_GDP.Units.unit_manager import GenieUnitManager
+from Actual_Tools_GDP.Graphics.graphic_manager import GraphicManager
+from Actual_Tools_GDP.Sounds.sound_manager import SoundManager
+from Actual_Tools_GDP.Techs.tech_manager import TechManager
+from Actual_Tools_GDP.Civilizations.civ_manager import CivilizationsManager
 
 class TestManagers(unittest.TestCase):
     def setUp(self):
@@ -94,12 +94,12 @@ class TestManagers(unittest.TestCase):
         self.dat_file.graphics = [None] * 12731
         self.dat_file.graphics[12730] = g_tpl
         
-        new_graphic = manager.add_graphic("new.smx")
+        new_graphic = manager.add_graphic("new.smx", template_id=12730)
         
         # Expect Graphic Object
         self.assertIsInstance(new_graphic, Graphic)
         self.assertEqual(new_graphic.file_name, "new.smx")
-        self.assertEqual(new_graphic.name, "new.smx")
+        self.assertEqual(new_graphic.name, "Template") 
         self.assertIn(new_graphic, self.dat_file.graphics)
 
     def test_tech_manager(self):

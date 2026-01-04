@@ -19,8 +19,6 @@ Unit = None
 Civ = None
 Tech = None
 Graphic = None
-Sound = None
-SoundItem = None
 
 BACKEND_NAME = "unknown"
 
@@ -33,7 +31,6 @@ try:
     from sections.civilization.civilization import Civilization as _G_Civ
     from sections.tech.tech import Tech as _G_Tech
     from sections.sprite_data.sprite import Sprite as _G_Sprite
-    from sections.sound.sound import Sound as _G_Sound, SoundItem as _G_SoundItem
     
     BACKEND_NAME = "GenieDatParser"
 
@@ -136,29 +133,17 @@ try:
     Civ = _G_Civ
     Tech = _G_Tech
     Graphic = _G_Sprite
-    Sound = _G_Sound
-    SoundItem = _G_SoundItem
 
 except ImportError:
     # -------------------------------------------------------------------------
     # OPTION 2: genieutils-py (Legacy / Fallback)
     # -------------------------------------------------------------------------
     try:
-        from genieutils.datfile import DatFile as _DatFile
-        from genieutils.unit import Unit as _Unit
-        from genieutils.civilization import Civilizations as _Civ
-        from genieutils.tech import Tech as _Tech
-        from genieutils.graphic import Graphic as _Graphic
-        from genieutils.sound import Sound as _Sound, SoundItem as _SoundItem
-        
-        # Assign to module-level variables
-        DatFile = _DatFile
-        Unit = _Unit
-        Civ = _Civ
-        Tech = _Tech
-        Graphic = _Graphic
-        Sound = _Sound
-        SoundItem = _SoundItem
+        from Actual_Tools_GDP.Shared.dat_adapter import DatFile
+        from Actual_Tools_GDP.Shared.dat_adapter import Unit
+        from genieutils.civilization import Civilizations as Civ
+        from Actual_Tools_GDP.Shared.dat_adapter import Tech
+        from Actual_Tools_GDP.Shared.dat_adapter import Graphic
         
         BACKEND_NAME = "genieutils-py"
     
@@ -169,4 +154,4 @@ except ImportError:
 # =============================================================================
 # EXPORTS
 # =============================================================================
-__all__ = ["DatFile", "Unit", "Civ", "Tech", "Graphic", "Sound", "SoundItem", "BACKEND_NAME"]
+__all__ = ["DatFile", "Unit", "Civ", "Tech", "Graphic", "BACKEND_NAME"]

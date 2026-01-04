@@ -9,13 +9,14 @@ from __future__ import annotations
 import copy
 from typing import TYPE_CHECKING, Optional
 
-from Actual_Tools.backend import DatFile, Sound, SoundItem
-from Actual_Tools.Sounds.sound_handle import SoundHandle
-from Actual_Tools.Shared.tool_base import ToolBase, tracks_creation
-from Actual_Tools.exceptions import InvalidIdError, TemplateNotFoundError
+from Actual_Tools_GDP.Shared.dat_adapter import Sound, SoundItem
+
+from Actual_Tools_GDP.Sounds.sound_handle import SoundHandle
+from Actual_Tools_GDP.Shared.tool_base import ToolBase, tracks_creation
+from Actual_Tools_GDP.exceptions import InvalidIdError, TemplateNotFoundError
 
 if TYPE_CHECKING:
-    pass
+    from Actual_Tools_GDP.Shared.dat_adapter import DatFile
 
 __all__ = ["SoundManager"]
 
