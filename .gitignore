@@ -19,6 +19,9 @@ inspect_*.py
 /Actual_Tools_GDP/*.json
 /Actual_Tools_GDP/*.ini
 
+# Documentation (ignore for now)
+/docs/
+
 # --- Python bytecode / caches ---
 __pycache__/
 *.py[cod]

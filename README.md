@@ -309,7 +309,7 @@ unit.class_ = UnitClass.ARCHER
 ## Requirements
 
 - Python 3.11+
-- genieutils-py (auto-installed)
+- GenieDatParser (local dependency - Rust-backed DAT parser)
 
 ## License
 

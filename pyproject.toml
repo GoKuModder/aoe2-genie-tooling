@@ -27,7 +27,8 @@ classifiers = [
     "Topic :: Games/Entertainment :: Real Time Strategy",
 ]
 dependencies = [
-    "genieutils-py>=0.1.1",
+    # Note: GenieDatParser is expected to be installed locally or available
+    # It's imported directly via sys.path manipulation in workspace.py
 ]
 
 [project.urls]

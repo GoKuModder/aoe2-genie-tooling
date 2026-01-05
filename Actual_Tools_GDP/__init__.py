@@ -1,9 +1,9 @@
 """
-Actual_Tools - Production-quality tools layer for editing AoE2 DAT files.
+Actual_Tools_GDP - Production-quality tools layer for editing AoE2 DAT files.
 
 This package provides an AoE2ScenarioParser-style API with GUI-like tabs
 and intuitive managers for editing Genie Engine DAT files. It wraps
-genieutils-py with a user-friendly, consistent interface.
+GenieDatParser (Rust-backed) with a user-friendly, Pythonic interface.
 
 Quick Start:
     from Actual_Tools import GenieWorkspace
