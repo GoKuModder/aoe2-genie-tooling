@@ -7,6 +7,7 @@
 /.agent/
 /agents/
 /Actual_Tools/
+/GenieDatParser/
 
 
 # --- Python bytecode / caches ---
