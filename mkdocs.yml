@@ -1,4 +1,5 @@
 site_name: aoe2-genie-tooling
+site_url: https://gokumodder.github.io/aoe2-genie-tooling/
 site_description: High-level Python toolkit for editing AoE2 DE DAT files
 site_author: GoKuModder
 repo_url: https://github.com/GoKuModder/aoe2-genie-tooling
