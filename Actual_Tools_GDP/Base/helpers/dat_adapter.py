@@ -1,5 +1,5 @@
 """
-Adapter module providing genieutils-py compatible interface over genie_rust.
+Adapter module providing genieutils-py compatible interface over GenieDatParser.
 
 This allows existing code using genieutils-py to work with minimal changes.
 
@@ -14,7 +14,7 @@ from __future__ import annotations
 
 from typing import List, Optional, Any
 
-# Import directly from genie_rust package
+# Import directly from sections package (GenieDatParser)
 from sections.datfile_sections import DatFile as _GRDatFile
 from sections.civilization.unit import Unit
 from sections.civilization.civilization import Civilization as Civ

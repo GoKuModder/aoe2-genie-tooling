@@ -11,10 +11,13 @@ Mirrors genieutils.unit.ResourceStorage structure (fixed tuple of 3).
 from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any, Dict, List, Optional
-from genie_rust import ResourceStorage
+# TODO: Removed genie-rust dependency - needs migration to GenieDatParser
+# from genie_rust import ResourceStorage
 
 if TYPE_CHECKING:
-    from genie_rust import Unit
+    # TODO: Removed genie-rust dependency - needs migration to GenieDatParser
+    # from genie_rust import Unit
+    pass
     from Datasets.resources import Resource
     from Datasets.store_modes import StoreMode
 

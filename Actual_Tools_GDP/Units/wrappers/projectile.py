@@ -11,7 +11,9 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any, List, Optional
 
 if TYPE_CHECKING:
-    from genie_rust import Unit
+    # TODO: Removed genie-rust dependency - needs migration to GenieDatParser
+    # from genie_rust import Unit
+    pass
 
 __all__ = ["ProjectileWrapper"]
 

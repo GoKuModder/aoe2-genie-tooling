@@ -14,7 +14,9 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any, List, Optional
 
 if TYPE_CHECKING:
-    from genie_rust import Unit, DamageGraphic
+    # TODO: Removed genie-rust dependency - needs migration to GenieDatParser
+    # from genie_rust import Unit, DamageGraphic
+    pass
 
 __all__ = ["DamageGraphicsWrapper"]
 
@@ -46,7 +48,9 @@ class DamageGraphicsWrapper:
             damage_percent: Damage percentage at which to show (0-100)
             apply_mode: Apply mode
         """
-        from genie_rust import DamageGraphic
+        # TODO: Removed genie-rust dependency - needs migration to GenieDatParser
+        # from genie_rust import DamageGraphic
+        pass
 
         new_damage_graphic = DamageGraphic(
             graphic_id=graphic_id,

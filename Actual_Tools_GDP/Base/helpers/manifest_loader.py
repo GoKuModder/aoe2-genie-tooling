@@ -27,7 +27,9 @@ from typing import Any, Callable, Dict, List, Optional, Set, Tuple, Type, TYPE_C
 from .logger import logger
 
 if TYPE_CHECKING:
-    from genie_rust import DatFile
+    # TODO: Removed genie-rust dependency - needs migration to GenieDatParser
+    # from genie_rust import DatFile
+    pass
 
 __all__ = [
     "manifest",

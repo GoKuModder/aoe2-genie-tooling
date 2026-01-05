@@ -1,41 +1,8 @@
 """
-Shared utilities module for Actual_Tools.
+Shared module - DEPRECATED
 
-This module provides:
-- ToolBase: Base class with common utilities
-- logger: Colored console output
-- registry: JSON export for created items
-- manifest: Attribute manifest loader
-- serializer: TwoPassSerializer for deferred validation
+All files have been moved to Base/core/ and Base/helpers/.
+This module is kept for backward compatibility but should not be used.
 """
 
-from Actual_Tools_GDP.Shared.tool_base import ToolBase, tracks_creation
-from Actual_Tools_GDP.Shared.logger import logger, Logger
-from Actual_Tools_GDP.Shared.registry import registry, Registry
-from Actual_Tools_GDP.Shared.manifest_loader import (
-    manifest,
-    serializer,
-    DeferredReference,
-    ValidationError,
-    ReferenceNotFoundError,
-    EnumValueError,
-    CircularReferenceError,
-    DuplicateIdError,
-)
-
-__all__ = [
-    "ToolBase",
-    "tracks_creation",
-    "logger",
-    "Logger",
-    "registry",
-    "Registry",
-    "manifest",
-    "serializer",
-    "DeferredReference",
-    "ValidationError",
-    "ReferenceNotFoundError",
-    "EnumValueError",
-    "CircularReferenceError",
-    "DuplicateIdError",
-]
+# TODO: Remove this module once all imports are updated to Base.core and Base.helpers

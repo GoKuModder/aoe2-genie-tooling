@@ -10,7 +10,9 @@ from dataclasses import dataclass
 from typing import TYPE_CHECKING, Any, List, Optional, Tuple
 
 if TYPE_CHECKING:
-    from genie_rust import Unit
+    # TODO: Removed genie-rust dependency - needs migration to GenieDatParser
+    # from genie_rust import Unit
+    pass
 
 __all__ = ["AnnexHandle", "AnnexesWrapper"]
 

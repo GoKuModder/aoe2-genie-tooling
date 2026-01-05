@@ -15,8 +15,10 @@ import copy
 from typing import TYPE_CHECKING, Any, List, Optional
 
 if TYPE_CHECKING:
-    from genie_rust import Unit
-    from genie_rust import Task as GenieTask
+    # TODO: Removed genie-rust dependency - needs migration to GenieDatParser
+    # from genie_rust import Unit
+    # from genie_rust import Task as GenieTask
+    pass
     from Datasets.tasks import Task
     from Datasets.task_attributes import TargetDiplomacy
     from Datasets.resources import Resource
@@ -118,7 +120,7 @@ class TasksWrapper:
             wwise_resource_deposit_sound_id: Wwise resource deposit sound ID
             enabled: Whether task is enabled
         """
-        from genie_rust import Task
+        # TODO: Removed genie-rust dependency - needs migration to GenieDatParser\n        # from genie_rust import Task\n        pass
 
         new_task = Task(
             task_type=task_type,

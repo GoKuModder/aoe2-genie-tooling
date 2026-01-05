@@ -6,6 +6,8 @@
 /tests/
 /.agent/
 /agents/
+/Actual_Tools/
+
 
 # --- Python bytecode / caches ---
 __pycache__/
@@ -51,19 +53,16 @@ secrets/
 *.pem
 *.key
 
-*.txt
+
 *.dat
 
 
 !empires2_x2_p1_Shortened.dat
-!Genie-Rust/empires2_x2_p1_RUST_TEST.dat
-
-/Genie-Rust/target/
 
 .git/info/exclude
 
 # Rust build artifacts (The biggest culprit)
-Genie-Rust/target/
+
 **/target/
 
 # Generated documentation/website files
@@ -71,13 +70,14 @@ site/
 
 
 
-# --- Agent / AI Files ---
-Actual_Tools_GDP/Datasets/AGENTS.md
-GEMINI.md
-Actual_Tools/AGENTS.md
-docs/AGENTS.md
-MIGRATION_PLAN_GenieDatParser.md
-Actual_Tools_GDP/Datasets/manifest_review.md
-Actual_Tools_GDP/Datasets/unit_vs_manifest_comparison.md
-docs/code_notes.md
+# --- Text files --- IGNORE ALL THE BELOW BEFORE PUSHING
+*.txt
+/Actual_Tools_GDP/Datasets/AGENTS.md
+/GEMINI.md
+/Actual_Tools/AGENTS.md
+/docs/AGENTS.md
+/MIGRATION_PLAN_GenieDatParser.md
+/Actual_Tools_GDP/Datasets/manifest_review.md
+/Actual_Tools_GDP/Datasets/unit_vs_manifest_comparison.md
+/docs/code_notes.md
 

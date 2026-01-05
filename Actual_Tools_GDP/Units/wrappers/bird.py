@@ -16,7 +16,9 @@ from typing import TYPE_CHECKING, Any, List, Optional
 from Actual_Tools_GDP.Units.wrappers.tasks import TasksWrapper
 
 if TYPE_CHECKING:
-    from genie_rust import Unit
+    # TODO: Removed genie-rust dependency - needs migration to GenieDatParser
+    # from genie_rust import Unit
+    pass
     from Datasets.tasks import Task
 
 __all__ = ["BirdWrapper"]

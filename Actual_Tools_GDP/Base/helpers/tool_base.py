@@ -17,7 +17,9 @@ from ..exceptions import (
 from .logger import logger
 from .registry import registry
 if TYPE_CHECKING:
-    from genie_rust import DatFile, Unit
+    # TODO: Removed genie-rust dependency - needs migration to GenieDatParser
+    # from genie_rust import DatFile, Unit
+    pass
 
 __all__ = ["ToolBase", "tracks_creation"]
 

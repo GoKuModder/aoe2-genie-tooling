@@ -30,8 +30,10 @@ from Actual_Tools_GDP.exceptions import (
 )
 
 if TYPE_CHECKING:
-    from genie_rust.datfile import DatFile
-    from genie_rust.unit import Unit
+    # TODO: Removed genie-rust dependency - needs migration to GenieDatParser
+    # from genie_rust.datfile import DatFile
+    # from genie_rust.unit import Unit
+    pass
 
 __all__ = ['GenieUnitManager']
 

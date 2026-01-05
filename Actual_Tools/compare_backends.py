@@ -1,7 +1,8 @@
 
 import os
 from genieutils.datfile import DatFile as LegacyDatFile
-from genie_rust import DatFile as RustDatFile
+# TODO: Removed genie-rust dependency - needs migration to GenieDatParser
+# from genie_rust import DatFile as RustDatFile
 
 def compare_units(legacy_unit, rust_unit):
     """Compares attributes of two unit objects and prints a diff."""

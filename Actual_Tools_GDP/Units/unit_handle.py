@@ -11,7 +11,7 @@ import copy
 from functools import cached_property
 from typing import TYPE_CHECKING, Any, List, Optional, Tuple
 
-from genie_rust import AttackOrArmor, TrainLocation
+from sections.civilization.type_info.damage_class import DamageClass
 
 from Actual_Tools_GDP.Units.handles import (
     TaskHandle, AttackHandle, ArmourHandle, DamageGraphicHandle,
@@ -24,8 +24,10 @@ from Actual_Tools_GDP.Units.wrappers import (
 )
 
 if TYPE_CHECKING:
-    from genie_rust.datfile import DatFile
-    from genie_rust.unit import Unit
+    # TODO: Removed genie-rust dependency - needs migration to GenieDatParser
+    # from genie_rust.datfile import DatFile
+    # from genie_rust.unit import Unit
+    pass
 
 __all__ = ["UnitHandle"]
 
@@ -190,28 +192,28 @@ class UnitHandle:
     # =========================================================================
 
     @property
-    def attacks(self) -> List[AttackOrArmor]:
-        """Type50 attacks list."""
+    def attacks(self) -> List[DamageClass]:
+        """Combat attacks list."""
         u = self._primary_unit
-        return u.type_50.attacks if u and u.type_50 else []
+        return u.combat_info.attacks if u and hasattr(u, "combat_info") and u.combat_info else []
 
     @attacks.setter
-    def attacks(self, value: List[AttackOrArmor]) -> None:
+    def attacks(self, value: List[DamageClass]) -> None:
         for u in self._get_units():
-            if u.type_50:
-                u.type_50.attacks = value
+            if hasattr(u, "combat_info") and u.combat_info:
+                u.combat_info.attacks = value
 
     @property
-    def armours(self) -> List[AttackOrArmor]:
-        """Type50 armours list."""
+    def armours(self) -> List[DamageClass]:
+        """Combat armours list."""
         u = self._primary_unit
-        return u.type_50.armours if u and u.type_50 else []
+        return u.combat_info.armors if u and hasattr(u, "combat_info") and u.combat_info else []
 
     @armours.setter
-    def armours(self, value: List[AttackOrArmor]) -> None:
+    def armours(self, value: List[DamageClass]) -> None:
         for u in self._get_units():
-            if u.type_50:
-                u.type_50.armours = value
+            if hasattr(u, "combat_info") and u.combat_info:
+                u.combat_info.armors = value
 
     @property
     def resource_costs(self) -> Tuple:
@@ -302,17 +304,19 @@ class UnitHandle:
 
     def add_attack(self, class_: int, amount: int) -> Optional[AttackHandle]:
         """Add attack entry to all units. Returns handle for primary unit's attack."""
-        new_attack = AttackOrArmor(class_=class_, amount=amount)
         attack_id = -1
         for u in self._get_units():
-            if u.type_50:
-                u.type_50.attacks.append(copy.deepcopy(new_attack))
+            if hasattr(u, "combat_info") and u.combat_info:
+                new_attack = DamageClass()
+                new_attack.id = class_
+                new_attack.amount = amount
+                u.combat_info.attacks.append(new_attack)
                 if attack_id == -1:
-                    attack_id = len(u.type_50.attacks) - 1
+                    attack_id = len(u.combat_info.attacks) - 1
 
         u = self._primary_unit
-        if u and u.type_50 and attack_id >= 0:
-            return AttackHandle(u.type_50.attacks[attack_id], attack_id)
+        if u and hasattr(u, "combat_info") and u.combat_info and attack_id >= 0:
+            return AttackHandle(u.combat_info.attacks[attack_id], attack_id)
         return None
 
     def get_attack_by_id(self, attack_id: int) -> Optional[AttackHandle]:
@@ -364,17 +368,19 @@ class UnitHandle:
 
     def add_armour(self, class_: int, amount: int) -> Optional[ArmourHandle]:
         """Add armour entry to all units. Returns handle for primary unit's armour."""
-        new_armour = AttackOrArmor(class_=class_, amount=amount)
         armour_id = -1
         for u in self._get_units():
-            if u.type_50:
-                u.type_50.armours.append(copy.deepcopy(new_armour))
+            if hasattr(u, "combat_info") and u.combat_info:
+                new_armour = DamageClass()
+                new_armour.id = class_
+                new_armour.amount = amount
+                u.combat_info.armors.append(new_armour)
                 if armour_id == -1:
-                    armour_id = len(u.type_50.armours) - 1
+                    armour_id = len(u.combat_info.armors) - 1
 
         u = self._primary_unit
-        if u and u.type_50 and armour_id >= 0:
-            return ArmourHandle(u.type_50.armours[armour_id], armour_id)
+        if u and hasattr(u, "combat_info") and u.combat_info and armour_id >= 0:
+            return ArmourHandle(u.combat_info.armors[armour_id], armour_id)
         return None
 
     def get_armour_by_id(self, armour_id: int) -> Optional[ArmourHandle]:
