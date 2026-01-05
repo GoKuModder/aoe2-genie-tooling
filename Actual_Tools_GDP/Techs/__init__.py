@@ -1,11 +1,6 @@
-"""
-Techs module - Technology management for Genie Engine.
+"""Techs module - Technology editing functionality."""
 
-Provides:
-- TechManager: Create, copy, get, delete technologies
-- TechHandle: Wrapper with attribute access
-"""
-from .tech_manager import TechManager
-from .tech_handle import TechHandle
+from Actual_Tools_GDP.Techs.tech_manager import TechManager
+from Actual_Tools_GDP.Techs.tech_handle import TechHandle
 
 __all__ = ["TechManager", "TechHandle"]

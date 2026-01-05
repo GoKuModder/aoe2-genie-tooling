@@ -1,90 +1,80 @@
 """
-Centralized exceptions for Actual_Tools.
+Custom exceptions for Actual_Tools_GDP.
 
-All custom exceptions used across the tools layer are defined here
-for consistent error handling and clear, actionable error messages.
-
-Exception Hierarchy:
+Exception hierarchy:
     GenieToolsError (base)
-    ├── UnitIdConflictError - ID already exists
-    ├── GapNotAllowedError - would create None gaps
-    ├── InvalidIdError - negative or out-of-range ID
-    ├── ValidationError - workspace validation failed
-    └── TemplateNotFoundError - no template for cloning
+    ├── ValidationError (attribute/type validation failures)
+    ├── InvalidIdError (ID out of valid range)
+    ├── UnitIdConflictError (ID already exists)
+    ├── GapNotAllowedError (gaps in ID sequence)
+    └── TemplateNotFoundError (base template not found)
 """
+from __future__ import annotations
 
 __all__ = [
     "GenieToolsError",
-    "GapNotAllowedError",
-    "InvalidIdError",
-    "TemplateNotFoundError",
-    "UnitIdConflictError",
     "ValidationError",
+    "InvalidIdError",
+    "UnitIdConflictError",
+    "GapNotAllowedError",
+    "TemplateNotFoundError",
 ]
 
 
 class GenieToolsError(Exception):
-    """
-    Base exception for all Actual_Tools errors.
-
-    All custom exceptions in this package inherit from this class,
-    allowing catch-all error handling when desired.
-    """
+    """Base exception for all Actual_Tools_GDP errors."""
     pass
 
 
-class UnitIdConflictError(GenieToolsError):
+class ValidationError(GenieToolsError):
     """
-    Raised when attempting to create/move a unit to an ID that already exists.
-
-    This occurs when:
-    - create() or clone_into() targets an occupied ID with on_conflict="error"
-    - move() destination is occupied with on_conflict="error"
-    """
-    pass
-
-
-class GapNotAllowedError(GenieToolsError):
-    """
-    Raised when an operation would create illegal None gaps in a table.
-
-    This occurs when:
-    - Creating/cloning beyond current max ID with fill_gaps="error"
-    - The "no gaps" policy prevents None values in unit tables
+    Raised when attribute validation fails.
+    
+    Examples:
+    - Invalid Handle type passed to attribute
+    - Flattened attribute not in allow-list
+    - Reference ID does not exist
     """
     pass
 
 
 class InvalidIdError(GenieToolsError):
     """
-    Raised when an ID is invalid.
-
-    This occurs when:
-    - ID is negative
-    - ID doesn't exist when expected (e.g., get() on non-existent unit)
-    - ID is out of valid range for the table
+    Raised when an ID is out of valid range.
+    
+    Examples:
+    - Negative ID
+    - ID exceeds maximum for the data type
     """
     pass
 
 
-class ValidationError(GenieToolsError):
+class UnitIdConflictError(GenieToolsError):
     """
-    Raised when workspace validation fails.
+    Raised when attempting to create/move to an ID that already exists.
+    
+    Examples:
+    - create(unit_id=50) when ID 50 already exists with on_conflict="error"
+    - move(dst=100) when ID 100 is occupied
+    """
+    pass
 
-    This occurs when:
-    - Unit list lengths don't match across civs
-    - None gaps detected in tables
-    - Invalid references (graphic/sound IDs out of range)
+
+class GapNotAllowedError(GenieToolsError):
+    """
+    Raised when a gap would be created in the ID sequence.
+    
+    Examples:
+    - create(unit_id=500) when max ID is 200 and fill_gaps="error"
     """
     pass
 
 
 class TemplateNotFoundError(GenieToolsError):
     """
-    Raised when no valid template can be found for cloning.
-
-    This occurs when:
-    - DAT file has no valid units to use as template
-    - Specified base_unit_id doesn't exist
+    Raised when a base template unit/graphic/sound is not found.
+    
+    Examples:
+    - create(base_unit_id=999999) when unit 999999 doesn't exist
     """
     pass

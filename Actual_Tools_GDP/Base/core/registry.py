@@ -5,13 +5,9 @@ Tracks units, graphics, sounds, techs, and effects created during a session.
 Also supports dependency linking between objects.
 
 Usage:
-    from Actual_Tools_GDP.Shared.registry import registry
-
-    # Items are auto-registered by managers
-    workspace.units.create("My Unit", base_unit_id=4)
-
-    # Export to JSON for ASP
-    registry.save("genie_edits.json")
+    workspace = GenieWorkspace.load("file.dat")
+    workspace.registry.register_unit("My Unit", unit_id=2800)
+    workspace.registry.export_json("genie_edits.json")
 """
 from __future__ import annotations
 
@@ -21,19 +17,9 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Union
 
-__all__ = ["registry", "Registry", "Dependency"]
+__all__ = ["Registry"]
 
 PathLike = Union[str, Path]
-
-
-@dataclass
-class Dependency:
-    """Represents a dependency between two objects."""
-    source_type: str  # "unit", "tech", "effect", etc.
-    source_id: int
-    target_type: str
-    target_id: int
-    relation: str  # "uses_graphic", "uses_sound", "links_effect", etc.
 
 
 @dataclass
@@ -44,9 +30,8 @@ class Registry:
     Features:
     - UUID-based persistent identity (survives ID changes)
     - Dependency tracking between objects
-    - Effect registration
     - JSON export for AoE2ScenarioParser
-
+    
     JSON Format:
     ```json
     {
@@ -231,28 +216,6 @@ class Registry:
             "relation": relation,
         })
 
-    def link_tech_to_effect(self, tech_id: int, effect_id: int) -> None:
-        """Convenience: link a tech to its effect."""
-        self.link_dependency("tech", tech_id, "effect", effect_id, "links_effect")
-
-    def link_unit_to_graphic(self, unit_id: int, graphic_id: int, graphic_type: str = "standing") -> None:
-        """Convenience: link a unit to a graphic."""
-        self.link_dependency("unit", unit_id, "graphic", graphic_id, f"uses_{graphic_type}_graphic")
-
-    def link_unit_to_sound(self, unit_id: int, sound_id: int, sound_type: str = "selection") -> None:
-        """Convenience: link a unit to a sound."""
-        self.link_dependency("unit", unit_id, "sound", sound_id, f"uses_{sound_type}_sound")
-
-    def get_dependencies_for(self, obj_type: str, obj_id: int) -> List[Dict[str, Any]]:
-        """Get all dependencies where this object is the source."""
-        key = f"{obj_type}:{obj_id}"
-        return [d for d in self.dependencies if d["source"] == key]
-
-    def get_dependents_of(self, obj_type: str, obj_id: int) -> List[Dict[str, Any]]:
-        """Get all objects that depend on this object."""
-        key = f"{obj_type}:{obj_id}"
-        return [d for d in self.dependencies if d["target"] == key]
-
     # -------------------------
     # UUID-Based Lookup
     # -------------------------
@@ -272,45 +235,6 @@ class Registry:
                     entry["id"] = new_id
                     return True
         return False
-
-    # -------------------------
-    # Query Methods
-    # -------------------------
-
-    def get_unit_id(self, name: str) -> Optional[int]:
-        """Get a unit ID by name."""
-        for entry in self.units:
-            if entry["name"] == name:
-                return entry["id"]
-        return None
-
-    def get_sound_id(self, name: str) -> Optional[int]:
-        """Get a sound ID by name."""
-        for entry in self.sounds:
-            if entry["name"] == name:
-                return entry["id"]
-        return None
-
-    def get_graphic_id(self, name: str) -> Optional[int]:
-        """Get a graphic ID by name."""
-        for entry in self.graphics:
-            if entry["name"] == name:
-                return entry["id"]
-        return None
-
-    def get_tech_id(self, name: str) -> Optional[int]:
-        """Get a tech ID by name."""
-        for entry in self.techs:
-            if entry["name"] == name:
-                return entry["id"]
-        return None
-
-    def get_effect_id(self, name: str) -> Optional[int]:
-        """Get an effect ID by name."""
-        for entry in self.effects:
-            if entry["name"] == name:
-                return entry["id"]
-        return None
 
     # -------------------------
     # Export/Import
@@ -335,13 +259,13 @@ class Registry:
 
         return result
 
-    def save(self, path: PathLike) -> None:
-        """Save registry to a JSON file."""
+    def export_json(self, path: PathLike) -> None:
+        """Export registry to a JSON file."""
         data = self.to_dict()
         Path(path).write_text(json.dumps(data, indent=2), encoding="utf-8")
 
-    def load(self, path: PathLike) -> None:
-        """Load registry from a JSON file."""
+    def import_json(self, path: PathLike) -> None:
+        """Import registry from a JSON file."""
         data = json.loads(Path(path).read_text(encoding="utf-8"))
         self.units = data.get("units", [])
         self.graphics = data.get("graphics", [])
@@ -379,18 +303,6 @@ class Registry:
         self._uuid_map = {"units": {}, "graphics": {}, "sounds": {}, "techs": {}, "effects": {}}
 
     # -------------------------
-    # Control
-    # -------------------------
-
-    def disable(self) -> None:
-        """Disable auto-registration."""
-        self.enabled = False
-
-    def enable(self) -> None:
-        """Enable auto-registration."""
-        self.enabled = True
-
-    # -------------------------
     # Summary
     # -------------------------
 
@@ -411,7 +323,3 @@ class Registry:
             parts.append(f"{len(self.dependencies)} deps")
 
         return ", ".join(parts) if parts else "No items registered"
-
-
-# Global registry instance
-registry = Registry()

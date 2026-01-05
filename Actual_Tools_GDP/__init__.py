@@ -29,11 +29,12 @@ Public API:
                   InvalidIdError, ValidationError, TemplateNotFoundError
 """
 
-from Actual_Tools_GDP.Base.base_manager import GenieWorkspace
-from Actual_Tools_GDP.Units.unit_handle import UnitHandle
-from Actual_Tools_GDP.Shared.logger import logger
-from Actual_Tools_GDP.Shared.registry import registry
-from Actual_Tools_GDP.exceptions import (
+from Actual_Tools_GDP.Base.workspace import GenieWorkspace
+# TEMPORARILY COMMENTED - rebuilding managers
+# from Actual_Tools_GDP.Units.unit_handle_OLD import UnitHandle
+from Actual_Tools_GDP.Base.core.logger import Logger
+from Actual_Tools_GDP.Base.core.registry import Registry
+from Actual_Tools_GDP.Base.core.exceptions import (
     GenieToolsError,
     GapNotAllowedError,
     InvalidIdError,
@@ -42,10 +43,14 @@ from Actual_Tools_GDP.exceptions import (
     ValidationError,
 )
 
+# Create singleton instances for backward compatibility
+logger = Logger()
+registry = Registry()
+
 __all__ = [
     # Core
     "GenieWorkspace",
-    "UnitHandle",
+    # "UnitHandle",  # TEMPORARILY COMMENTED
     # Logging/Registry
     "logger",
     "registry",
