@@ -10,6 +10,10 @@
 /GenieDatParser/
 /summaries/
 
+# --- Test/Inspect Files ---
+test_*.py
+inspect_*.py
+
 # --- Python bytecode / caches ---
 __pycache__/
 *.py[cod]
