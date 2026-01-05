@@ -20,18 +20,29 @@ inspect_*.py
 /Actual_Tools_GDP/*.ini
 
 # Documentation (ignore for now)
-/docs/
 
-# --- Python bytecode / caches ---
+
+# --- Python# IDE
+.idea/
+.vscode/
+
+# Python
 __pycache__/
-*.py[cod]
-*$py.class
+*.pyc
+*.pyo
+*.egg-info/
+dist/
+build/
 
-# --- Test / coverage ---
-.pytest_cache/
-.coverage
-.coverage.*
-htmlcov/
+# Testing/Temp
+*.dat
+Testing/*.dat
+Testing/test_*.py
+Testing/check_*.py
+Testing/compare_*.py
+
+# Documentation (auto-generated)
+docs/
 .tox/
 .nox/
 
