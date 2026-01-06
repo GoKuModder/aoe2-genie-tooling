@@ -13,7 +13,7 @@ Example:
 """
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import List, Optional, Union
 
@@ -24,6 +24,8 @@ _genie_parser_path = Path(__file__).parent.parent.parent / "GenieDatParser" / "s
 if str(_genie_parser_path) not in sys.path:
     sys.path.insert(0, str(_genie_parser_path))
 from sections.datfile_sections import DatFile
+from Actual_Tools_GDP.Base.config import Config, ValidationLevel
+from bfp_rs import Version
 
 # Support systems
 from Actual_Tools_GDP.Base.core.fileio import FileIO
@@ -34,12 +36,12 @@ from Actual_Tools_GDP.Base.core.id_tracker import IDTracker
 from Actual_Tools_GDP.Base.core.exceptions import ValidationError
 
 # Managers (TEMPORARILY COMMENTED - need to be rebuilt)
-# from Actual_Tools_GDP.Units.unit_manager import GenieUnitManager
+from Actual_Tools_GDP.Units.unit_manager import UnitManager
 from Actual_Tools_GDP.Graphics.graphic_manager import GraphicManager
 from Actual_Tools_GDP.Sounds.sound_manager import SoundManager
 from Actual_Tools_GDP.Techs.tech_manager import TechManager
-# from Actual_Tools_GDP.Effects.effect_manager import EffectManager
-# from Actual_Tools_GDP.Civilizations.civ_manager import CivilizationsManager
+from Actual_Tools_GDP.Effects.effect_manager import EffectManager
+from Actual_Tools_GDP.Civilizations.civ_manager import CivManager
 
 __all__ = ["GenieWorkspace"]
 
@@ -68,6 +70,8 @@ class GenieWorkspace:
     """
     dat: DatFile
     source_path: Optional[Path] = None
+    target_version: Version = field(default_factory=lambda: Config.DEFAULT_VERSION)
+    validation_level: ValidationLevel = field(default_factory=lambda: Config.DEFAULT_VALIDATION)
 
     def __post_init__(self) -> None:
         """
@@ -85,18 +89,17 @@ class GenieWorkspace:
         self.id_tracker = IDTracker()
         
         # Managers (private, accessed via properties)
-        # TEMPORARILY COMMENTED - managers need to be rebuilt
-        # self._unit_manager = GenieUnitManager(self)
+        self._unit_manager = UnitManager(self)
         self._graphic_manager = GraphicManager(self)
         self._sound_manager = SoundManager(self)
         # self._terrain_manager = TerrainManager(self)
         self._tech_manager = TechManager(self)
-        # self._effect_manager = EffectManager(self)
-        # self._civilization_manager = CivilizationsManager(self)
+        self._effect_manager = EffectManager(self)
+        self._civ_manager = CivManager(self)
     
     # Manager Properties
     @property
-    def unit_manager(self) -> GenieUnitManager:
+    def unit_manager(self) -> UnitManager:
         """Access the unit manager."""
         return self._unit_manager
     
@@ -126,21 +129,32 @@ class GenieWorkspace:
         return self._effect_manager
     
     @property
-    def civilization_manager(self) -> CivilizationsManager:
+    def civ_manager(self) -> CivManager:
         """Access the civilization manager."""
-        return self._civilization_manager
+        return self._civ_manager
+
+    # Alias for backward compatibility
+    @property
+    def civilization_manager(self) -> CivManager:
+        """Access the civilization manager (alias for civ_manager)."""
+        return self._civ_manager
 
     # -------------------------
     # Construction / IO
     # -------------------------
 
     @classmethod
-    def load(cls, path: PathLike) -> "GenieWorkspace":
+    def load(
+        cls,
+        path: PathLike,
+        validation: ValidationLevel = ValidationLevel.VALIDATE_NEW,
+    ) -> "GenieWorkspace":
         """
         Load a DatFile from disk and return a workspace.
         
         Args:
             path: Path to the .dat file
+            validation: Validation level (default: VALIDATE_NEW)
         
         Returns:
             A new GenieWorkspace with the loaded data
@@ -149,33 +163,54 @@ class GenieWorkspace:
         
         # Load DAT file via FileIO
         dat = FileIO.load_dat_file(p)
-        workspace = cls(dat=dat, source_path=p)
+        workspace = cls(dat=dat, source_path=p, validation_level=validation)
         
-        # Log after workspace is initialized (logger now available)
-        workspace.logger.info(f"Loaded {p.name}")
+        # If validate_all, register all existing objects
+        if validation == ValidationLevel.VALIDATE_ALL:
+            workspace.registry.register_all_at_load(workspace)
+            workspace.logger.info(f"Loaded with validation=VALIDATE_ALL ({workspace.registry.summary()})")
+        else:
+            workspace.logger.info(f"Loaded {p.name} (validation={validation.value})")
         
         return workspace
 
-    def save(self, target_path: PathLike, validate: bool = True) -> None:
+    def save(
+        self,
+        target_path: PathLike,
+        validate: Union[ValidationLevel, bool] = None,
+    ) -> None:
         """
         Save the current DAT state to disk.
         
-        Performs optional validation before writing:
-        1. Validates all references if validate=True
-        2. Writes the DAT file via FileIO
+        Performs optional validation before writing based on validation level:
+        - NO_VALIDATION: Skip all checks
+        - VALIDATE_NEW: Check session-created objects only
+        - VALIDATE_ALL: Full validation of all references
         
         Args:
             target_path: Path to save the .dat file to
-            validate: If True, run validation before save (default True)
+            validate: Override validation level. If None, uses workspace default.
+                      True = VALIDATE_NEW, False = NO_VALIDATION for backward compat.
         
         Raises:
             ValidationError: If validation fails
         """
         out = Path(target_path)
         
-        # Optional validation
-        if validate:
-            issues = self.validate(raise_on_error=True)
+        # Determine validation level
+        if validate is None:
+            level = self.validation_level
+        elif validate is True:
+            level = ValidationLevel.VALIDATE_NEW
+        elif validate is False:
+            level = ValidationLevel.NO_VALIDATION
+        else:
+            level = validate
+        
+        # Perform validation based on level
+        if level != ValidationLevel.NO_VALIDATION:
+            validate_existing = (level == ValidationLevel.VALIDATE_ALL)
+            issues = self.validator.validate_all_references(self, validate_existing)
             if issues:
                 self.logger.error(f"Validation failed with {len(issues)} issues")
                 raise ValidationError(f"Validation failed: {issues[0]}")
@@ -196,6 +231,27 @@ class GenieWorkspace:
         """
         self.registry.export_json(str(path))
         self.logger.info(f"Registry saved: {Path(path).name}")
+    
+    def upgrade_validation(self, level: ValidationLevel) -> None:
+        """
+        Upgrade validation level mid-session.
+        
+        If upgrading to VALIDATE_ALL, registers all existing objects that
+        haven't been registered yet.
+        
+        Args:
+            level: Target validation level
+            
+        Example:
+            workspace = GenieWorkspace.load("file.dat")  # Default: VALIDATE_NEW
+            workspace.upgrade_validation(ValidationLevel.VALIDATE_ALL)
+        """
+        if level == ValidationLevel.VALIDATE_ALL and self.validation_level != ValidationLevel.VALIDATE_ALL:
+            # Register existing objects if not already done
+            self.registry.register_all_at_load(self)
+            self.logger.info(f"Upgraded to VALIDATE_ALL ({self.registry.summary()})")
+        
+        self.validation_level = level
     
     # -------------------------
     # Validation

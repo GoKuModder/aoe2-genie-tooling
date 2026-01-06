@@ -1,72 +1,71 @@
-# --- Ignore these repo-root directories ---
-/.venv/
+# ========================================
+# INCLUDE ONLY:
+# - Actual_Tools_GDP/
+# - Datasets/
+# - docs/
+# ========================================
+
+# --- Ignore everything by default ---
+/*
+
+# --- Explicitly include what we want ---
+!/Actual_Tools_GDP/
+!/Datasets/
+!/docs/
+!/.gitignore
+!/README.md
+!/pyproject.toml
+!/requirements.txt
+
+# --- Ignore Testing folder completely ---
+/Testing/
+
+# --- Ignore submodules/external ---
+/GenieDatParser/
 /genieutils/
-/My_Examples/
 /src/
 /tests/
+/.venv/
 /.agent/
 /agents/
 /Actual_Tools/
-/GenieDatParser/
+/My_Examples/
 /summaries/
 
-# --- Test/Inspect Files ---
-test_*.py
-inspect_*.py
+# --- Data files at root ---
+*.dat
+*.ini
+*.json
+*.txt
 
-# --- Loose test/data files in Actual_Tools_GDP ---
-/Actual_Tools_GDP/*.dat
-/Actual_Tools_GDP/*.json
-/Actual_Tools_GDP/*.ini
-
-# Documentation (ignore for now)
-
-
-# --- Python# IDE
-.idea/
-.vscode/
-
-# Python
+# --- Python cache ---
 __pycache__/
 *.pyc
 *.pyo
 *.egg-info/
-dist/
-build/
 
-# Testing/Temp
-*.dat
-Testing/*.dat
-Testing/test_*.py
-Testing/check_*.py
-Testing/compare_*.py
+# --- IDE ---
+.idea/
+.vscode/
+*.iml
 
-# Documentation (auto-generated)
-docs/
-.tox/
-.nox/
-
-# --- Type checker / linter caches ---
+# --- Type checker caches ---
 .mypy_cache/
 .pyright/
 .ruff_cache/
 
-# --- Packaging / build outputs ---
+# --- Build outputs ---
 build/
 dist/
-*.egg-info/
 *.whl
-
-# --- IDE / editor ---
-.vscode/
-.idea/
-*.iml
+site/
+**/target/
 
 # --- OS junk ---
 .DS_Store
 Thumbs.db
 
-# --- Logs / temp ---
+# --- Logs/temp ---
 *.log
 *.tmp
 
@@ -77,31 +76,11 @@ secrets/
 *.pem
 *.key
 
+# --- Within Actual_Tools_GDP, ignore data files ---
+/Actual_Tools_GDP/*.dat
+/Actual_Tools_GDP/*.json
+/Actual_Tools_GDP/*.ini
 
-*.dat
-
-
-!empires2_x2_p1_Shortened.dat
-
-.git/info/exclude
-
-# Rust build artifacts (The biggest culprit)
-
-**/target/
-
-# Generated documentation/website files
-site/
-
-
-
-# --- Text files --- IGNORE ALL THE BELOW BEFORE PUSHING
-*.txt
-/Actual_Tools_GDP/Datasets/AGENTS.md
-/GEMINI.md
-/Actual_Tools/AGENTS.md
-/docs/AGENTS.md
-/MIGRATION_PLAN_GenieDatParser.md
-/Actual_Tools_GDP/Datasets/manifest_review.md
-/Actual_Tools_GDP/Datasets/unit_vs_manifest_comparison.md
-/docs/code_notes.md
-
+# --- OLD files to ignore ---
+*_OLD.py
+/Actual_Tools_GDP/Units/wrappers_OLD/

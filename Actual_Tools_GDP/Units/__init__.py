@@ -1,7 +1,29 @@
-"""Units module - Unit editing functionality."""
+"""
+Units module - Unit editing functionality.
 
-# TEMPORARILY COMMENTED - modules need to be rebuilt
-# from Actual_Tools_GDP.Units.unit_manager_OLD import GenieUnitManager
-# from Actual_Tools_GDP.Units.unit_handle_OLD import UnitHandle
+Provides:
+- UnitManager: Create, clone, move, and query units
+- UnitHandle: High-level wrapper for Genie Unit objects with multi-civ support
+- Handles: TaskHandle, AttackHandle, ArmourHandle, DamageGraphicHandle, TrainLocationHandle, DropSiteHandle
+"""
+from .unit_manager import UnitManager
+from .unit_handle import UnitHandle
+from .handles import (
+    TaskHandle,
+    AttackHandle,
+    ArmourHandle,
+    DamageGraphicHandle,
+    TrainLocationHandle,
+    DropSiteHandle,
+)
 
-# __all__ = ["GenieUnitManager", "UnitHandle"]
+__all__ = [
+    "UnitManager",
+    "UnitHandle",
+    "TaskHandle",
+    "AttackHandle",
+    "ArmourHandle",
+    "DamageGraphicHandle",
+    "TrainLocationHandle",
+    "DropSiteHandle",
+]

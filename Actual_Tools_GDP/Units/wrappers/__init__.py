@@ -1,35 +1,45 @@
 """
 Unit property wrappers package.
 
-Each wrapper provides flat property access to nested genieutils classes and collection management.
+Each wrapper provides flat property access to nested GenieDatParser classes.
+
+Wrappers are for TYPE-LEVEL attributes (single nested objects):
+- CombatWrapper → unit.combat_info
+- CreationWrapper → unit.creation_info
+- MovementWrapper → unit.movement_info
+- BehaviorWrapper → unit.task_info (scalar properties only)
+- ProjectileWrapper → unit.projectile_info
+- BuildingWrapper → unit.building_info
+
+For LIST management (attacks, armours, tasks, etc.), see collections/ folder.
+
+OLD wrapper files have been moved to wrappers_OLD/ for reference.
 """
 
-from Actual_Tools_GDP.Units.wrappers.type_50 import Type50Wrapper
-from Actual_Tools_GDP.Units.wrappers.creatable import CreatableWrapper
-from Actual_Tools_GDP.Units.wrappers.costs import CostWrapper
-from Actual_Tools_GDP.Units.wrappers.dead_fish import DeadFishWrapper
-from Actual_Tools_GDP.Units.wrappers.bird import BirdWrapper
+from Actual_Tools_GDP.Units.wrappers.combat import CombatWrapper
+from Actual_Tools_GDP.Units.wrappers.creation import CreationWrapper
+from Actual_Tools_GDP.Units.wrappers.movement import MovementWrapper
+from Actual_Tools_GDP.Units.wrappers.behavior import BehaviorWrapper
 from Actual_Tools_GDP.Units.wrappers.projectile import ProjectileWrapper
 from Actual_Tools_GDP.Units.wrappers.building import BuildingWrapper
-from Actual_Tools_GDP.Units.wrappers.tasks import TasksWrapper
-from Actual_Tools_GDP.Units.wrappers.resource_storages import ResourceStoragesWrapper
-from Actual_Tools_GDP.Units.wrappers.damage_graphics import DamageGraphicsWrapper
-from Actual_Tools_GDP.Units.wrappers.annex import AnnexHandle, AnnexesWrapper
-from Actual_Tools_GDP.Units.wrappers.train_location import TrainLocationHandle, TrainLocationsWrapper
+
+# Backward compatibility aliases
+Type50Wrapper = CombatWrapper
+CreatableWrapper = CreationWrapper
+DeadFishWrapper = MovementWrapper
+BirdWrapper = BehaviorWrapper
 
 __all__ = [
-    "Type50Wrapper",
-    "CreatableWrapper",
-    "CostWrapper",
-    "DeadFishWrapper",
-    "BirdWrapper",
+    # New names (preferred)
+    "CombatWrapper",
+    "CreationWrapper",
+    "MovementWrapper",
+    "BehaviorWrapper",
     "ProjectileWrapper",
     "BuildingWrapper",
-    "TasksWrapper",
-    "ResourceStoragesWrapper",
-    "DamageGraphicsWrapper",
-    "AnnexHandle",
-    "AnnexesWrapper",
-    "TrainLocationHandle",
-    "TrainLocationsWrapper",
+    # Legacy aliases
+    "Type50Wrapper",
+    "CreatableWrapper",
+    "DeadFishWrapper",
+    "BirdWrapper",
 ]

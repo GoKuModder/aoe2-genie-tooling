@@ -1,5 +1,7 @@
 """Type stubs for GenieWorkspace - enables IDE autocomplete"""
 from typing import TYPE_CHECKING
+from bfp_rs import Version
+from Actual_Tools_GDP.Base.config import Config
 
 if TYPE_CHECKING:
     from Actual_Tools_GDP.Graphics.graphic_manager import GraphicManager
@@ -12,6 +14,7 @@ class GenieWorkspace:
     
     Provides managers for units, graphics, sounds, techs, effects, and civilizations.
     """
+    target_version: Version = Config.DEFAULT_VERSION
     
     @property
     def graphic_manager(self) -> GraphicManager:

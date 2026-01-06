@@ -64,10 +64,17 @@ class Registry:
         name: str,
         unit_id: int,
         base_unit_id: Optional[int] = None,
+        _is_existing: bool = False,
         **extra: Any,
     ) -> Optional[str]:
         """
         Register a created unit. Returns UUID for persistent tracking.
+        
+        Args:
+            name: Display name
+            unit_id: The unit ID
+            base_unit_id: Optional base unit this was cloned from
+            _is_existing: True if from DAT file (not session-created)
         """
         if not self.enabled:
             return None
@@ -77,6 +84,7 @@ class Registry:
             "name": name,
             "id": unit_id,
             "uuid": item_uuid,
+            "_is_existing": _is_existing,
         }
         if base_unit_id is not None:
             entry["base_id"] = base_unit_id
@@ -91,6 +99,7 @@ class Registry:
         self,
         name: str,
         graphic_id: int,
+        _is_existing: bool = False,
         **extra: Any,
     ) -> Optional[str]:
         """Register a created graphic. Returns UUID."""
@@ -102,6 +111,7 @@ class Registry:
             "name": name,
             "id": graphic_id,
             "uuid": item_uuid,
+            "_is_existing": _is_existing,
         }
         if extra:
             entry.update(extra)
@@ -114,6 +124,7 @@ class Registry:
         self,
         name: str,
         sound_id: int,
+        _is_existing: bool = False,
         **extra: Any,
     ) -> Optional[str]:
         """Register a created sound. Returns UUID."""
@@ -125,6 +136,7 @@ class Registry:
             "name": name,
             "id": sound_id,
             "uuid": item_uuid,
+            "_is_existing": _is_existing,
         }
         if extra:
             entry.update(extra)
@@ -323,3 +335,42 @@ class Registry:
             parts.append(f"{len(self.dependencies)} deps")
 
         return ", ".join(parts) if parts else "No items registered"
+    
+    # -------------------------
+    # Bulk Registration (validate_all)
+    # -------------------------
+    
+    def register_all_at_load(self, workspace: Any) -> None:
+        """
+        Register all existing objects for validate_all mode.
+        
+        Generates UUIDs for every object in the DAT file so that
+        all references can be tracked and validated at save time.
+        
+        Args:
+            workspace: GenieWorkspace instance with loaded DAT
+        """
+        # Register all graphics
+        for i, sprite in enumerate(workspace.dat.sprites):
+            if sprite is not None:
+                name = getattr(sprite, 'name', f'sprite_{i}')
+                self.register_graphic(name, i, _is_existing=True)
+        
+        # Register all sounds
+        for i, sound in enumerate(workspace.dat.sounds):
+            if sound is not None:
+                self.register_sound(f"sound_{i}", i, _is_existing=True)
+        
+        # Register all units (from civ 0 as reference)
+        if len(workspace.dat.civilizations) > 0:
+            civ0_units = workspace.dat.civilizations[0].units
+            for i, unit in enumerate(civ0_units):
+                if unit is not None:
+                    name = getattr(unit, 'name', f'unit_{i}')
+                    self.register_unit(name, i, _is_existing=True)
+        
+        # Register techs
+        for i, tech in enumerate(workspace.dat.techs):
+            if tech is not None:
+                name = getattr(tech, 'name', f'tech_{i}')
+                self.register_tech(name, i, _is_existing=True)

@@ -9,7 +9,9 @@ Provides access to delta properties:
 """
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Union
+
+from Actual_Tools_GDP.Base.core.typed_ids import DeltaIndex, GraphicId
 
 if TYPE_CHECKING:
     from Actual_Tools_GDP.Graphics.graphic_handle import GraphicHandle
@@ -35,19 +37,19 @@ class DeltaHandle:
         return f"DeltaHandle(delta_id={self.delta_id}, graphic_id={self.graphic_id})"
     
     @property
-    def delta_id(self) -> int:
-        """Get the delta index."""
-        return self.index
+    def delta_id(self) -> DeltaIndex:
+        """Get the delta index (typed for IDE checking)."""
+        return DeltaIndex(self.index)
     
     @property
-    def graphic_id(self) -> int:
-        """Get the referenced graphic ID."""
-        return self.parent._sprite.deltas[self.index].sprite_id
+    def graphic_id(self) -> GraphicId:
+        """Get the referenced graphic ID (typed for IDE checking)."""
+        return GraphicId(self.parent._sprite.deltas[self.index].sprite_id)
     
     @graphic_id.setter
-    def graphic_id(self, value: int) -> None:
+    def graphic_id(self, value: Union[GraphicId, int]) -> None:
         """Set the referenced graphic ID."""
-        self.parent._sprite.deltas[self.index].sprite_id = value
+        self.parent._sprite.deltas[self.index].sprite_id = int(value)
     
     @property
     def offset_x(self) -> int:

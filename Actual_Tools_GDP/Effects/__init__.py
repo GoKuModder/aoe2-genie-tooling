@@ -2,11 +2,12 @@
 Effects module - Effect management for Genie Engine.
 
 Provides:
-- EffectManager: Create, clone, get, delete effects
-- EffectHandle: Wrapper with command management
-- EffectCommandHandle: Wrapper for individual commands
+- EffectManager: Create, copy, get, delete effect holders
+- EffectHandle: Wrapper for effect holder with command management
+- CommandHandle: Wrapper for individual effect commands
 """
-from .effect_handle import EffectCommandHandle, EffectHandle
 from .effect_manager import EffectManager
+from .effect_handle import EffectHandle
+from .command_handle import CommandHandle
 
-__all__ = ["EffectManager", "EffectHandle", "EffectCommandHandle"]
+__all__ = ["EffectManager", "EffectHandle", "CommandHandle"]
