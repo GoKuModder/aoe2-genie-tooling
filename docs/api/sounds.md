@@ -1,48 +1,53 @@
 # Sounds API
 
-> Coming soon
+Manage sounds using `SoundManager` and `SoundHandle`.
 
-The Sounds API provides control over sound entries in AoE2 DAT files. 
+## Mental Model
 
-Sounds follow a two-tier structure:
-1. **Sound Holder**: A slot in the "mega-list" (e.g., sound ID 100).
-2. **Actual Sounds**: A list of one or more audio files within that holder (e.g., `attack1.wav`, `attack2.wav`).
+Sounds in Genie are collections of audio files.
+1.  **Sound Group**: The main "Sound" object is actually a group (e.g., "Sword Attack").
+2.  **Sound Files**: Inside the group, there are multiple files (e.g., "swing1.wav", "swing2.wav"). The game picks one randomly to play.
+3.  **References**: Units reference the Sound Group ID, not the individual file.
 
-## Quick Example
+## Common Workflows
 
+### Creating a New Sound Group
 ```python
-sm = workspace.sound_manager
+# Create the container
+sword_sound = workspace.sound_manager.add_copy(source_id=0, name="New Sword Sound")
 
-# 1. Create a holder (slot)
-holder = sm.add_new(play_delay=50)
-
-# 2. Add actual sounds to the holder
-holder.new_sound(file_name="hero_attack_01.wav", probability=50)
-holder.new_sound(file_name="hero_attack_02.wav", probability=50)
-
-# 3. Assign the holder ID to a unit
-unit.selection_sound = holder.id
+# Clear old files and add new ones
+sword_sound.clear_files()
+sword_sound.add_file(filename="new_swing1.wav", probability=50)
+sword_sound.add_file(filename="new_swing2.wav", probability=50)
 ```
 
-## SoundManager Methods
+## Gotchas & Invariants
 
-| Method | Description |
-|--------|-------------|
-| `add_new(...)` | Create a new sound holder/slot |
-| `get(sound_id)` | Get sound holder by ID |
-| `exists(sound_id)` | Check if slot ID is in range |
-| `count()` | Total sound slots |
-| `find_by_file_name(name)` | Find holder containing a specific filename |
-| `copy_to_clipboard(id)` | Copy holder to internal clipboard |
-| `paste(target_id)` | Paste from clipboard |
+*   **File Paths**: Filenames are relative to the game's sound folder.
+*   **Probabilities**: While there is a probability field, the engine logic for selection can be complex. Usually, ensuring equal probabilities sum to 100 is best practice.
 
-## SoundHolder (`SoundHandle`) Methods
+## SoundManager
 
-| Method | Description |
-|--------|-------------|
-| `new_sound(file_name, ...)` | Add an actual audio file to this holder |
-| `files` (property) | List of actual sounds in this holder |
-| `remove_file(index)` | Remove sound file by index |
-| `clear_files()` | Remove all sound files |
-| `play_delay` (attr) | Delay before playing |
-| `total_probability` (attr) | Total probability sum |
+Access via `workspace.sound_manager`.
+
+### Methods
+
+#### `get(sound_id: int) -> SoundHandle`
+Get a handle for an existing sound.
+
+#### `add_copy(source_id: int, name: str) -> SoundHandle`
+Create a new sound by copying an existing one.
+
+## SoundHandle
+
+Wrapper for sound data.
+
+### Attributes
+- `id` (int)
+- `files` (list of sound items)
+
+### Methods
+
+#### `add_file(...)`
+Adds a new sound file entry to this group.

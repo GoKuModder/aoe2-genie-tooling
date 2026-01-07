@@ -555,9 +555,13 @@ class UnitManager:
         """
         Clone a Unit object manually to avoid pickle issues/shared references.
 
-        Copies all public attributes from source to a new Unit instance,
-        using deepcopy to ensure isolation (fixing shared list issues).
-        Fallbacks to shallow copy for lists/task_info if deepcopy fails.
+        Performs a DEEP COPY of the unit structure. This is critical for
+        isolation across civilizations. Without deep copy, units in different
+        civs would share reference types (lists, task_info), causing
+        "spooky action at a distance" where editing a unit for Britons
+        would accidentally edit it for Franks.
+
+        Copies all public attributes from source to a new Unit instance.
         """
         from sections.civilization.unit import Unit
         import copy

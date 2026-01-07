@@ -181,19 +181,23 @@ class GenieWorkspace:
     ) -> None:
         """
         Save the current DAT state to disk.
-        
-        Performs optional validation before writing based on validation level:
-        - NO_VALIDATION: Skip all checks
-        - VALIDATE_NEW: Check session-created objects only
-        - VALIDATE_ALL: Full validation of all references
-        
+
+        Before saving, this method triggers the validation pipeline based on
+        the configured level. Validation checks for broken references (e.g.
+        units pointing to non-existent graphics) which would crash the game.
+
+        Validation Levels:
+        - NO_VALIDATION: Skip all checks (fastest, unsafe)
+        - VALIDATE_NEW: Check only objects created in this session (default)
+        - VALIDATE_ALL: Full validation of every object in the DAT (slowest, safest)
+
         Args:
             target_path: Path to save the .dat file to
-            validate: Override validation level. If None, uses workspace default.
-                      True = VALIDATE_NEW, False = NO_VALIDATION for backward compat.
-        
+            validate: Override validation level for this specific save.
+                      True = VALIDATE_NEW, False = NO_VALIDATION.
+
         Raises:
-            ValidationError: If validation fails
+            ValidationError: If critical issues are found during validation.
         """
         out = Path(target_path)
         

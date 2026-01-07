@@ -508,15 +508,17 @@ class UnitHandle:
     @property
     def add_task(self):
         """
-        Fluent API for adding typed tasks.
-        
-        Usage:
-            unit.add_task.combat(class_id=0)
-            unit.add_task.garrison(class_id=11)
-            unit.add_task.aura(work_value_1=10, work_range=5)
+        Fluent API for adding typed tasks via TaskBuilder.
+
+        This property returns a `TaskBuilder` instance, which provides
+        typed methods like `.combat()`, `.garrison()`, etc. This prevents
+        the need to manually specify the raw `task_type` integer.
+
+        Example:
+            unit.add_task.combat(class_id=4, work_range=5)
         
         Returns:
-            TaskBuilder with typed methods for all task types
+            TaskBuilder: Fluent builder for tasks.
         """
         from Actual_Tools_GDP.Units.task_builder import TaskBuilder
         return TaskBuilder(self)

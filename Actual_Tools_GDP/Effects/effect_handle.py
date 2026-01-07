@@ -105,15 +105,17 @@ class EffectHandle:
     @property
     def add_command(self):
         """
-        Fluent API for adding typed effect commands.
-        
-        Usage:
-            effect.add_command.attribute_modifier_set(a=4, b=-1, c=0, d=100)
-            effect.add_command.enable_disable_unit(a=100, b=1)
-            effect.add_command.team_upgrade_unit(a=4, b=1000)
+        Fluent API for adding typed effect commands via EffectCommandBuilder.
+
+        This property returns an `EffectCommandBuilder` instance, which provides
+        methods like `.attribute_modifier_multiply()`, `.enable_disable_unit()`, etc.
+        This is the preferred way to add commands as it avoids manual type code handling.
+
+        Example:
+            effect.add_command.attribute_modifier_multiply(a=9, b=0, c=4, d=1.1)
         
         Returns:
-            EffectCommandBuilder with typed methods for all command types
+            EffectCommandBuilder: Fluent builder for effect commands.
         """
         from Actual_Tools_GDP.Effects.effect_command_builder import EffectCommandBuilder
         return EffectCommandBuilder(self)
