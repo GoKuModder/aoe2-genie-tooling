@@ -1,48 +1,64 @@
-# Sounds API
+# Sounds Manager
 
-> Coming soon
+The `SoundManager` handles the creation and management of audio assets.
 
-The Sounds API provides control over sound entries in AoE2 DAT files. 
+## Mental Model
 
-Sounds follow a two-tier structure:
-1. **Sound Holder**: A slot in the "mega-list" (e.g., sound ID 100).
-2. **Actual Sounds**: A list of one or more audio files within that holder (e.g., `attack1.wav`, `attack2.wav`).
+*   **Sound Holder (Sound ID)**: A "Sound" in the DAT file (e.g., ID 500) is a container. It can hold multiple variations of a sound (e.g., 5 different sword swing samples) which the engine plays randomly.
+*   **Sound File**: The actual reference to a `.wav` or `.wem` file. A Sound Holder contains a list of Sound Files.
+*   **File References**: Like graphics, the DAT file doesn't store the audio. It stores the filename (e.g., `attack01.wav`) which must exist in the `drs` or `sound` folder.
 
-## Quick Example
+## Public API
+
+### SoundManager (`Actual_Tools_GDP.Sounds.sound_manager`)
+
+Access via `workspace.sound_manager`.
+
+*   `add_sound(filename: str) -> SoundHandle`: Quick helper to create a Sound Holder with one file.
+*   `add_new() -> SoundHandle`: Creates an empty Sound Holder.
+*   `get(sound_id) -> SoundHandle`: Gets a handle.
+*   `find_by_file_name(name) -> SoundHandle`: Searches for a sound that contains a specific filename.
+
+### SoundHandle (`Actual_Tools_GDP.Sounds.sound_handle`)
+
+*   `id`: The Sound ID.
+*   `new_sound(filename, probability, ...)`: Adds a new file variation to this holder.
+*   `sounds` / `files`: List of `SoundFileHandle` objects.
+
+### SoundFileHandle (`Actual_Tools_GDP.Sounds.sound_file_handle`)
+
+*   `filename`: The name of the audio file.
+*   `probability`: Chance (0-100) for this specific variation to play.
+*   `civilization_id`: If set, only plays for that civ.
+
+## Workflows
+
+### creating a Simple Sound
 
 ```python
-sm = workspace.sound_manager
-
-# 1. Create a holder (slot)
-holder = sm.add_new(play_delay=50)
-
-# 2. Add actual sounds to the holder
-holder.new_sound(file_name="hero_attack_01.wav", probability=50)
-holder.new_sound(file_name="hero_attack_02.wav", probability=50)
-
-# 3. Assign the holder ID to a unit
-unit.selection_sound = holder.id
+# Create a new sound ID pointing to "boom.wav"
+sound = workspace.sound_manager.add_sound("boom.wav")
+print(f"Created Sound ID {sound.id}")
 ```
 
-## SoundManager Methods
+### Creating a Random Variation Sound
 
-| Method | Description |
-|--------|-------------|
-| `add_new(...)` | Create a new sound holder/slot |
-| `get(sound_id)` | Get sound holder by ID |
-| `exists(sound_id)` | Check if slot ID is in range |
-| `count()` | Total sound slots |
-| `find_by_file_name(name)` | Find holder containing a specific filename |
-| `copy_to_clipboard(id)` | Copy holder to internal clipboard |
-| `paste(target_id)` | Paste from clipboard |
+```python
+# Create empty holder
+sound = workspace.sound_manager.add_new()
 
-## SoundHolder (`SoundHandle`) Methods
+# Add 3 variations, equal probability
+sound.new_sound("sword1.wav", probability=100)
+sound.new_sound("sword2.wav", probability=100)
+sound.new_sound("sword3.wav", probability=100)
+```
 
-| Method | Description |
-|--------|-------------|
-| `new_sound(file_name, ...)` | Add an actual audio file to this holder |
-| `files` (property) | List of actual sounds in this holder |
-| `remove_file(index)` | Remove sound file by index |
-| `clear_files()` | Remove all sound files |
-| `play_delay` (attr) | Delay before playing |
-| `total_probability` (attr) | Total probability sum |
+## Gotchas & Invariants
+
+*   **Missing Files**: If the filename doesn't match an actual file in your mods folder or game data, the sound will be silent.
+*   **Wwise IDs**: Definitive Edition uses Wwise (`.wem` files). Sometimes the engine uses `resource_id` or `icon_set` to map to Wwise sound banks instead of using the filename.
+*   **Probabilities**: If multiple files have 100 probability, the engine picks one randomly.
+
+## Cross-Links
+
+*   [Graphics](../graphics.md)

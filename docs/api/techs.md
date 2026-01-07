@@ -1,63 +1,59 @@
-# Techs API
+# Techs Manager
 
-The Techs API provides control over technology entries in AoE2 DAT files.
+The `TechManager` handles the creation, deletion, and searching of Technologies.
 
-Unlike Sounds and Effects, Techs are **single-tier objects** - they don't have a nested list of sub-items. Each tech has properties like `name`, `effect_id`, `costs`, etc.
+## Mental Model
 
-## Quick Example
+*   **Technology**: A "Tech" is an item that can be researched at a building. It has a cost, a research time, and most importantly, it links to an **Effect**.
+*   **Separation of Concerns**: The Tech itself defines *how* it is researched (cost, time, location). The Effect defines *what happens* when it is researched.
+*   **Unique Techs**: Civilizations often have unique techs. These are just normal techs that are only available in that civ's tech tree (or enabled via effects).
+
+## Public API
+
+### TechManager (`Actual_Tools_GDP.Techs.tech_manager`)
+
+Access via `workspace.tech_manager`.
+
+*   `add_new(name: str) -> TechHandle`: Creates a new tech.
+*   `get(tech_id: int) -> TechHandle`: Gets a handle.
+*   `find_by_name(name: str) -> TechHandle | None`: Searches by name.
+*   `copy(source_id: int, target_id: int = None) -> TechHandle`: Copies a tech.
+
+### TechHandle (`Actual_Tools_GDP.Techs.tech_handle`)
+
+*   `id`: Tech ID.
+*   `name`: Internal name.
+*   `research_time`: Time in seconds.
+*   `effect_id`: ID of the Effect to trigger upon completion.
+*   `research_location`: ID of the Unit (building) where this is researched (DE mostly uses the Building's `tech_id` list instead).
+*   `resource_costs`: List of `TechCost` objects (Type, Amount, Flag).
+
+## Workflows
+
+### Creating a New Tech
 
 ```python
-tm = workspace.tech_manager
+# 1. Create the Tech
+tech = workspace.tech_manager.add_new("Super Loom")
+tech.research_time = 30.0
 
-# Create a new tech
-tech = tm.add_new(name="Elite Archer Upgrade", effect_id=100)
+# 2. Set Cost (50 Food)
+from Actual_Tools_GDP.Datasets import Resource, TechCostType
+tech.resource_costs[0].type = Resource.FOOD
+tech.resource_costs[0].amount = 50
+tech.resource_costs[0].flag = TechCostType.PAY_COST
 
-# Configure costs using named properties
-tech.cost_1.resource_id = 0  # Food
-tech.cost_1.quantity = 500
-tech.cost_2.resource_id = 3  # Gold
-tech.cost_2.quantity = 300
-
-# Set research time and icon
-tech.research_time = 60
-tech.icon_id = 50
-
-# Link to the tech tree
-tech.required_tech_ids[0] = 22  # Archery Range tech
+# 3. Link to Effect
+effect = workspace.effect_manager.add_new("Super Loom Effect")
+tech.effect_id = effect.id
 ```
 
-## TechManager Methods
+## Gotchas & Invariants
 
-| Method | Description |
-|--------|-------------|
-| `add_new(name, effect_id, ...)` | Create a new tech |
-| `get(tech_id)` | Get tech by ID |
-| `exists(tech_id)` | Check if tech exists |
-| `count()` | Total tech slots |
-| `find_by_name(name)` | Find tech by name |
-| `copy(source_id, target_id)` | Copy tech to new ID |
-| `copy_to_clipboard(id)` | Copy tech to clipboard |
-| `paste(target_id)` | Paste from clipboard |
-| `delete(tech_id)` | Reset slot to blank |
+*   **Costs**: Techs usually support up to 3 cost types. The list is fixed-size in older versions but dynamic in DE. The handles abstract this.
+*   **Research Location**: In older engine versions, the Tech defined where it was researched. In DE, the Building (Unit) usually defines which techs it contains. You might need to add the Tech ID to the Building's interface list, not just set `tech.research_location`.
 
-## TechHandle Properties
+## Cross-Links
 
-| Property | Type | Description |
-|----------|------|-------------|
-| `id` | `int` | Tech ID |
-| `name` | `str` | Tech name |
-| `effect_id` | `int` | Linked effect ID |
-| `research_time` | `int` | Time to research |
-| `costs` | `list` | 3 TechCost objects |
-| `required_tech_ids` | `list` | Required tech IDs |
-| `icon_id` | `int` | Icon ID |
-
-## TechCost Properties
-
-Each tech has 3 cost slots. Access via `tech.costs[0]`, `tech.costs[1]`, `tech.costs[2]`.
-
-| Property | Type | Description |
-|----------|------|-------------|
-| `resource_id` | `int` | Resource type (0=Food, 1=Wood, 2=Stone, 3=Gold) |
-| `quantity` | `int` | Amount required |
-| `deduct_flag` | `bool` | Whether to deduct resource |
+*   [Effects Manager](../effects/effects_manager.md)
+*   [Civilizations](../civilizations/civs.md)
