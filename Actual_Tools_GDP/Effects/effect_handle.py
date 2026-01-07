@@ -102,8 +102,21 @@ class EffectHandle:
         self._effect.effects.append(new_cmd)
         return CommandHandle(self, len(self._effect.effects) - 1)
 
-    # Alias
-    add_command = new_command
+    @property
+    def add_command(self):
+        """
+        Fluent API for adding typed effect commands.
+        
+        Usage:
+            effect.add_command.attribute_modifier_set(a=4, b=-1, c=0, d=100)
+            effect.add_command.enable_disable_unit(a=100, b=1)
+            effect.add_command.team_upgrade_unit(a=4, b=1000)
+        
+        Returns:
+            EffectCommandBuilder with typed methods for all command types
+        """
+        from Actual_Tools_GDP.Effects.effect_command_builder import EffectCommandBuilder
+        return EffectCommandBuilder(self)
 
     def get_command(self, index: int) -> Optional[CommandHandle]:
         """Get a command by index."""

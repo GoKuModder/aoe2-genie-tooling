@@ -505,7 +505,23 @@ class UnitHandle:
     # TASK METHODS (with handles)
     # =========================================================================
 
-    def add_task(
+    @property
+    def add_task(self):
+        """
+        Fluent API for adding typed tasks.
+        
+        Usage:
+            unit.add_task.combat(class_id=0)
+            unit.add_task.garrison(class_id=11)
+            unit.add_task.aura(work_value_1=10, work_range=5)
+        
+        Returns:
+            TaskBuilder with typed methods for all task types
+        """
+        from Actual_Tools_GDP.Units.task_builder import TaskBuilder
+        return TaskBuilder(self)
+
+    def create_task(
         self,
         task_type: int = 0,
         id: int = 0,
@@ -522,7 +538,13 @@ class UnitHandle:
         enabled: int = 1,
         **kwargs
     ) -> Optional[TaskHandle]:
-        """Add task to all units. Returns handle for primary unit's task."""
+        """
+        Add task to all units with raw parameters. Returns handle for primary unit's task.
+        
+        For typed task creation, use add_task property instead:
+            unit.add_task.combat()
+            unit.add_task.garrison()
+        """
         return self.tasks.add(
             task_type=task_type,
             id=id,

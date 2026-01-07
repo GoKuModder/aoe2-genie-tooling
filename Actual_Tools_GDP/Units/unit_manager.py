@@ -553,11 +553,14 @@ class UnitManager:
 
     def _clone_unit(self, source: Any) -> Any:
         """
-        Clone a Unit object manually to avoid pickle issues.
+        Clone a Unit object manually to avoid pickle issues/shared references.
 
-        Copies all public attributes from source to a new Unit instance.
+        Copies all public attributes from source to a new Unit instance,
+        using deepcopy to ensure isolation (fixing shared list issues).
+        Fallbacks to shallow copy for lists/task_info if deepcopy fails.
         """
         from sections.civilization.unit import Unit
+        import copy
 
         new_unit = Unit(ver=source.ver)
 
@@ -569,9 +572,43 @@ class UnitManager:
                 attr = getattr(source, name)
                 if callable(attr):
                     continue
+                
+                # Special handling for known container types that must be independent
+                # 1. Lists (attacks, etc.)
+                if isinstance(attr, list):
+                    try:
+                        val = copy.deepcopy(attr)
+                    except Exception:
+                        # Fallback: Shallow copy the list so appends are independent
+                        val = list(attr)
+                    setattr(new_unit, name, val)
+                    continue
+                
+                # 2. task_info (Nested object with list)
+                if name == "task_info" and attr is not None:
+                    try:
+                        val = copy.deepcopy(attr)
+                    except Exception:
+                        # Fallback: Copy object + shallow copy tasks list
+                        try:
+                            val = copy.copy(attr)
+                            if hasattr(val, "tasks") and isinstance(val.tasks, list):
+                                val.tasks = list(val.tasks)
+                        except Exception:
+                            val = attr
+                    setattr(new_unit, name, val)
+                    continue
+
+                # Default handling for other attributes
+                try:
+                    val = copy.deepcopy(attr)
+                except Exception:
+                    # Fallback if uncopyable
+                    val = attr
+
                 # Try to set on new unit
                 try:
-                    setattr(new_unit, name, attr)
+                    setattr(new_unit, name, val)
                 except (AttributeError, Exception):
                     pass
             except Exception:

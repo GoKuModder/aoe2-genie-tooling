@@ -1,6 +1,7 @@
 """Type stubs for EffectHandle - enables IDE autocomplete"""
 from typing import Any, Optional
 from Actual_Tools_GDP.Effects.command_handle import CommandHandle
+from Actual_Tools_GDP.Effects.effect_command_builder import EffectCommandBuilder
 
 class EffectHandle:
     """Handle for a single effect holder."""
@@ -37,18 +38,19 @@ class EffectHandle:
         c: int = -1,
         d: float = 0.0,
     ) -> CommandHandle:
-        """Add a new effect command to this holder."""
+        """Add a new effect command to this holder (raw method)."""
         ...
 
-    def add_command(
-        self,
-        type: int = 0,
-        a: int = -1,
-        b: int = -1,
-        c: int = -1,
-        d: float = 0.0,
-    ) -> CommandHandle:
-        """Alias for new_command."""
+    @property
+    def add_command(self) -> EffectCommandBuilder:
+        """
+        Fluent API for adding typed effect commands.
+        
+        Usage:
+            effect.add_command.attribute_modifier_set(a=4, b=-1, c=0, d=100)
+            effect.add_command.enable_disable_unit(a=100, b=1)
+            effect.add_command.team_upgrade_unit(a=4, b=1000)
+        """
         ...
 
     def get_command(self, index: int) -> Optional[CommandHandle]:

@@ -83,7 +83,7 @@ class TaskHandle:
 
     @is_default.setter
     def is_default(self, value: int) -> None:
-        self._task.is_default = value
+        self._task.is_default = bool(value)
 
     @property
     def action_type(self) -> int:
@@ -165,25 +165,114 @@ class TaskHandle:
     def target_diplomacy(self, value: int) -> None:
         self._task.target_diplomacy = value
 
+    # Core graphic mapping fixes (UnitTask struct uses these names)
     @property
     def working_graphic_id(self) -> int:
-        return self._task.working_graphic_id
+        return self._task.work_sprite_id
 
     @working_graphic_id.setter
     def working_graphic_id(self, value: int) -> None:
-        self._task.working_graphic_id = value
+        self._task.work_sprite_id = value
 
     @property
     def carrying_graphic_id(self) -> int:
-        return self._task.carrying_graphic_id
+        return self._task.carry_sprite_id
 
     @carrying_graphic_id.setter
     def carrying_graphic_id(self, value: int) -> None:
-        self._task.carrying_graphic_id = value
+        self._task.carry_sprite_id = value
+
+    # New Property aliases for TaskBuilder
+    @property
+    def work_sprite_id(self) -> int:
+        return self._task.work_sprite_id
+
+    @work_sprite_id.setter
+    def work_sprite_id(self, value: int) -> None:
+        self._task.work_sprite_id = value
+
+    @property
+    def carry_sprite_id(self) -> int:
+        return self._task.carry_sprite_id
+
+    @carry_sprite_id.setter
+    def carry_sprite_id(self, value: int) -> None:
+        self._task.carry_sprite_id = value
+        
+    @property
+    def productivity_resource(self) -> int:
+        return self._task.productivity_resource
+        
+    @productivity_resource.setter
+    def productivity_resource(self, value: int) -> None:
+        self._task.productivity_resource = value
+        
+    @property
+    def unused_resource(self) -> int:
+        return self._task.unused_resource
+        
+    @unused_resource.setter
+    def unused_resource(self, value: int) -> None:
+        self._task.unused_resource = value
+        
+    @property
+    def search_wait_time(self) -> float:
+        return self._task.search_wait_time
+        
+    @search_wait_time.setter
+    def search_wait_time(self, value: float) -> None:
+        self._task.search_wait_time = value
+        
+    @property
+    def proceeding_graphic_id(self) -> int:
+        return self._task.proceed_sprite_id
+        
+    @proceeding_graphic_id.setter
+    def proceeding_graphic_id(self, value: int) -> None:
+        self._task.proceed_sprite_id = value
+        
+    @property
+    def resource_gather_sound_id(self) -> int:
+        return self._task.resource_gather_sound_id
+        
+    @resource_gather_sound_id.setter
+    def resource_gather_sound_id(self, value: int) -> None:
+        self._task.resource_gather_sound_id = value
+        
+    @property
+    def resource_deposit_sound_id(self) -> int:
+        return self._task.resource_deposit_sound_id
+        
+    @resource_deposit_sound_id.setter
+    def resource_deposit_sound_id(self, value: int) -> None:
+        self._task.resource_deposit_sound_id = value
+    
+    @property
+    def gather_type(self) -> int:
+        return self._task.gather_type
+        
+    @gather_type.setter
+    def gather_type(self, value: int) -> None:
+        self._task.gather_type = value
+        
+    @property
+    def work_mode(self) -> int:
+        return self._task.work_mode
+        
+    @work_mode.setter
+    def work_mode(self, value: int) -> None:
+        self._task.work_mode = value
+    
+    @property
+    def enable_targeting(self) -> int:
+        return self._task.enable_targeting
+        
+    @enable_targeting.setter
+    def enable_targeting(self, value: int) -> None:
+        self._task.enable_targeting = value
 
     @property
     def enabled(self) -> int:
-        """Whether the task is enabled (stub, not present in UnitTask)."""
         return 1
 
     @enabled.setter

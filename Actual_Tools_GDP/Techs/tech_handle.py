@@ -99,9 +99,30 @@ class TechHandle:
         return self._tech.costs
 
     @property
-    def required_tech_ids(self) -> list:
-        """Get required tech IDs."""
-        return self._tech.required_tech_ids
+    def required_tech_ids(self) -> tuple:
+        """Get required tech IDs (6 slots, -1 means empty). Use set_required_tech() to modify."""
+        return tuple(self._tech.required_tech_ids)
+
+    def set_required_tech(self, slot: int, tech_id: int) -> None:
+        """
+        Set a required tech ID at a specific slot.
+        
+        Args:
+            slot: Slot index (0-5)
+            tech_id: Tech ID to require (-1 to clear the slot)
+            
+        Raises:
+            ValueError: If slot is not in range 0-5
+        """
+        max_slot = len(self._tech.required_tech_ids) - 1
+        if not (0 <= slot <= max_slot):
+            raise ValueError(f"slot must be 0-{max_slot}, got {slot}")
+        self._tech.required_tech_ids[slot] = tech_id
+
+    def clear_required_techs(self) -> None:
+        """Clear all required tech slots (set to -1)."""
+        for i in range(len(self._tech.required_tech_ids)):
+            self._tech.required_tech_ids[i] = -1
 
     @property
     def icon_id(self) -> int:
@@ -111,6 +132,153 @@ class TechHandle:
     @icon_id.setter
     def icon_id(self, value: int) -> None:
         self._tech.icon_id = value
+
+    @property
+    def type(self) -> int:
+        """Get tech type."""
+        return self._tech.type
+
+    @type.setter
+    def type(self, value: int) -> None:
+        self._tech.type = value
+
+    @property
+    def min_required_techs(self) -> int:
+        """Get minimum required techs count."""
+        return self._tech.min_required_techs
+
+    @min_required_techs.setter
+    def min_required_techs(self, value: int) -> None:
+        self._tech.min_required_techs = value
+
+    @property
+    def civilization_id(self) -> int:
+        """Get civilization ID (-1 = all civs)."""
+        return self._tech.civilization_id
+
+    @civilization_id.setter
+    def civilization_id(self, value: int) -> None:
+        self._tech.civilization_id = value
+
+    @property
+    def full_tech_tree_mode(self) -> int:
+        """Get full tech tree mode."""
+        return self._tech.full_tech_tree_mode
+
+    @full_tech_tree_mode.setter
+    def full_tech_tree_mode(self, value: int) -> None:
+        self._tech.full_tech_tree_mode = value
+
+    @property
+    def location_unit_id(self) -> int:
+        """Get research location unit ID (pre-DE versions only)."""
+        try:
+            return self._tech.location_unit_id
+        except Exception:
+            return -1
+
+    @location_unit_id.setter
+    def location_unit_id(self, value: int) -> None:
+        try:
+            self._tech.location_unit_id = value
+        except Exception:
+            pass
+
+    @property
+    def name_str_id(self) -> int:
+        """Get language file name string ID."""
+        return self._tech.name_str_id
+
+    @name_str_id.setter
+    def name_str_id(self, value: int) -> None:
+        self._tech.name_str_id = value
+
+    @property
+    def description_str_id(self) -> int:
+        """Get language file description string ID."""
+        return self._tech.description_str_id
+
+    @description_str_id.setter
+    def description_str_id(self, value: int) -> None:
+        self._tech.description_str_id = value
+
+    @property
+    def help_str_id(self) -> int:
+        """Get language file help string ID."""
+        return self._tech.help_str_id
+
+    @help_str_id.setter
+    def help_str_id(self, value: int) -> None:
+        self._tech.help_str_id = value
+
+    @property
+    def tech_tree_str_id(self) -> int:
+        """Get tech tree string ID."""
+        return self._tech.tech_tree_str_id
+
+    @tech_tree_str_id.setter
+    def tech_tree_str_id(self, value: int) -> None:
+        self._tech.tech_tree_str_id = value
+
+    @property
+    def hotkey_str_id(self) -> int:
+        """Get hotkey string ID (pre-DE versions only)."""
+        try:
+            return self._tech.hotkey_str_id
+        except Exception:
+            return -1
+
+    @hotkey_str_id.setter
+    def hotkey_str_id(self, value: int) -> None:
+        try:
+            self._tech.hotkey_str_id = value
+        except Exception:
+            pass
+
+    @property
+    def button_id(self) -> int:
+        """Get button ID (pre-DE versions only)."""
+        try:
+            return self._tech.button_id
+        except Exception:
+            return 0
+
+    @button_id.setter
+    def button_id(self, value: int) -> None:
+        try:
+            self._tech.button_id = value
+        except Exception:
+            pass
+
+    @property
+    def repeatable(self) -> bool:
+        """Get if tech is repeatable (DE only)."""
+        try:
+            return self._tech.repeatable
+        except Exception:
+            return False
+
+    @repeatable.setter
+    def repeatable(self, value: bool) -> None:
+        try:
+            self._tech.repeatable = value
+        except Exception:
+            pass
+
+    @property
+    def name2(self) -> str:
+        """Get secondary name (SWGB only)."""
+        try:
+            return self._tech.name2
+        except Exception:
+            return ""
+
+    @name2.setter
+    def name2(self, value: str) -> None:
+        try:
+            self._tech.name2 = value
+        except Exception:
+            pass
 
     @property
     def research_locations(self) -> list:
@@ -124,20 +292,133 @@ class TechHandle:
         except Exception:
             return []
 
-    @property
-    def research_location(self) -> Any:
+    def get_research_location(self, location_id: int) -> Optional[Any]:
         """
-        Access research location operations.
+        Get a specific research location by index.
         
-        Usage:
-            tech.research_location.add(location_unit_id=87, research_time=60)
-            tech.research_location.get(0)
-            tech.research_location.remove(0)
-            tech.research_location.copy(0)
-            tech.research_location.move(0, 1)
+        Args:
+            location_id: Index of the research location (0-based)
+            
+        Returns:
+            ResearchLocation object or None if not found
         """
-        from Actual_Tools_GDP.Techs.research_location_accessor import ResearchLocationAccessor
-        return ResearchLocationAccessor(self)
+        try:
+            if 0 <= location_id < len(self._tech.research_locations):
+                return self._tech.research_locations[location_id]
+        except Exception:
+            pass
+        return None
+
+    def add_research_location(
+        self,
+        location_unit_id: int = -1,
+        research_time: int = 0,
+        button_id: int = 0,
+        hotkey_str_id: int = -1,
+    ) -> Optional[Any]:
+        """
+        Add a new research location.
+        
+        Args:
+            location_unit_id: Building unit ID where this can be researched
+            research_time: Time to research at this location
+            button_id: UI button position
+            hotkey_str_id: Hotkey string ID
+            
+        Returns:
+            The new ResearchLocation object, or None if failed
+        """
+        try:
+            from sections.tech.tech import ResearchLocation
+            
+            new_loc = ResearchLocation(ver=self._tech.ver)
+            new_loc.location_unit_id = location_unit_id
+            new_loc.research_time = research_time
+            new_loc.button_id = button_id
+            new_loc.hotkey_str_id = hotkey_str_id
+            
+            self._tech.research_locations.append(new_loc)
+            return new_loc
+        except Exception:
+            return None
+
+    def remove_research_location(self, location_id: int) -> bool:
+        """
+        Remove a research location by index.
+        
+        Args:
+            location_id: Index of the research location to remove
+            
+        Returns:
+            True if removed, False if failed or out of range
+        """
+        try:
+            if 0 <= location_id < len(self._tech.research_locations):
+                del self._tech.research_locations[location_id]
+                return True
+        except Exception:
+            pass
+        return False
+
+    def copy_research_location(self, location_id: int, target_index: Optional[int] = None) -> Optional[Any]:
+        """
+        Copy a research location.
+        
+        Args:
+            location_id: Source location index
+            target_index: Destination index. If None, appends to end.
+            
+        Returns:
+            The new ResearchLocation object, or None if failed
+        """
+        try:
+            if not (0 <= location_id < len(self._tech.research_locations)):
+                return None
+                
+            source = self._tech.research_locations[location_id]
+            
+            from sections.tech.tech import ResearchLocation
+            new_loc = ResearchLocation(ver=source.ver)
+            new_loc.location_unit_id = source.location_unit_id
+            new_loc.research_time = source.research_time
+            new_loc.button_id = source.button_id
+            new_loc.hotkey_str_id = source.hotkey_str_id
+            
+            if target_index is None:
+                self._tech.research_locations.append(new_loc)
+            else:
+                target_index = max(0, min(target_index, len(self._tech.research_locations)))
+                self._tech.research_locations.insert(target_index, new_loc)
+                
+            return new_loc
+        except Exception:
+            return None
+
+    def move_research_location(self, source_index: int, target_index: int) -> bool:
+        """
+        Move a research location to a new position.
+        
+        Args:
+            source_index: Index of location to move
+            target_index: New index position
+            
+        Returns:
+            True if moved, False if out of range
+        """
+        try:
+            if not (0 <= source_index < len(self._tech.research_locations)):
+                return False
+                
+            target_index = max(0, min(target_index, len(self._tech.research_locations) - 1))
+            
+            if source_index == target_index:
+                return True
+                
+            obj = self._tech.research_locations.pop(source_index)
+            self._tech.research_locations.insert(target_index, obj)
+            return True
+        except Exception:
+            return False
 
     def clear_research_locations(self) -> None:
         """Remove all research locations."""

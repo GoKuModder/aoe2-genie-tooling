@@ -118,7 +118,7 @@ class TasksManager:
                 new_task = UnitTask(ver=u.ver)
                 new_task.task_type = task_type
                 new_task.id = id if id != -1 else len(u.task_info.tasks)
-                new_task.is_default = is_default
+                new_task.is_default = bool(is_default)
                 new_task.action_type = action_type
                 new_task.unit_class_id = unit_class_id
                 new_task.unit_type = unit_type

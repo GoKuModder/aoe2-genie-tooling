@@ -1,18 +1,17 @@
 """Type stubs for UnitHandle - provides IDE autocomplete for flattened attributes."""
-from typing import List, Optional, Tuple
+from typing import List, Optional, Tuple, Any
 
-from genieutils.unit import AttackOrArmor, ResourceStorage, DamageGraphic, BuildingAnnex, ResourceCost, TrainLocation
-from genieutils.task import Task as GenieTask
-
-from Actual_Tools.Units.handles import (
+from Actual_Tools_GDP.Units.handles import (
     TaskHandle, AttackHandle, ArmourHandle, DamageGraphicHandle,
     TrainLocationHandle, DropSiteHandle
 )
-from Actual_Tools.Units.wrappers import (
+from Actual_Tools_GDP.Units.wrappers import (
     Type50Wrapper, CreatableWrapper, CostWrapper, DeadFishWrapper,
     BirdWrapper, ProjectileWrapper, BuildingWrapper, ResourceStoragesWrapper,
     DamageGraphicsWrapper, TasksWrapper
 )
+from Actual_Tools_GDP.Units.task_builder import TaskBuilder
+
 
 class UnitHandle:
     # Basic
@@ -76,12 +75,12 @@ class UnitHandle:
     garrison_type: int
     tech_id: int
     
-    # Collections
-    attacks: List[AttackOrArmor]
-    armours: List[AttackOrArmor]
-    resource_costs: Tuple[ResourceCost, ResourceCost, ResourceCost]
-    train_locations: List[TrainLocation]
-    annexes: Tuple[BuildingAnnex, ...]
+    # Collections (use Any as return types are handled by wrapper/manager classes)
+    attacks: List[Any]
+    armours: List[Any]
+    resource_costs: Tuple[Any, Any, Any]
+    train_locations: List[Any]
+    annexes: Tuple[Any, ...]
     looting_table: Tuple[int, ...]
     drop_sites: List[int]
     
@@ -110,7 +109,21 @@ class UnitHandle:
     def remove_damage_graphic(self, damage_graphic_id: int) -> bool: ...
     
     # Task methods
-    def add_task(self, task_type: int = 0, id: int = 0, is_default: int = 0, action_type: int = 0, class_id: int = -1, unit_id: int = -1, terrain_id: int = -1, resource_in: int = -1, resource_out: int = -1, work_value_1: float = 0.0, work_value_2: float = 0.0, work_range: float = 0.0, enabled: int = 1, **kwargs) -> Optional[TaskHandle]: ...
+    @property
+    def add_task(self) -> TaskBuilder:
+        """
+        Fluent API for adding typed tasks.
+        
+        Usage:
+            unit.add_task.combat(class_id=0)
+            unit.add_task.garrison(class_id=11)
+            unit.add_task.aura(work_value_1=10, work_range=5)
+        """
+        ...
+    
+    def create_task(self, task_type: int = 0, id: int = 0, is_default: int = 0, action_type: int = 0, class_id: int = -1, unit_id: int = -1, terrain_id: int = -1, resource_in: int = -1, resource_out: int = -1, work_value_1: float = 0.0, work_value_2: float = 0.0, work_range: float = 0.0, enabled: int = 1, **kwargs) -> Optional[TaskHandle]:
+        """Add task with raw parameters. Use add_task property for typed API."""
+        ...
     def get_task(self, task_id: int) -> Optional[TaskHandle]: ...
     def get_tasks_list(self) -> List[TaskHandle]: ...
     def remove_task(self, task_id: int) -> bool: ...
