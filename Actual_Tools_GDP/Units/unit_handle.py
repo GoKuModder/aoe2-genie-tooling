@@ -21,10 +21,15 @@ from Actual_Tools_GDP.Units.handles import (
 )
 
     # Wrapper imports (modernized versions)
+    # Wrapper imports (modernized versions)
 from Actual_Tools_GDP.Units.wrappers import (
+    CombatWrapper,
     CombatWrapper as Type50Wrapper, 
+    CreationWrapper,
     CreationWrapper as CreatableWrapper, 
+    MovementWrapper,
     MovementWrapper as DeadFishWrapper,
+    BehaviorWrapper,
     BehaviorWrapper as BirdWrapper, 
     ProjectileWrapper, 
     BuildingWrapper
@@ -83,8 +88,8 @@ class UnitHandle:
         # removed "_validator" (using workspace.validator)
         
         # Wrapper caches
-        "_combat_cache", "_creatable_cache", "_cost_cache", "_dead_fish_cache",
-        "_bird_cache", "_projectile_cache", "_building_cache",
+        "_combat_cache", "_creatable_cache", "_cost_cache", "_movement_cache",
+        "_behavior_cache", "_projectile_cache", "_building_cache",
         # Collection caches
         "_tasks_cache", "_attacks_cache", "_armours_cache", 
         "_damage_graphics_cache", "_train_locations_cache", 
@@ -112,8 +117,8 @@ class UnitHandle:
         object.__setattr__(self, "_combat_cache", None)
         object.__setattr__(self, "_creatable_cache", None)
         object.__setattr__(self, "_cost_cache", None)
-        object.__setattr__(self, "_dead_fish_cache", None)
-        object.__setattr__(self, "_bird_cache", None)
+        object.__setattr__(self, "_movement_cache", None)
+        object.__setattr__(self, "_behavior_cache", None)
         object.__setattr__(self, "_projectile_cache", None)
         object.__setattr__(self, "_building_cache", None)
         # Collection caches
@@ -160,8 +165,8 @@ class UnitHandle:
         object.__setattr__(self, "_combat_cache", None)
         object.__setattr__(self, "_creatable_cache", None)
         object.__setattr__(self, "_cost_cache", None)
-        object.__setattr__(self, "_dead_fish_cache", None)
-        object.__setattr__(self, "_bird_cache", None)
+        object.__setattr__(self, "_movement_cache", None)
+        object.__setattr__(self, "_behavior_cache", None)
         object.__setattr__(self, "_projectile_cache", None)
         object.__setattr__(self, "_building_cache", None)
         # Collection caches
@@ -1447,150 +1452,1351 @@ class UnitHandle:
                 return comp
         return None
 
-    def __getattr__(self, name: str) -> Any:
-        """
-        Dynamic attribute lookup for wrapper attributes only.
-        
-        Direct Unit attributes are now explicit @property declarations.
-        This prevents IDE from suggesting non-curated GenieDatParser attributes.
-        """
-        # Don't intercept internal attributes
-        if name.startswith("_"):
-            raise AttributeError(f"'{type(self).__name__}' has no attribute '{name}'")
+# =========================================================================
 
-        # Sub-component attribute (from wrappers ONLY)
-        comp = self._find_component(name)
-        if comp:
-            # Use the wrapper instance from self
-            return getattr(getattr(self, comp), name)
+    # =========================================================================
+    # MISSING WRAPPER ACCESSORS (Option 1 Requirement)
+    # =========================================================================
 
-        # Attribute not found - provide helpful suggestions
-        import difflib
-        
-        # Collect all available attributes from wrappers only
-        available_attrs = set()
-        
-        # Add direct properties and methods from UnitHandle
-        available_attrs.update(dir(type(self)))
-        
-        # Add wrapper attributes
-        for comp in _COMPONENTS:
-            if hasattr(self, comp):
-                wrapper = getattr(self, comp)
-                if wrapper is not None:
-                    available_attrs.update(a for a in dir(wrapper) if not a.startswith('_'))
-        
-        # Find close matches
-        suggestions = difflib.get_close_matches(name, available_attrs, n=3, cutoff=0.6)
-        
-        error_msg = f"'{type(self).__name__}' object has no attribute '{name}'"
-        if suggestions:
-            error_msg += f"\n  Did you mean: {', '.join(repr(s) for s in suggestions)}?"
-        error_msg += f"\n  Tip: Use dir(unit) to see all available attributes"
-        
-        raise AttributeError(error_msg)
+    @property
+    def behavior(self) -> BehaviorWrapper:
+        if self._behavior_cache is None:
+            self._behavior_cache = BehaviorWrapper(self._get_units())
+        return self._behavior_cache
+
+    @property
+    def movement(self) -> MovementWrapper:
+        if self._movement_cache is None:
+            self._movement_cache = MovementWrapper(self._get_units())
+        return self._movement_cache
+
+    @property
+    def projectile(self) -> ProjectileWrapper:
+        if self._projectile_cache is None:
+            self._projectile_cache = ProjectileWrapper(self._get_units())
+        return self._projectile_cache
+
+    @property
+    def creatable(self) -> CreationWrapper:
+        if self._creatable_cache is None:
+            self._creatable_cache = CreationWrapper(self._get_units())
+        return self._creatable_cache
+
+    @property
+    def building(self) -> BuildingWrapper:
+        if self._building_cache is None:
+            self._building_cache = BuildingWrapper(self._get_units())
+        return self._building_cache
+    
+    # Combat accessor appears to exist, but ensured here if needed
+    @property
+    def combat(self) -> CombatWrapper:
+        if self._combat_cache is None:
+            self._combat_cache = CombatWrapper(self._get_units())
+        return self._combat_cache
 
 
-    def __setattr__(self, name: str, value: Any) -> None:
-        # Internal slots
-        if name in self.__slots__:
-            object.__setattr__(self, name, value)
-            return
+    # FLATTENED WRAPPER PROPERTIES (Generated by generate_wrapper_properties.py)
+# =========================================================================
 
-        units = self._get_units()
-        if not units:
-            raise AttributeError(f"Cannot set '{name}': no units linked")
+    # CombatWrapper flattened properties
+    @property
+    def accuracy_dispersion(self) -> Any:
+        """Flattens combat.accuracy_dispersion."""
+        return self.combat.accuracy_dispersion
 
-        # Validate and set the value
-        self._validated_set(name, value, units)
+    @accuracy_dispersion.setter
+    def accuracy_dispersion(self, value: Any) -> None:
+        self.combat.accuracy_dispersion = value
 
-    def _validated_set(self, name: str, value: Any, units: List) -> None:
-        """Set attribute with validation for references and enums."""
-        import traceback
-        
-        # Try to import manifest loader for validation (may not exist yet)
-        try:
-            from Actual_Tools_GDP.Shared.manifest_loader import manifest, serializer, DeferredReference
-            has_manifest = True
-        except ImportError:
-            has_manifest = False
-            manifest = None
+    @property
+    def accuracy_percent(self) -> Any:
+        """Flattens combat.accuracy_percent."""
+        return self.combat.accuracy_percent
 
-        if has_manifest and manifest:
-            # Get manifest entry for this attribute
-            entry = manifest.get_by_name(name)
+    @accuracy_percent.setter
+    def accuracy_percent(self, value: Any) -> None:
+        self.combat.accuracy_percent = value
 
-            # Capture source location for error messages
-            stack = traceback.extract_stack()
-            source_frame = None
-            for frame in reversed(stack[:-2]):
-                if "site-packages" not in frame.filename and "Actual_Tools" not in frame.filename:
-                    source_frame = frame
-                    break
-            if source_frame is None:
-                source_frame = stack[-3] if len(stack) >= 3 else stack[-1]
-            source_info = f"{source_frame.filename}:{source_frame.lineno} - {source_frame.line}"
+    @property
+    def armours(self) -> Any:
+        """Flattens combat.armours."""
+        return self.combat.armours
 
-            # VALIDATION: Reference types (deferred to save time)
-            if entry and entry.is_reference:
-                # Extract ID from value
-                actual_id = value
-                if not isinstance(value, int):
-                    if hasattr(value, 'id'):
-                        actual_id = value.id
-                    elif hasattr(value, '_id'):
-                        actual_id = value._id
-                    else:
-                        raise TypeError(
-                            f"{name}: Expected int or handle object, got {type(value).__name__}\n"
-                            f"  Source: {source_info}"
-                        )
+    @armours.setter
+    def armours(self, value: Any) -> None:
+        self.combat.armours = value
 
-                # Create deferred reference for validation at save time
-                ref = DeferredReference(
-                    target_type=entry.link_target,
-                    value=actual_id,
-                    source_file=source_frame.filename,
-                    source_line=source_frame.lineno,
-                    source_code=source_frame.line or "",
-                    attribute_name=name,
-                )
-                serializer.add_deferred(ref)
-                value = actual_id
+    @property
+    def attack_graphic_2_id(self) -> Any:
+        """Flattens combat.attack_graphic_2_id."""
+        return self.combat.attack_graphic_2_id
 
-            # VALIDATION: Enum/Bitmask types (immediate)
-            elif entry and entry.is_enum:
-                manifest.validate_enum_value(entry, value, source_info)
+    @attack_graphic_2_id.setter
+    def attack_graphic_2_id(self, value: Any) -> None:
+        self.combat.attack_graphic_2_id = value
 
-        # NOTE: Reference validation moved to workspace.validate_unit()
+    @property
+    def attack_graphic_id(self) -> Any:
+        """Flattens combat.attack_graphic_id."""
+        return self.combat.attack_graphic_id
 
-        # Try to set via wrapper first (for wrapper attributes like max_range, work_rate, etc.)
-        comp = self._find_component(name)
-        if comp:
-            # Use the wrapper's setter - this ensures proper logic is applied
-            wrapper = getattr(self, comp)
-            if wrapper is not None and hasattr(wrapper, name):
-                # The wrapper's setter will handle setting on all units
-                setattr(wrapper, name, value)
-                return
+    @attack_graphic_id.setter
+    def attack_graphic_id(self, value: Any) -> None:
+        self.combat.attack_graphic_id = value
 
-        # Direct Unit attribute
-        if hasattr(units[0], name):
-            for u in units:
-                setattr(u, name, value)
-            return
+    @property
+    def attacks(self) -> Any:
+        """Flattens combat.attacks."""
+        return self.combat.attacks
 
-        raise AttributeError(f"'{type(self).__name__}' has no attribute '{name}'")
+    @attacks.setter
+    def attacks(self, value: Any) -> None:
+        self.combat.attacks = value
 
-    def validate_all_references(self) -> list:
-        """
-        Validate all reference fields in this unit.
-        
-        Delegates to workspace.validate_unit() for centralized validation.
-        
-        Returns:
-            List of error messages (empty if all valid)
-        """
-        if self._workspace is None:
-            return ["Validation skipped: workspace not available"]
-        return self._workspace.validate_unit(self._unit_id)
+    @property
+    def base_armor(self) -> Any:
+        """Flattens combat.base_armor."""
+        return self.combat.base_armor
+
+    @base_armor.setter
+    def base_armor(self, value: Any) -> None:
+        self.combat.base_armor = value
+
+    @property
+    def blast_attack_level(self) -> Any:
+        """Flattens combat.blast_attack_level."""
+        return self.combat.blast_attack_level
+
+    @blast_attack_level.setter
+    def blast_attack_level(self, value: Any) -> None:
+        self.combat.blast_attack_level = value
+
+    @property
+    def blast_damage(self) -> Any:
+        """Flattens combat.blast_damage."""
+        return self.combat.blast_damage
+
+    @blast_damage.setter
+    def blast_damage(self, value: Any) -> None:
+        self.combat.blast_damage = value
+
+    @property
+    def blast_width(self) -> Any:
+        """Flattens combat.blast_width."""
+        return self.combat.blast_width
+
+    @blast_width.setter
+    def blast_width(self, value: Any) -> None:
+        self.combat.blast_width = value
+
+    @property
+    def bonus_damage_resistance(self) -> Any:
+        """Flattens combat.bonus_damage_resistance."""
+        return self.combat.bonus_damage_resistance
+
+    @bonus_damage_resistance.setter
+    def bonus_damage_resistance(self, value: Any) -> None:
+        self.combat.bonus_damage_resistance = value
+
+    @property
+    def break_off_combat(self) -> Any:
+        """Flattens combat.break_off_combat."""
+        return self.combat.break_off_combat
+
+    @break_off_combat.setter
+    def break_off_combat(self, value: Any) -> None:
+        self.combat.break_off_combat = value
+
+    @property
+    def damage_reflection(self) -> Any:
+        """Flattens combat.damage_reflection."""
+        return self.combat.damage_reflection
+
+    @damage_reflection.setter
+    def damage_reflection(self, value: Any) -> None:
+        self.combat.damage_reflection = value
+
+    @property
+    def defense_terrain_bonus(self) -> Any:
+        """Flattens combat.defense_terrain_bonus."""
+        return self.combat.defense_terrain_bonus
+
+    @defense_terrain_bonus.setter
+    def defense_terrain_bonus(self, value: Any) -> None:
+        self.combat.defense_terrain_bonus = value
+
+    @property
+    def displayed_attack(self) -> Any:
+        """Flattens combat.displayed_attack."""
+        return self.combat.displayed_attack
+
+    @displayed_attack.setter
+    def displayed_attack(self, value: Any) -> None:
+        self.combat.displayed_attack = value
+
+    @property
+    def displayed_melee_armour(self) -> Any:
+        """Flattens combat.displayed_melee_armour."""
+        return self.combat.displayed_melee_armour
+
+    @displayed_melee_armour.setter
+    def displayed_melee_armour(self, value: Any) -> None:
+        self.combat.displayed_melee_armour = value
+
+    @property
+    def displayed_range(self) -> Any:
+        """Flattens combat.displayed_range."""
+        return self.combat.displayed_range
+
+    @displayed_range.setter
+    def displayed_range(self, value: Any) -> None:
+        self.combat.displayed_range = value
+
+    @property
+    def displayed_reload_time(self) -> Any:
+        """Flattens combat.displayed_reload_time."""
+        return self.combat.displayed_reload_time
+
+    @displayed_reload_time.setter
+    def displayed_reload_time(self, value: Any) -> None:
+        self.combat.displayed_reload_time = value
+
+    @property
+    def frame_delay(self) -> Any:
+        """Flattens combat.frame_delay."""
+        return self.combat.frame_delay
+
+    @frame_delay.setter
+    def frame_delay(self, value: Any) -> None:
+        self.combat.frame_delay = value
+
+    @property
+    def friendly_fire_damage(self) -> Any:
+        """Flattens combat.friendly_fire_damage."""
+        return self.combat.friendly_fire_damage
+
+    @friendly_fire_damage.setter
+    def friendly_fire_damage(self, value: Any) -> None:
+        self.combat.friendly_fire_damage = value
+
+    @property
+    def garrison_firepower(self) -> Any:
+        """Flattens combat.garrison_firepower."""
+        return self.combat.garrison_firepower
+
+    @garrison_firepower.setter
+    def garrison_firepower(self, value: Any) -> None:
+        self.combat.garrison_firepower = value
+
+    @property
+    def graphic_displacement(self) -> Any:
+        """Flattens combat.graphic_displacement."""
+        return self.combat.graphic_displacement
+
+    @graphic_displacement.setter
+    def graphic_displacement(self, value: Any) -> None:
+        self.combat.graphic_displacement = value
+
+    @property
+    def interrupt_frame(self) -> Any:
+        """Flattens combat.interrupt_frame."""
+        return self.combat.interrupt_frame
+
+    @interrupt_frame.setter
+    def interrupt_frame(self, value: Any) -> None:
+        self.combat.interrupt_frame = value
+
+    @property
+    def max_range(self) -> Any:
+        """Flattens combat.max_range."""
+        return self.combat.max_range
+
+    @max_range.setter
+    def max_range(self, value: Any) -> None:
+        self.combat.max_range = value
+
+    @property
+    def min_range(self) -> Any:
+        """Flattens combat.min_range."""
+        return self.combat.min_range
+
+    @min_range.setter
+    def min_range(self, value: Any) -> None:
+        self.combat.min_range = value
+
+    @property
+    def projectile_unit_id(self) -> Any:
+        """Flattens combat.projectile_unit_id."""
+        return self.combat.projectile_unit_id
+
+    @projectile_unit_id.setter
+    def projectile_unit_id(self, value: Any) -> None:
+        self.combat.projectile_unit_id = value
+
+    @property
+    def reload_time(self) -> Any:
+        """Flattens combat.reload_time."""
+        return self.combat.reload_time
+
+    @reload_time.setter
+    def reload_time(self, value: Any) -> None:
+        self.combat.reload_time = value
+
+    @property
+    def weapon_offset_x(self) -> Any:
+        """Flattens combat.weapon_offset_x."""
+        return self.combat.weapon_offset_x
+
+    @weapon_offset_x.setter
+    def weapon_offset_x(self, value: Any) -> None:
+        self.combat.weapon_offset_x = value
+
+    @property
+    def weapon_offset_y(self) -> Any:
+        """Flattens combat.weapon_offset_y."""
+        return self.combat.weapon_offset_y
+
+    @weapon_offset_y.setter
+    def weapon_offset_y(self, value: Any) -> None:
+        self.combat.weapon_offset_y = value
+
+    @property
+    def weapon_offset_z(self) -> Any:
+        """Flattens combat.weapon_offset_z."""
+        return self.combat.weapon_offset_z
+
+    @weapon_offset_z.setter
+    def weapon_offset_z(self, value: Any) -> None:
+        self.combat.weapon_offset_z = value
+
+
+    # MovementWrapper flattened properties
+    @property
+    def max_yaw_per_sec_standing(self) -> Any:
+        """Flattens movement.max_yaw_per_sec_standing."""
+        return self.movement.max_yaw_per_sec_standing
+
+    @max_yaw_per_sec_standing.setter
+    def max_yaw_per_sec_standing(self, value: Any) -> None:
+        self.movement.max_yaw_per_sec_standing = value
+
+    @property
+    def max_yaw_per_sec_walking(self) -> Any:
+        """Flattens movement.max_yaw_per_sec_walking."""
+        return self.movement.max_yaw_per_sec_walking
+
+    @max_yaw_per_sec_walking.setter
+    def max_yaw_per_sec_walking(self, value: Any) -> None:
+        self.movement.max_yaw_per_sec_walking = value
+
+    @property
+    def max_yaw_per_second_moving(self) -> Any:
+        """Flattens movement.max_yaw_per_second_moving."""
+        return self.movement.max_yaw_per_second_moving
+
+    @max_yaw_per_second_moving.setter
+    def max_yaw_per_second_moving(self, value: Any) -> None:
+        self.movement.max_yaw_per_second_moving = value
+
+    @property
+    def max_yaw_per_second_stationary(self) -> Any:
+        """Flattens movement.max_yaw_per_second_stationary."""
+        return self.movement.max_yaw_per_second_stationary
+
+    @max_yaw_per_second_stationary.setter
+    def max_yaw_per_second_stationary(self, value: Any) -> None:
+        self.movement.max_yaw_per_second_stationary = value
+
+    @property
+    def min_collision_size_multiplier(self) -> Any:
+        """Flattens movement.min_collision_size_multiplier."""
+        return self.movement.min_collision_size_multiplier
+
+    @min_collision_size_multiplier.setter
+    def min_collision_size_multiplier(self, value: Any) -> None:
+        self.movement.min_collision_size_multiplier = value
+
+    @property
+    def old_move_algorithm(self) -> Any:
+        """Flattens movement.old_move_algorithm."""
+        return self.movement.old_move_algorithm
+
+    @old_move_algorithm.setter
+    def old_move_algorithm(self, value: Any) -> None:
+        self.movement.old_move_algorithm = value
+
+    @property
+    def old_size_class(self) -> Any:
+        """Flattens movement.old_size_class."""
+        return self.movement.old_size_class
+
+    @old_size_class.setter
+    def old_size_class(self, value: Any) -> None:
+        self.movement.old_size_class = value
+
+    @property
+    def rotation_radius(self) -> Any:
+        """Flattens movement.rotation_radius."""
+        return self.movement.rotation_radius
+
+    @rotation_radius.setter
+    def rotation_radius(self, value: Any) -> None:
+        self.movement.rotation_radius = value
+
+    @property
+    def rotation_radius_speed(self) -> Any:
+        """Flattens movement.rotation_radius_speed."""
+        return self.movement.rotation_radius_speed
+
+    @rotation_radius_speed.setter
+    def rotation_radius_speed(self, value: Any) -> None:
+        self.movement.rotation_radius_speed = value
+
+    @property
+    def rotation_speed(self) -> Any:
+        """Flattens movement.rotation_speed."""
+        return self.movement.rotation_speed
+
+    @rotation_speed.setter
+    def rotation_speed(self, value: Any) -> None:
+        self.movement.rotation_speed = value
+
+    @property
+    def running_graphic_id(self) -> Any:
+        """Flattens movement.running_graphic_id."""
+        return self.movement.running_graphic_id
+
+    @running_graphic_id.setter
+    def running_graphic_id(self, value: Any) -> None:
+        self.movement.running_graphic_id = value
+
+    @property
+    def standing_yaw_revolution_time(self) -> Any:
+        """Flattens movement.standing_yaw_revolution_time."""
+        return self.movement.standing_yaw_revolution_time
+
+    @standing_yaw_revolution_time.setter
+    def standing_yaw_revolution_time(self, value: Any) -> None:
+        self.movement.standing_yaw_revolution_time = value
+
+    @property
+    def stationary_yaw_revolution_time(self) -> Any:
+        """Flattens movement.stationary_yaw_revolution_time."""
+        return self.movement.stationary_yaw_revolution_time
+
+    @stationary_yaw_revolution_time.setter
+    def stationary_yaw_revolution_time(self, value: Any) -> None:
+        self.movement.stationary_yaw_revolution_time = value
+
+    @property
+    def tracking_unit_density(self) -> Any:
+        """Flattens movement.tracking_unit_density."""
+        return self.movement.tracking_unit_density
+
+    @tracking_unit_density.setter
+    def tracking_unit_density(self, value: Any) -> None:
+        self.movement.tracking_unit_density = value
+
+    @property
+    def tracking_unit_id(self) -> Any:
+        """Flattens movement.tracking_unit_id."""
+        return self.movement.tracking_unit_id
+
+    @tracking_unit_id.setter
+    def tracking_unit_id(self, value: Any) -> None:
+        self.movement.tracking_unit_id = value
+
+    @property
+    def tracking_unit_mode(self) -> Any:
+        """Flattens movement.tracking_unit_mode."""
+        return self.movement.tracking_unit_mode
+
+    @tracking_unit_mode.setter
+    def tracking_unit_mode(self, value: Any) -> None:
+        self.movement.tracking_unit_mode = value
+
+    @property
+    def trail_mode(self) -> Any:
+        """Flattens movement.trail_mode."""
+        return self.movement.trail_mode
+
+    @trail_mode.setter
+    def trail_mode(self, value: Any) -> None:
+        self.movement.trail_mode = value
+
+    @property
+    def trail_spacing(self) -> Any:
+        """Flattens movement.trail_spacing."""
+        return self.movement.trail_spacing
+
+    @trail_spacing.setter
+    def trail_spacing(self, value: Any) -> None:
+        self.movement.trail_spacing = value
+
+    @property
+    def trailing_unit_id(self) -> Any:
+        """Flattens movement.trailing_unit_id."""
+        return self.movement.trailing_unit_id
+
+    @trailing_unit_id.setter
+    def trailing_unit_id(self, value: Any) -> None:
+        self.movement.trailing_unit_id = value
+
+    @property
+    def turn_radius(self) -> Any:
+        """Flattens movement.turn_radius."""
+        return self.movement.turn_radius
+
+    @turn_radius.setter
+    def turn_radius(self, value: Any) -> None:
+        self.movement.turn_radius = value
+
+    @property
+    def turn_radius_speed(self) -> Any:
+        """Flattens movement.turn_radius_speed."""
+        return self.movement.turn_radius_speed
+
+    @turn_radius_speed.setter
+    def turn_radius_speed(self, value: Any) -> None:
+        self.movement.turn_radius_speed = value
+
+    @property
+    def walking_graphic_id(self) -> Any:
+        """Flattens movement.walking_graphic_id."""
+        return self.movement.walking_graphic_id
+
+    @walking_graphic_id.setter
+    def walking_graphic_id(self, value: Any) -> None:
+        self.movement.walking_graphic_id = value
+
+
+    # BehaviorWrapper flattened properties
+    @property
+    def attack_sound(self) -> Any:
+        """Flattens behavior.attack_sound."""
+        return self.behavior.attack_sound
+
+    @attack_sound.setter
+    def attack_sound(self, value: Any) -> None:
+        self.behavior.attack_sound = value
+
+    @property
+    def attack_sound_id(self) -> Any:
+        """Flattens behavior.attack_sound_id."""
+        return self.behavior.attack_sound_id
+
+    @attack_sound_id.setter
+    def attack_sound_id(self, value: Any) -> None:
+        self.behavior.attack_sound_id = value
+
+    @property
+    def default_task_id(self) -> Any:
+        """Flattens behavior.default_task_id."""
+        return self.behavior.default_task_id
+
+    @default_task_id.setter
+    def default_task_id(self, value: Any) -> None:
+        self.behavior.default_task_id = value
+
+    @property
+    def drop_site_unit_ids(self) -> Any:
+        """Flattens behavior.drop_site_unit_ids."""
+        return self.behavior.drop_site_unit_ids
+
+    @drop_site_unit_ids.setter
+    def drop_site_unit_ids(self, value: Any) -> None:
+        self.behavior.drop_site_unit_ids = value
+
+    @property
+    def drop_sites(self) -> Any:
+        """Flattens behavior.drop_sites."""
+        return self.behavior.drop_sites
+
+    @drop_sites.setter
+    def drop_sites(self, value: Any) -> None:
+        self.behavior.drop_sites = value
+
+    @property
+    def move_sound(self) -> Any:
+        """Flattens behavior.move_sound."""
+        return self.behavior.move_sound
+
+    @move_sound.setter
+    def move_sound(self, value: Any) -> None:
+        self.behavior.move_sound = value
+
+    @property
+    def move_sound_id(self) -> Any:
+        """Flattens behavior.move_sound_id."""
+        return self.behavior.move_sound_id
+
+    @move_sound_id.setter
+    def move_sound_id(self, value: Any) -> None:
+        self.behavior.move_sound_id = value
+
+    @property
+    def run_mode(self) -> Any:
+        """Flattens behavior.run_mode."""
+        return self.behavior.run_mode
+
+    @run_mode.setter
+    def run_mode(self, value: Any) -> None:
+        self.behavior.run_mode = value
+
+    @property
+    def run_pattern(self) -> Any:
+        """Flattens behavior.run_pattern."""
+        return self.behavior.run_pattern
+
+    @run_pattern.setter
+    def run_pattern(self, value: Any) -> None:
+        self.behavior.run_pattern = value
+
+    @property
+    def search_radius(self) -> Any:
+        """Flattens behavior.search_radius."""
+        return self.behavior.search_radius
+
+    @search_radius.setter
+    def search_radius(self, value: Any) -> None:
+        self.behavior.search_radius = value
+
+    @property
+    def task_swap_group(self) -> Any:
+        """Flattens behavior.task_swap_group."""
+        return self.behavior.task_swap_group
+
+    @task_swap_group.setter
+    def task_swap_group(self, value: Any) -> None:
+        self.behavior.task_swap_group = value
+
+    @property
+    def tasks(self) -> Any:
+        """Flattens behavior.tasks."""
+        return self.behavior.tasks
+
+    @tasks.setter
+    def tasks(self, value: Any) -> None:
+        self.behavior.tasks = value
+
+    @property
+    def work_rate(self) -> Any:
+        """Flattens behavior.work_rate."""
+        return self.behavior.work_rate
+
+    @work_rate.setter
+    def work_rate(self, value: Any) -> None:
+        self.behavior.work_rate = value
+
+    @property
+    def wwise_attack_sound_id(self) -> Any:
+        """Flattens behavior.wwise_attack_sound_id."""
+        return self.behavior.wwise_attack_sound_id
+
+    @wwise_attack_sound_id.setter
+    def wwise_attack_sound_id(self, value: Any) -> None:
+        self.behavior.wwise_attack_sound_id = value
+
+    @property
+    def wwise_move_sound_id(self) -> Any:
+        """Flattens behavior.wwise_move_sound_id."""
+        return self.behavior.wwise_move_sound_id
+
+    @wwise_move_sound_id.setter
+    def wwise_move_sound_id(self, value: Any) -> None:
+        self.behavior.wwise_move_sound_id = value
+
+
+    # ProjectileWrapper flattened properties
+    @property
+    def area_effect_specials(self) -> Any:
+        """Flattens projectile.area_effect_specials."""
+        return self.projectile.area_effect_specials
+
+    @area_effect_specials.setter
+    def area_effect_specials(self, value: Any) -> None:
+        self.projectile.area_effect_specials = value
+
+    @property
+    def hit_mode(self) -> Any:
+        """Flattens projectile.hit_mode."""
+        return self.projectile.hit_mode
+
+    @hit_mode.setter
+    def hit_mode(self, value: Any) -> None:
+        self.projectile.hit_mode = value
+
+    @property
+    def projectile_arc(self) -> Any:
+        """Flattens projectile.projectile_arc."""
+        return self.projectile.projectile_arc
+
+    @projectile_arc.setter
+    def projectile_arc(self, value: Any) -> None:
+        self.projectile.projectile_arc = value
+
+    @property
+    def projectile_type(self) -> Any:
+        """Flattens projectile.projectile_type."""
+        return self.projectile.projectile_type
+
+    @projectile_type.setter
+    def projectile_type(self, value: Any) -> None:
+        self.projectile.projectile_type = value
+
+    @property
+    def smart_mode(self) -> Any:
+        """Flattens projectile.smart_mode."""
+        return self.projectile.smart_mode
+
+    @smart_mode.setter
+    def smart_mode(self, value: Any) -> None:
+        self.projectile.smart_mode = value
+
+    @property
+    def vanish_mode(self) -> Any:
+        """Flattens projectile.vanish_mode."""
+        return self.projectile.vanish_mode
+
+    @vanish_mode.setter
+    def vanish_mode(self, value: Any) -> None:
+        self.projectile.vanish_mode = value
+
+
+    # CreationWrapper flattened properties
+    @property
+    def attack_priority(self) -> Any:
+        """Flattens creatable.attack_priority."""
+        return self.creatable.attack_priority
+
+    @attack_priority.setter
+    def attack_priority(self, value: Any) -> None:
+        self.creatable.attack_priority = value
+
+    @property
+    def button_extended_tooltip_id(self) -> Any:
+        """Flattens creatable.button_extended_tooltip_id."""
+        return self.creatable.button_extended_tooltip_id
+
+    @button_extended_tooltip_id.setter
+    def button_extended_tooltip_id(self, value: Any) -> None:
+        self.creatable.button_extended_tooltip_id = value
+
+    @property
+    def button_hotkey_action(self) -> Any:
+        """Flattens creatable.button_hotkey_action."""
+        return self.creatable.button_hotkey_action
+
+    @button_hotkey_action.setter
+    def button_hotkey_action(self, value: Any) -> None:
+        self.creatable.button_hotkey_action = value
+
+    @property
+    def button_icon_id(self) -> Any:
+        """Flattens creatable.button_icon_id."""
+        return self.creatable.button_icon_id
+
+    @button_icon_id.setter
+    def button_icon_id(self, value: Any) -> None:
+        self.creatable.button_icon_id = value
+
+    @property
+    def button_id(self) -> Any:
+        """Flattens creatable.button_id."""
+        return self.creatable.button_id
+
+    @button_id.setter
+    def button_id(self, value: Any) -> None:
+        self.creatable.button_id = value
+
+    @property
+    def button_short_tooltip_id(self) -> Any:
+        """Flattens creatable.button_short_tooltip_id."""
+        return self.creatable.button_short_tooltip_id
+
+    @button_short_tooltip_id.setter
+    def button_short_tooltip_id(self, value: Any) -> None:
+        self.creatable.button_short_tooltip_id = value
+
+    @property
+    def charge_event(self) -> Any:
+        """Flattens creatable.charge_event."""
+        return self.creatable.charge_event
+
+    @charge_event.setter
+    def charge_event(self, value: Any) -> None:
+        self.creatable.charge_event = value
+
+    @property
+    def charge_projectile_unit_id(self) -> Any:
+        """Flattens creatable.charge_projectile_unit_id."""
+        return self.creatable.charge_projectile_unit_id
+
+    @charge_projectile_unit_id.setter
+    def charge_projectile_unit_id(self, value: Any) -> None:
+        self.creatable.charge_projectile_unit_id = value
+
+    @property
+    def charge_target(self) -> Any:
+        """Flattens creatable.charge_target."""
+        return self.creatable.charge_target
+
+    @charge_target.setter
+    def charge_target(self, value: Any) -> None:
+        self.creatable.charge_target = value
+
+    @property
+    def charge_type(self) -> Any:
+        """Flattens creatable.charge_type."""
+        return self.creatable.charge_type
+
+    @charge_type.setter
+    def charge_type(self, value: Any) -> None:
+        self.creatable.charge_type = value
+
+    @property
+    def conversion_chance_mod(self) -> Any:
+        """Flattens creatable.conversion_chance_mod."""
+        return self.creatable.conversion_chance_mod
+
+    @conversion_chance_mod.setter
+    def conversion_chance_mod(self, value: Any) -> None:
+        self.creatable.conversion_chance_mod = value
+
+    @property
+    def costs(self) -> Any:
+        """Flattens creatable.costs."""
+        return self.creatable.costs
+
+    @costs.setter
+    def costs(self, value: Any) -> None:
+        self.creatable.costs = value
+
+    @property
+    def creatable_type(self) -> Any:
+        """Flattens creatable.creatable_type."""
+        return self.creatable.creatable_type
+
+    @creatable_type.setter
+    def creatable_type(self, value: Any) -> None:
+        self.creatable.creatable_type = value
+
+    @property
+    def displayed_pierce_armour(self) -> Any:
+        """Flattens creatable.displayed_pierce_armour."""
+        return self.creatable.displayed_pierce_armour
+
+    @displayed_pierce_armour.setter
+    def displayed_pierce_armour(self, value: Any) -> None:
+        self.creatable.displayed_pierce_armour = value
+
+    @property
+    def flank_attack_modifier(self) -> Any:
+        """Flattens creatable.flank_attack_modifier."""
+        return self.creatable.flank_attack_modifier
+
+    @flank_attack_modifier.setter
+    def flank_attack_modifier(self, value: Any) -> None:
+        self.creatable.flank_attack_modifier = value
+
+    @property
+    def garrison_graphic_id(self) -> Any:
+        """Flattens creatable.garrison_graphic_id."""
+        return self.creatable.garrison_graphic_id
+
+    @garrison_graphic_id.setter
+    def garrison_graphic_id(self, value: Any) -> None:
+        self.creatable.garrison_graphic_id = value
+
+    @property
+    def hero_glow_graphic_id(self) -> Any:
+        """Flattens creatable.hero_glow_graphic_id."""
+        return self.creatable.hero_glow_graphic_id
+
+    @hero_glow_graphic_id.setter
+    def hero_glow_graphic_id(self, value: Any) -> None:
+        self.creatable.hero_glow_graphic_id = value
+
+    @property
+    def hero_mode(self) -> Any:
+        """Flattens creatable.hero_mode."""
+        return self.creatable.hero_mode
+
+    @hero_mode.setter
+    def hero_mode(self, value: Any) -> None:
+        self.creatable.hero_mode = value
+
+    @property
+    def hot_key_id(self) -> Any:
+        """Flattens creatable.hot_key_id."""
+        return self.creatable.hot_key_id
+
+    @hot_key_id.setter
+    def hot_key_id(self, value: Any) -> None:
+        self.creatable.hot_key_id = value
+
+    @property
+    def idle_attack_graphic_id(self) -> Any:
+        """Flattens creatable.idle_attack_graphic_id."""
+        return self.creatable.idle_attack_graphic_id
+
+    @idle_attack_graphic_id.setter
+    def idle_attack_graphic_id(self, value: Any) -> None:
+        self.creatable.idle_attack_graphic_id = value
+
+    @property
+    def invulnerability_level(self) -> Any:
+        """Flattens creatable.invulnerability_level."""
+        return self.creatable.invulnerability_level
+
+    @invulnerability_level.setter
+    def invulnerability_level(self, value: Any) -> None:
+        self.creatable.invulnerability_level = value
+
+    @property
+    def max_charge(self) -> Any:
+        """Flattens creatable.max_charge."""
+        return self.creatable.max_charge
+
+    @max_charge.setter
+    def max_charge(self, value: Any) -> None:
+        self.creatable.max_charge = value
+
+    @property
+    def max_conversion_time_mod(self) -> Any:
+        """Flattens creatable.max_conversion_time_mod."""
+        return self.creatable.max_conversion_time_mod
+
+    @max_conversion_time_mod.setter
+    def max_conversion_time_mod(self, value: Any) -> None:
+        self.creatable.max_conversion_time_mod = value
+
+    @property
+    def max_total_projectiles(self) -> Any:
+        """Flattens creatable.max_total_projectiles."""
+        return self.creatable.max_total_projectiles
+
+    @max_total_projectiles.setter
+    def max_total_projectiles(self, value: Any) -> None:
+        self.creatable.max_total_projectiles = value
+
+    @property
+    def min_conversion_time_mod(self) -> Any:
+        """Flattens creatable.min_conversion_time_mod."""
+        return self.creatable.min_conversion_time_mod
+
+    @min_conversion_time_mod.setter
+    def min_conversion_time_mod(self, value: Any) -> None:
+        self.creatable.min_conversion_time_mod = value
+
+    @property
+    def projectile_spawning_area(self) -> Any:
+        """Flattens creatable.projectile_spawning_area."""
+        return self.creatable.projectile_spawning_area
+
+    @projectile_spawning_area.setter
+    def projectile_spawning_area(self, value: Any) -> None:
+        self.creatable.projectile_spawning_area = value
+
+    @property
+    def projectile_spawning_area_length(self) -> Any:
+        """Flattens creatable.projectile_spawning_area_length."""
+        return self.creatable.projectile_spawning_area_length
+
+    @projectile_spawning_area_length.setter
+    def projectile_spawning_area_length(self, value: Any) -> None:
+        self.creatable.projectile_spawning_area_length = value
+
+    @property
+    def projectile_spawning_area_randomness(self) -> Any:
+        """Flattens creatable.projectile_spawning_area_randomness."""
+        return self.creatable.projectile_spawning_area_randomness
+
+    @projectile_spawning_area_randomness.setter
+    def projectile_spawning_area_randomness(self, value: Any) -> None:
+        self.creatable.projectile_spawning_area_randomness = value
+
+    @property
+    def projectile_spawning_area_width(self) -> Any:
+        """Flattens creatable.projectile_spawning_area_width."""
+        return self.creatable.projectile_spawning_area_width
+
+    @projectile_spawning_area_width.setter
+    def projectile_spawning_area_width(self, value: Any) -> None:
+        self.creatable.projectile_spawning_area_width = value
+
+    @property
+    def rear_attack_modifier(self) -> Any:
+        """Flattens creatable.rear_attack_modifier."""
+        return self.creatable.rear_attack_modifier
+
+    @rear_attack_modifier.setter
+    def rear_attack_modifier(self, value: Any) -> None:
+        self.creatable.rear_attack_modifier = value
+
+    @property
+    def recharge_rate(self) -> Any:
+        """Flattens creatable.recharge_rate."""
+        return self.creatable.recharge_rate
+
+    @recharge_rate.setter
+    def recharge_rate(self, value: Any) -> None:
+        self.creatable.recharge_rate = value
+
+    @property
+    def resource_costs(self) -> Any:
+        """Flattens creatable.resource_costs."""
+        return self.creatable.resource_costs
+
+    @resource_costs.setter
+    def resource_costs(self, value: Any) -> None:
+        self.creatable.resource_costs = value
+
+    @property
+    def secondary_projectile_unit_id(self) -> Any:
+        """Flattens creatable.secondary_projectile_unit_id."""
+        return self.creatable.secondary_projectile_unit_id
+
+    @secondary_projectile_unit_id.setter
+    def secondary_projectile_unit_id(self, value: Any) -> None:
+        self.creatable.secondary_projectile_unit_id = value
+
+    @property
+    def spawning_graphic_id(self) -> Any:
+        """Flattens creatable.spawning_graphic_id."""
+        return self.creatable.spawning_graphic_id
+
+    @spawning_graphic_id.setter
+    def spawning_graphic_id(self, value: Any) -> None:
+        self.creatable.spawning_graphic_id = value
+
+    @property
+    def special_ability(self) -> Any:
+        """Flattens creatable.special_ability."""
+        return self.creatable.special_ability
+
+    @special_ability.setter
+    def special_ability(self, value: Any) -> None:
+        self.creatable.special_ability = value
+
+    @property
+    def special_graphic_id(self) -> Any:
+        """Flattens creatable.special_graphic_id."""
+        return self.creatable.special_graphic_id
+
+    @special_graphic_id.setter
+    def special_graphic_id(self, value: Any) -> None:
+        self.creatable.special_graphic_id = value
+
+    @property
+    def total_projectiles(self) -> Any:
+        """Flattens creatable.total_projectiles."""
+        return self.creatable.total_projectiles
+
+    @total_projectiles.setter
+    def total_projectiles(self, value: Any) -> None:
+        self.creatable.total_projectiles = value
+
+    @property
+    def train_location_id(self) -> Any:
+        """Flattens creatable.train_location_id."""
+        return self.creatable.train_location_id
+
+    @train_location_id.setter
+    def train_location_id(self, value: Any) -> None:
+        self.creatable.train_location_id = value
+
+    @property
+    def train_locations(self) -> Any:
+        """Flattens creatable.train_locations."""
+        return self.creatable.train_locations
+
+    @train_locations.setter
+    def train_locations(self, value: Any) -> None:
+        self.creatable.train_locations = value
+
+    @property
+    def train_time(self) -> Any:
+        """Flattens creatable.train_time."""
+        return self.creatable.train_time
+
+    @train_time.setter
+    def train_time(self, value: Any) -> None:
+        self.creatable.train_time = value
+
+    @property
+    def upgrade_graphic_id(self) -> Any:
+        """Flattens creatable.upgrade_graphic_id."""
+        return self.creatable.upgrade_graphic_id
+
+    @upgrade_graphic_id.setter
+    def upgrade_graphic_id(self, value: Any) -> None:
+        self.creatable.upgrade_graphic_id = value
+
+
+    # BuildingWrapper flattened properties
+    @property
+    def adjacent_mode(self) -> Any:
+        """Flattens building.adjacent_mode."""
+        return self.building.adjacent_mode
+
+    @adjacent_mode.setter
+    def adjacent_mode(self, value: Any) -> None:
+        self.building.adjacent_mode = value
+
+    @property
+    def annexes(self) -> Any:
+        """Flattens building.annexes."""
+        return self.building.annexes
+
+    @annexes.setter
+    def annexes(self, value: Any) -> None:
+        self.building.annexes = value
+
+    @property
+    def annexes_manager(self) -> Any:
+        """Flattens building.annexes_manager."""
+        return self.building.annexes_manager
+
+    @annexes_manager.setter
+    def annexes_manager(self, value: Any) -> None:
+        self.building.annexes_manager = value
+
+    @property
+    def can_burn(self) -> Any:
+        """Flattens building.can_burn."""
+        return self.building.can_burn
+
+    @can_burn.setter
+    def can_burn(self, value: Any) -> None:
+        self.building.can_burn = value
+
+    @property
+    def completion_tech_id(self) -> Any:
+        """Flattens building.completion_tech_id."""
+        return self.building.completion_tech_id
+
+    @completion_tech_id.setter
+    def completion_tech_id(self, value: Any) -> None:
+        self.building.completion_tech_id = value
+
+    @property
+    def construction_graphic_id(self) -> Any:
+        """Flattens building.construction_graphic_id."""
+        return self.building.construction_graphic_id
+
+    @construction_graphic_id.setter
+    def construction_graphic_id(self, value: Any) -> None:
+        self.building.construction_graphic_id = value
+
+    @property
+    def construction_sound_id(self) -> Any:
+        """Flattens building.construction_sound_id."""
+        return self.building.construction_sound_id
+
+    @construction_sound_id.setter
+    def construction_sound_id(self, value: Any) -> None:
+        self.building.construction_sound_id = value
+
+    @property
+    def destruction_graphic_id(self) -> Any:
+        """Flattens building.destruction_graphic_id."""
+        return self.building.destruction_graphic_id
+
+    @destruction_graphic_id.setter
+    def destruction_graphic_id(self, value: Any) -> None:
+        self.building.destruction_graphic_id = value
+
+    @property
+    def destruction_rubble_graphic_id(self) -> Any:
+        """Flattens building.destruction_rubble_graphic_id."""
+        return self.building.destruction_rubble_graphic_id
+
+    @destruction_rubble_graphic_id.setter
+    def destruction_rubble_graphic_id(self, value: Any) -> None:
+        self.building.destruction_rubble_graphic_id = value
+
+    @property
+    def disappears_when_built(self) -> Any:
+        """Flattens building.disappears_when_built."""
+        return self.building.disappears_when_built
+
+    @disappears_when_built.setter
+    def disappears_when_built(self, value: Any) -> None:
+        self.building.disappears_when_built = value
+
+    @property
+    def foundation_terrain_id(self) -> Any:
+        """Flattens building.foundation_terrain_id."""
+        return self.building.foundation_terrain_id
+
+    @foundation_terrain_id.setter
+    def foundation_terrain_id(self, value: Any) -> None:
+        self.building.foundation_terrain_id = value
+
+    @property
+    def garrison_heal_rate(self) -> Any:
+        """Flattens building.garrison_heal_rate."""
+        return self.building.garrison_heal_rate
+
+    @garrison_heal_rate.setter
+    def garrison_heal_rate(self, value: Any) -> None:
+        self.building.garrison_heal_rate = value
+
+    @property
+    def garrison_repair_rate(self) -> Any:
+        """Flattens building.garrison_repair_rate."""
+        return self.building.garrison_repair_rate
+
+    @garrison_repair_rate.setter
+    def garrison_repair_rate(self, value: Any) -> None:
+        self.building.garrison_repair_rate = value
+
+    @property
+    def garrison_type(self) -> Any:
+        """Flattens building.garrison_type."""
+        return self.building.garrison_type
+
+    @garrison_type.setter
+    def garrison_type(self, value: Any) -> None:
+        self.building.garrison_type = value
+
+    @property
+    def graphics_angle(self) -> Any:
+        """Flattens building.graphics_angle."""
+        return self.building.graphics_angle
+
+    @graphics_angle.setter
+    def graphics_angle(self, value: Any) -> None:
+        self.building.graphics_angle = value
+
+    @property
+    def head_unit_id(self) -> Any:
+        """Flattens building.head_unit_id."""
+        return self.building.head_unit_id
+
+    @head_unit_id.setter
+    def head_unit_id(self, value: Any) -> None:
+        self.building.head_unit_id = value
+
+    @property
+    def looting_table(self) -> Any:
+        """Flattens building.looting_table."""
+        return self.building.looting_table
+
+    @looting_table.setter
+    def looting_table(self, value: Any) -> None:
+        self.building.looting_table = value
+
+    @property
+    def old_overlap_id(self) -> Any:
+        """Flattens building.old_overlap_id."""
+        return self.building.old_overlap_id
+
+    @old_overlap_id.setter
+    def old_overlap_id(self, value: Any) -> None:
+        self.building.old_overlap_id = value
+
+    @property
+    def pile_unit_id(self) -> Any:
+        """Flattens building.pile_unit_id."""
+        return self.building.pile_unit_id
+
+    @pile_unit_id.setter
+    def pile_unit_id(self, value: Any) -> None:
+        self.building.pile_unit_id = value
+
+    @property
+    def research_complete_graphic_id(self) -> Any:
+        """Flattens building.research_complete_graphic_id."""
+        return self.building.research_complete_graphic_id
+
+    @research_complete_graphic_id.setter
+    def research_complete_graphic_id(self, value: Any) -> None:
+        self.building.research_complete_graphic_id = value
+
+    @property
+    def research_graphic_id(self) -> Any:
+        """Flattens building.research_graphic_id."""
+        return self.building.research_graphic_id
+
+    @research_graphic_id.setter
+    def research_graphic_id(self, value: Any) -> None:
+        self.building.research_graphic_id = value
+
+    @property
+    def salvage_unit_id(self) -> Any:
+        """Flattens building.salvage_unit_id."""
+        return self.building.salvage_unit_id
+
+    @salvage_unit_id.setter
+    def salvage_unit_id(self, value: Any) -> None:
+        self.building.salvage_unit_id = value
+
+    @property
+    def snow_graphic_id(self) -> Any:
+        """Flattens building.snow_graphic_id."""
+        return self.building.snow_graphic_id
+
+    @snow_graphic_id.setter
+    def snow_graphic_id(self, value: Any) -> None:
+        self.building.snow_graphic_id = value
+
+    @property
+    def stack_unit_id(self) -> Any:
+        """Flattens building.stack_unit_id."""
+        return self.building.stack_unit_id
+
+    @stack_unit_id.setter
+    def stack_unit_id(self, value: Any) -> None:
+        self.building.stack_unit_id = value
+
+    @property
+    def tech_id(self) -> Any:
+        """Flattens building.tech_id."""
+        return self.building.tech_id
+
+    @tech_id.setter
+    def tech_id(self, value: Any) -> None:
+        self.building.tech_id = value
+
+    @property
+    def transform_sound_id(self) -> Any:
+        """Flattens building.transform_sound_id."""
+        return self.building.transform_sound_id
+
+    @transform_sound_id.setter
+    def transform_sound_id(self, value: Any) -> None:
+        self.building.transform_sound_id = value
+
+    @property
+    def transform_unit_id(self) -> Any:
+        """Flattens building.transform_unit_id."""
+        return self.building.transform_unit_id
+
+    @transform_unit_id.setter
+    def transform_unit_id(self, value: Any) -> None:
+        self.building.transform_unit_id = value
+
+    @property
+    def wwise_construction_sound_id(self) -> Any:
+        """Flattens building.wwise_construction_sound_id."""
+        return self.building.wwise_construction_sound_id
+
+    @wwise_construction_sound_id.setter
+    def wwise_construction_sound_id(self, value: Any) -> None:
+        self.building.wwise_construction_sound_id = value
+
+    @property
+    def wwise_transform_sound_id(self) -> Any:
+        """Flattens building.wwise_transform_sound_id."""
+        return self.building.wwise_transform_sound_id
+
+    @wwise_transform_sound_id.setter
+    def wwise_transform_sound_id(self, value: Any) -> None:
+        self.building.wwise_transform_sound_id = value
+
+
+
+# =========================================================================
