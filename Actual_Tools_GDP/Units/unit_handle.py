@@ -1560,14 +1560,15 @@ class UnitHandle:
 
         # NOTE: Reference validation moved to workspace.validate_unit()
 
-        # Set the value on component or unit
+        # Try to set via wrapper first (for wrapper attributes like max_range, work_rate, etc.)
         comp = self._find_component(name)
         if comp:
-            for u in units:
-                obj = getattr(u, comp, None)
-                if obj is not None:
-                    setattr(obj, name, value)
-            return
+            # Use the wrapper's setter - this ensures proper logic is applied
+            wrapper = getattr(self, comp)
+            if wrapper is not None and hasattr(wrapper, name):
+                # The wrapper's setter will handle setting on all units
+                setattr(wrapper, name, value)
+                return
 
         # Direct Unit attribute
         if hasattr(units[0], name):
