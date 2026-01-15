@@ -34,6 +34,14 @@ from Actual_Tools_GDP.Units.unit_collections import (
 )
 
 class UnitHandle:
+    __slots__ = (
+        "_workspace", "_unit_id", "_civ_ids", "_units_cache",
+        "_combat_cache", "_creation_cache", "_cost_cache", "_movement_cache",
+        "_behavior_cache", "_projectile_cache", "_building_cache",
+        "_tasks_cache", "_attacks_cache", "_armours_cache", 
+        "_damage_graphics_cache", "_train_locations_cache", 
+        "_annexes_cache", "_drop_sites_cache", "_costs_cache", "_resources_cache",
+    )
     # --------------------------------------------------------------------------
     # Core Attributes
     # --------------------------------------------------------------------------
