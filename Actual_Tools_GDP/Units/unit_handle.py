@@ -748,6 +748,17 @@ class UnitHandle:
         for u in self._get_units():
             u.terrain_restriction_id = value
 
+    @property
+    def foundation_terrain_id(self) -> int:
+        """Foundation terrain ID."""
+        u = self._primary_unit
+        return u.foundation_terrain_id if u else 0
+
+    @foundation_terrain_id.setter
+    def foundation_terrain_id(self, value: int) -> None:
+        for u in self._get_units():
+            u.foundation_terrain_id = value
+
     # Movement/Pathfinding
     @property
     def movement_mode(self) -> int:
@@ -1437,19 +1448,17 @@ class UnitHandle:
         return None
 
     def __getattr__(self, name: str) -> Any:
+        """
+        Dynamic attribute lookup for wrapper attributes only.
+        
+        Direct Unit attributes are now explicit @property declarations.
+        This prevents IDE from suggesting non-curated GenieDatParser attributes.
+        """
         # Don't intercept internal attributes
         if name.startswith("_"):
             raise AttributeError(f"'{type(self).__name__}' has no attribute '{name}'")
 
-        u = self._primary_unit
-        if not u:
-            raise AttributeError(f"'{type(self).__name__}' has no attribute '{name}' (no units)")
-
-        # Direct Unit attribute
-        if hasattr(u, name) and name not in _COMPONENTS:
-            return getattr(u, name)
-
-        # Sub-component attribute
+        # Sub-component attribute (from wrappers ONLY)
         comp = self._find_component(name)
         if comp:
             # Use the wrapper instance from self
@@ -1458,15 +1467,11 @@ class UnitHandle:
         # Attribute not found - provide helpful suggestions
         import difflib
         
-        # Collect all available attributes
+        # Collect all available attributes from wrappers only
         available_attrs = set()
         
-        # Add direct properties and methods
+        # Add direct properties and methods from UnitHandle
         available_attrs.update(dir(type(self)))
-        
-        # Add unit attributes
-        if u:
-            available_attrs.update(a for a in dir(u) if not a.startswith('_'))
         
         # Add wrapper attributes
         for comp in _COMPONENTS:
@@ -1480,9 +1485,8 @@ class UnitHandle:
         
         error_msg = f"'{type(self).__name__}' object has no attribute '{name}'"
         if suggestions:
-            error_msg += f"\n  💡 Did you mean: {', '.join(repr(s) for s in suggestions)}?"
-        error_msg += f"\n  💡 Tip: Use dir(unit) to see all available attributes"
-        error_msg += f"\n  💡 Check the .pyi stub file for IDE autocomplete support"
+            error_msg += f"\n  Did you mean: {', '.join(repr(s) for s in suggestions)}?"
+        error_msg += f"\n  Tip: Use dir(unit) to see all available attributes"
         
         raise AttributeError(error_msg)
 
