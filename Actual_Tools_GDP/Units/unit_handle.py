@@ -20,17 +20,11 @@ from Actual_Tools_GDP.Units.handles import (
     TrainLocationHandle, DropSiteHandle
 )
 
-    # Wrapper imports (modernized versions)
-    # Wrapper imports (modernized versions)
 from Actual_Tools_GDP.Units.wrappers import (
     CombatWrapper,
-    CombatWrapper as Type50Wrapper, 
     CreationWrapper,
-    CreationWrapper as CreatableWrapper, 
     MovementWrapper,
-    MovementWrapper as DeadFishWrapper,
     BehaviorWrapper,
-    BehaviorWrapper as BirdWrapper, 
     ProjectileWrapper, 
     BuildingWrapper
 )
@@ -55,8 +49,8 @@ if TYPE_CHECKING:
 
 __all__ = ["UnitHandle"]
 
-# Component names for flattening lookup (OLD style names for wrapper compatibility)
-_COMPONENTS = ("bird", "dead_fish", "type_50", "projectile", "creatable", "building")
+# Component names for flattening lookup
+_COMPONENTS = ("behavior", "movement", "combat", "projectile", "creation", "building")
 
 
 class UnitHandle:
@@ -88,7 +82,7 @@ class UnitHandle:
         # removed "_validator" (using workspace.validator)
         
         # Wrapper caches
-        "_combat_cache", "_creatable_cache", "_cost_cache", "_movement_cache",
+        "_combat_cache", "_creation_cache", "_cost_cache", "_movement_cache",
         "_behavior_cache", "_projectile_cache", "_building_cache",
         # Collection caches
         "_tasks_cache", "_attacks_cache", "_armours_cache", 
@@ -115,7 +109,7 @@ class UnitHandle:
         # _validator init removed
         # Initialize wrapper caches to None
         object.__setattr__(self, "_combat_cache", None)
-        object.__setattr__(self, "_creatable_cache", None)
+        object.__setattr__(self, "_creation_cache", None)
         object.__setattr__(self, "_cost_cache", None)
         object.__setattr__(self, "_movement_cache", None)
         object.__setattr__(self, "_behavior_cache", None)
@@ -163,7 +157,7 @@ class UnitHandle:
         object.__setattr__(self, "_units_cache", None)
         # Wrapper caches
         object.__setattr__(self, "_combat_cache", None)
-        object.__setattr__(self, "_creatable_cache", None)
+        object.__setattr__(self, "_creation_cache", None)
         object.__setattr__(self, "_cost_cache", None)
         object.__setattr__(self, "_movement_cache", None)
         object.__setattr__(self, "_behavior_cache", None)
@@ -1022,17 +1016,14 @@ class UnitHandle:
             object.__setattr__(self, "_combat_cache", Type50Wrapper(self._get_units()))
         return self._combat_cache
 
-    @property
-    def type_50(self) -> Type50Wrapper:
-        """Type50 wrapper (alias for combat). Cached."""
-        return self.combat
+
 
     @property
-    def creatable(self) -> CreatableWrapper:
-        """Creatable wrapper. Cached."""
-        if self._creatable_cache is None:
-            object.__setattr__(self, "_creatable_cache", CreatableWrapper(self._get_units()))
-        return self._creatable_cache
+    def creation(self) -> CreationWrapper:
+        """Creation wrapper. Cached."""
+        if self._creation_cache is None:
+            object.__setattr__(self, "_creation_cache", CreationWrapper(self._get_units()))
+        return self._creation_cache
 
     @property
     def cost(self) -> CostWrapper:
@@ -1041,19 +1032,9 @@ class UnitHandle:
             object.__setattr__(self, "_cost_cache", CostWrapper(self._get_units()))
         return self._cost_cache
 
-    @property
-    def dead_fish(self) -> DeadFishWrapper:
-        """DeadFish wrapper. Cached."""
-        if self._dead_fish_cache is None:
-            object.__setattr__(self, "_dead_fish_cache", DeadFishWrapper(self._get_units()))
-        return self._dead_fish_cache
 
-    @property
-    def bird(self) -> BirdWrapper:
-        """Bird wrapper. Cached."""
-        if self._bird_cache is None:
-            object.__setattr__(self, "_bird_cache", BirdWrapper(self._get_units()))
-        return self._bird_cache
+
+
 
     @property
     def projectile(self) -> ProjectileWrapper:
@@ -1477,10 +1458,10 @@ class UnitHandle:
         return self._projectile_cache
 
     @property
-    def creatable(self) -> CreationWrapper:
-        if self._creatable_cache is None:
-            self._creatable_cache = CreationWrapper(self._get_units())
-        return self._creatable_cache
+    def creation(self) -> CreationWrapper:
+        if self._creation_cache is None:
+            self._creation_cache = CreationWrapper(self._get_units())
+        return self._creation_cache
 
     @property
     def building(self) -> BuildingWrapper:
@@ -2186,353 +2167,353 @@ class UnitHandle:
     @property
     def button_hotkey_action(self) -> Any:
         """Flattens creatable.button_hotkey_action."""
-        return self.creatable.button_hotkey_action
+        return self.creation.button_hotkey_action
 
     @button_hotkey_action.setter
     def button_hotkey_action(self, value: Any) -> None:
-        self.creatable.button_hotkey_action = value
+        self.creation.button_hotkey_action = value
 
     @property
     def button_icon_id(self) -> Any:
         """Flattens creatable.button_icon_id."""
-        return self.creatable.button_icon_id
+        return self.creation.button_icon_id
 
     @button_icon_id.setter
     def button_icon_id(self, value: Any) -> None:
-        self.creatable.button_icon_id = value
+        self.creation.button_icon_id = value
 
     @property
     def button_id(self) -> Any:
         """Flattens creatable.button_id."""
-        return self.creatable.button_id
+        return self.creation.button_id
 
     @button_id.setter
     def button_id(self, value: Any) -> None:
-        self.creatable.button_id = value
+        self.creation.button_id = value
 
     @property
     def button_short_tooltip_id(self) -> Any:
         """Flattens creatable.button_short_tooltip_id."""
-        return self.creatable.button_short_tooltip_id
+        return self.creation.button_short_tooltip_id
 
     @button_short_tooltip_id.setter
     def button_short_tooltip_id(self, value: Any) -> None:
-        self.creatable.button_short_tooltip_id = value
+        self.creation.button_short_tooltip_id = value
 
     @property
     def charge_event(self) -> Any:
         """Flattens creatable.charge_event."""
-        return self.creatable.charge_event
+        return self.creation.charge_event
 
     @charge_event.setter
     def charge_event(self, value: Any) -> None:
-        self.creatable.charge_event = value
+        self.creation.charge_event = value
 
     @property
     def charge_projectile_unit_id(self) -> Any:
         """Flattens creatable.charge_projectile_unit_id."""
-        return self.creatable.charge_projectile_unit_id
+        return self.creation.charge_projectile_unit_id
 
     @charge_projectile_unit_id.setter
     def charge_projectile_unit_id(self, value: Any) -> None:
-        self.creatable.charge_projectile_unit_id = value
+        self.creation.charge_projectile_unit_id = value
 
     @property
     def charge_target(self) -> Any:
         """Flattens creatable.charge_target."""
-        return self.creatable.charge_target
+        return self.creation.charge_target
 
     @charge_target.setter
     def charge_target(self, value: Any) -> None:
-        self.creatable.charge_target = value
+        self.creation.charge_target = value
 
     @property
     def charge_type(self) -> Any:
         """Flattens creatable.charge_type."""
-        return self.creatable.charge_type
+        return self.creation.charge_type
 
     @charge_type.setter
     def charge_type(self, value: Any) -> None:
-        self.creatable.charge_type = value
+        self.creation.charge_type = value
 
     @property
     def conversion_chance_mod(self) -> Any:
         """Flattens creatable.conversion_chance_mod."""
-        return self.creatable.conversion_chance_mod
+        return self.creation.conversion_chance_mod
 
     @conversion_chance_mod.setter
     def conversion_chance_mod(self, value: Any) -> None:
-        self.creatable.conversion_chance_mod = value
+        self.creation.conversion_chance_mod = value
 
     @property
     def costs(self) -> Any:
         """Flattens creatable.costs."""
-        return self.creatable.costs
+        return self.creation.costs
 
     @costs.setter
     def costs(self, value: Any) -> None:
-        self.creatable.costs = value
+        self.creation.costs = value
 
     @property
     def creatable_type(self) -> Any:
         """Flattens creatable.creatable_type."""
-        return self.creatable.creatable_type
+        return self.creation.creatable_type
 
     @creatable_type.setter
     def creatable_type(self, value: Any) -> None:
-        self.creatable.creatable_type = value
+        self.creation.creatable_type = value
 
     @property
     def displayed_pierce_armour(self) -> Any:
         """Flattens creatable.displayed_pierce_armour."""
-        return self.creatable.displayed_pierce_armour
+        return self.creation.displayed_pierce_armour
 
     @displayed_pierce_armour.setter
     def displayed_pierce_armour(self, value: Any) -> None:
-        self.creatable.displayed_pierce_armour = value
+        self.creation.displayed_pierce_armour = value
 
     @property
     def flank_attack_modifier(self) -> Any:
         """Flattens creatable.flank_attack_modifier."""
-        return self.creatable.flank_attack_modifier
+        return self.creation.flank_attack_modifier
 
     @flank_attack_modifier.setter
     def flank_attack_modifier(self, value: Any) -> None:
-        self.creatable.flank_attack_modifier = value
+        self.creation.flank_attack_modifier = value
 
     @property
     def garrison_graphic_id(self) -> Any:
         """Flattens creatable.garrison_graphic_id."""
-        return self.creatable.garrison_graphic_id
+        return self.creation.garrison_graphic_id
 
     @garrison_graphic_id.setter
     def garrison_graphic_id(self, value: Any) -> None:
-        self.creatable.garrison_graphic_id = value
+        self.creation.garrison_graphic_id = value
 
     @property
     def hero_glow_graphic_id(self) -> Any:
         """Flattens creatable.hero_glow_graphic_id."""
-        return self.creatable.hero_glow_graphic_id
+        return self.creation.hero_glow_graphic_id
 
     @hero_glow_graphic_id.setter
     def hero_glow_graphic_id(self, value: Any) -> None:
-        self.creatable.hero_glow_graphic_id = value
+        self.creation.hero_glow_graphic_id = value
 
     @property
     def hero_mode(self) -> Any:
         """Flattens creatable.hero_mode."""
-        return self.creatable.hero_mode
+        return self.creation.hero_mode
 
     @hero_mode.setter
     def hero_mode(self, value: Any) -> None:
-        self.creatable.hero_mode = value
+        self.creation.hero_mode = value
 
     @property
     def hot_key_id(self) -> Any:
         """Flattens creatable.hot_key_id."""
-        return self.creatable.hot_key_id
+        return self.creation.hot_key_id
 
     @hot_key_id.setter
     def hot_key_id(self, value: Any) -> None:
-        self.creatable.hot_key_id = value
+        self.creation.hot_key_id = value
 
     @property
     def idle_attack_graphic_id(self) -> Any:
         """Flattens creatable.idle_attack_graphic_id."""
-        return self.creatable.idle_attack_graphic_id
+        return self.creation.idle_attack_graphic_id
 
     @idle_attack_graphic_id.setter
     def idle_attack_graphic_id(self, value: Any) -> None:
-        self.creatable.idle_attack_graphic_id = value
+        self.creation.idle_attack_graphic_id = value
 
     @property
     def invulnerability_level(self) -> Any:
         """Flattens creatable.invulnerability_level."""
-        return self.creatable.invulnerability_level
+        return self.creation.invulnerability_level
 
     @invulnerability_level.setter
     def invulnerability_level(self, value: Any) -> None:
-        self.creatable.invulnerability_level = value
+        self.creation.invulnerability_level = value
 
     @property
     def max_charge(self) -> Any:
         """Flattens creatable.max_charge."""
-        return self.creatable.max_charge
+        return self.creation.max_charge
 
     @max_charge.setter
     def max_charge(self, value: Any) -> None:
-        self.creatable.max_charge = value
+        self.creation.max_charge = value
 
     @property
     def max_conversion_time_mod(self) -> Any:
         """Flattens creatable.max_conversion_time_mod."""
-        return self.creatable.max_conversion_time_mod
+        return self.creation.max_conversion_time_mod
 
     @max_conversion_time_mod.setter
     def max_conversion_time_mod(self, value: Any) -> None:
-        self.creatable.max_conversion_time_mod = value
+        self.creation.max_conversion_time_mod = value
 
     @property
     def max_total_projectiles(self) -> Any:
         """Flattens creatable.max_total_projectiles."""
-        return self.creatable.max_total_projectiles
+        return self.creation.max_total_projectiles
 
     @max_total_projectiles.setter
     def max_total_projectiles(self, value: Any) -> None:
-        self.creatable.max_total_projectiles = value
+        self.creation.max_total_projectiles = value
 
     @property
     def min_conversion_time_mod(self) -> Any:
         """Flattens creatable.min_conversion_time_mod."""
-        return self.creatable.min_conversion_time_mod
+        return self.creation.min_conversion_time_mod
 
     @min_conversion_time_mod.setter
     def min_conversion_time_mod(self, value: Any) -> None:
-        self.creatable.min_conversion_time_mod = value
+        self.creation.min_conversion_time_mod = value
 
     @property
     def projectile_spawning_area(self) -> Any:
         """Flattens creatable.projectile_spawning_area."""
-        return self.creatable.projectile_spawning_area
+        return self.creation.projectile_spawning_area
 
     @projectile_spawning_area.setter
     def projectile_spawning_area(self, value: Any) -> None:
-        self.creatable.projectile_spawning_area = value
+        self.creation.projectile_spawning_area = value
 
     @property
     def projectile_spawning_area_length(self) -> Any:
         """Flattens creatable.projectile_spawning_area_length."""
-        return self.creatable.projectile_spawning_area_length
+        return self.creation.projectile_spawning_area_length
 
     @projectile_spawning_area_length.setter
     def projectile_spawning_area_length(self, value: Any) -> None:
-        self.creatable.projectile_spawning_area_length = value
+        self.creation.projectile_spawning_area_length = value
 
     @property
     def projectile_spawning_area_randomness(self) -> Any:
         """Flattens creatable.projectile_spawning_area_randomness."""
-        return self.creatable.projectile_spawning_area_randomness
+        return self.creation.projectile_spawning_area_randomness
 
     @projectile_spawning_area_randomness.setter
     def projectile_spawning_area_randomness(self, value: Any) -> None:
-        self.creatable.projectile_spawning_area_randomness = value
+        self.creation.projectile_spawning_area_randomness = value
 
     @property
     def projectile_spawning_area_width(self) -> Any:
         """Flattens creatable.projectile_spawning_area_width."""
-        return self.creatable.projectile_spawning_area_width
+        return self.creation.projectile_spawning_area_width
 
     @projectile_spawning_area_width.setter
     def projectile_spawning_area_width(self, value: Any) -> None:
-        self.creatable.projectile_spawning_area_width = value
+        self.creation.projectile_spawning_area_width = value
 
     @property
     def rear_attack_modifier(self) -> Any:
         """Flattens creatable.rear_attack_modifier."""
-        return self.creatable.rear_attack_modifier
+        return self.creation.rear_attack_modifier
 
     @rear_attack_modifier.setter
     def rear_attack_modifier(self, value: Any) -> None:
-        self.creatable.rear_attack_modifier = value
+        self.creation.rear_attack_modifier = value
 
     @property
     def recharge_rate(self) -> Any:
         """Flattens creatable.recharge_rate."""
-        return self.creatable.recharge_rate
+        return self.creation.recharge_rate
 
     @recharge_rate.setter
     def recharge_rate(self, value: Any) -> None:
-        self.creatable.recharge_rate = value
+        self.creation.recharge_rate = value
 
     @property
     def resource_costs(self) -> Any:
         """Flattens creatable.resource_costs."""
-        return self.creatable.resource_costs
+        return self.creation.resource_costs
 
     @resource_costs.setter
     def resource_costs(self, value: Any) -> None:
-        self.creatable.resource_costs = value
+        self.creation.resource_costs = value
 
     @property
     def secondary_projectile_unit_id(self) -> Any:
         """Flattens creatable.secondary_projectile_unit_id."""
-        return self.creatable.secondary_projectile_unit_id
+        return self.creation.secondary_projectile_unit_id
 
     @secondary_projectile_unit_id.setter
     def secondary_projectile_unit_id(self, value: Any) -> None:
-        self.creatable.secondary_projectile_unit_id = value
+        self.creation.secondary_projectile_unit_id = value
 
     @property
     def spawning_graphic_id(self) -> Any:
         """Flattens creatable.spawning_graphic_id."""
-        return self.creatable.spawning_graphic_id
+        return self.creation.spawning_graphic_id
 
     @spawning_graphic_id.setter
     def spawning_graphic_id(self, value: Any) -> None:
-        self.creatable.spawning_graphic_id = value
+        self.creation.spawning_graphic_id = value
 
     @property
     def special_ability(self) -> Any:
         """Flattens creatable.special_ability."""
-        return self.creatable.special_ability
+        return self.creation.special_ability
 
     @special_ability.setter
     def special_ability(self, value: Any) -> None:
-        self.creatable.special_ability = value
+        self.creation.special_ability = value
 
     @property
     def special_graphic_id(self) -> Any:
         """Flattens creatable.special_graphic_id."""
-        return self.creatable.special_graphic_id
+        return self.creation.special_graphic_id
 
     @special_graphic_id.setter
     def special_graphic_id(self, value: Any) -> None:
-        self.creatable.special_graphic_id = value
+        self.creation.special_graphic_id = value
 
     @property
     def total_projectiles(self) -> Any:
         """Flattens creatable.total_projectiles."""
-        return self.creatable.total_projectiles
+        return self.creation.total_projectiles
 
     @total_projectiles.setter
     def total_projectiles(self, value: Any) -> None:
-        self.creatable.total_projectiles = value
+        self.creation.total_projectiles = value
 
     @property
     def train_location_id(self) -> Any:
         """Flattens creatable.train_location_id."""
-        return self.creatable.train_location_id
+        return self.creation.train_location_id
 
     @train_location_id.setter
     def train_location_id(self, value: Any) -> None:
-        self.creatable.train_location_id = value
+        self.creation.train_location_id = value
 
     @property
     def train_locations(self) -> Any:
         """Flattens creatable.train_locations."""
-        return self.creatable.train_locations
+        return self.creation.train_locations
 
     @train_locations.setter
     def train_locations(self, value: Any) -> None:
-        self.creatable.train_locations = value
+        self.creation.train_locations = value
 
     @property
     def train_time(self) -> Any:
         """Flattens creatable.train_time."""
-        return self.creatable.train_time
+        return self.creation.train_time
 
     @train_time.setter
     def train_time(self, value: Any) -> None:
-        self.creatable.train_time = value
+        self.creation.train_time = value
 
     @property
     def upgrade_graphic_id(self) -> Any:
         """Flattens creatable.upgrade_graphic_id."""
-        return self.creatable.upgrade_graphic_id
+        return self.creation.upgrade_graphic_id
 
     @upgrade_graphic_id.setter
     def upgrade_graphic_id(self, value: Any) -> None:
-        self.creatable.upgrade_graphic_id = value
+        self.creation.upgrade_graphic_id = value
 
 
     # BuildingWrapper flattened properties
