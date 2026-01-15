@@ -1,0 +1,219 @@
+/**
+ * GenieTooling Dark Theme with Orange Accents
+ * Matching the provided screenshot design
+ */
+
+:root {
+  /* Brand Colors - Orange/Gold */
+  --vp-c-brand-1: #f5a623;
+  --vp-c-brand-2: #e09919;
+  --vp-c-brand-3: #cc8a10;
+  --vp-c-brand-soft: rgba(245, 166, 35, 0.14);
+  
+  /* Override default green to orange */
+  --vp-c-green-1: #f5a623;
+  --vp-c-green-2: #e09919;
+  --vp-c-green-3: #cc8a10;
+  --vp-c-green-soft: rgba(245, 166, 35, 0.14);
+}
+
+/* Force dark mode */
+.dark {
+  --vp-c-bg: #0d1117;
+  --vp-c-bg-alt: #161b22;
+  --vp-c-bg-elv: #1c2128;
+  --vp-c-bg-soft: #161b22;
+  
+  /* Sidebar background */
+  --vp-sidebar-bg-color: #0d1117;
+  
+  /* Text colors */
+  --vp-c-text-1: rgba(255, 255, 255, 0.87);
+  --vp-c-text-2: rgba(255, 255, 255, 0.6);
+  --vp-c-text-3: rgba(255, 255, 255, 0.38);
+  
+  /* Border */
+  --vp-c-border: rgba(255, 255, 255, 0.08);
+  --vp-c-divider: rgba(255, 255, 255, 0.08);
+  --vp-c-gutter: #1c2128;
+  
+  /* Code blocks */
+  --vp-code-block-bg: #161b22;
+  --vp-code-line-highlight-color: rgba(245, 166, 35, 0.08);
+  
+  /* Button */
+  --vp-button-brand-bg: #f5a623;
+  --vp-button-brand-hover-bg: #e09919;
+  --vp-button-brand-active-bg: #cc8a10;
+  --vp-button-brand-text: #0d1117;
+}
+
+/* Sidebar active item */
+.VPSidebar .VPSidebarItem.is-active > .item .link > .text {
+  color: var(--vp-c-brand-1);
+}
+
+/* Sidebar category headers */
+.VPSidebar .VPSidebarItem.level-0 > .item > .text {
+  color: var(--vp-c-brand-1);
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+}
+
+/* Navigation links hover */
+.VPNavBarMenuLink:hover,
+.VPSidebarItem .link:hover .text {
+  color: var(--vp-c-brand-1);
+}
+
+/* Active sidebar indicator */
+.VPSidebar .VPSidebarItem.is-active > .item {
+  border-left: 2px solid var(--vp-c-brand-1);
+  margin-left: -1px;
+}
+
+/* Footer styling */
+.VPFooter {
+  border-top: 1px solid var(--vp-c-border);
+  background-color: var(--vp-c-bg);
+}
+
+/* Community box on right sidebar */
+.VPDocAsideOutline::before {
+  content: '';
+  display: block;
+}
+
+/* Custom community box (add via slot if needed) */
+.community-box {
+  background: linear-gradient(135deg, #1c2128 0%, #161b22 100%);
+  border: 1px solid var(--vp-c-brand-1);
+  border-radius: 8px;
+  padding: 1rem;
+  margin-top: 1rem;
+}
+
+.community-box h4 {
+  color: var(--vp-c-brand-1);
+  margin: 0 0 0.5rem 0;
+  font-size: 0.875rem;
+}
+
+.community-box p {
+  font-size: 0.8rem;
+  margin: 0 0 0.75rem 0;
+  color: var(--vp-c-text-2);
+}
+
+.community-box a {
+  color: var(--vp-c-brand-1);
+}
+
+/* Discord button style */
+.discord-btn {
+  display: inline-block;
+  background: var(--vp-c-brand-1);
+  color: #0d1117 !important;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  font-weight: 600;
+  text-decoration: none;
+  font-size: 0.875rem;
+}
+
+.discord-btn:hover {
+  background: var(--vp-c-brand-2);
+}
+
+/* Table styling */
+.vp-doc table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+}
+
+.vp-doc th {
+  background: var(--vp-c-bg-soft);
+  font-weight: 600;
+  text-align: left;
+  padding: 0.75rem;
+  border-bottom: 2px solid var(--vp-c-border);
+}
+
+.vp-doc td {
+  padding: 0.75rem;
+  border-bottom: 1px solid var(--vp-c-border);
+}
+
+.vp-doc tr:hover td {
+  background: rgba(245, 166, 35, 0.03);
+}
+
+/* Code inline */
+.vp-doc :not(pre) > code {
+  background: var(--vp-c-bg-soft);
+  color: var(--vp-c-brand-1);
+  padding: 0.15rem 0.4rem;
+  border-radius: 4px;
+  font-size: 0.9em;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--vp-c-bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--vp-c-border);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--vp-c-brand-1);
+}
+
+/* Header badges */
+.header-badge {
+  display: inline-block;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  border-radius: 4px;
+  margin-left: 0.5rem;
+}
+
+.header-badge.beta {
+  background: var(--vp-c-brand-1);
+  color: #0d1117;
+}
+
+.header-badge.version {
+  background: var(--vp-c-bg-soft);
+  border: 1px solid var(--vp-c-border);
+  color: var(--vp-c-text-2);
+}
+
+/* Fix logo size */
+.VPNavBarTitle .logo {
+  height: 24px;
+  margin-right: 8px;
+}
+
+/* Hero section improvements */
+.VPHero .name {
+  background: linear-gradient(135deg, #f5a623 0%, #e09919 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.VPHero .tagline {
+  color: var(--vp-c-text-2);
+}

@@ -1,0 +1,103 @@
+# ========================================
+# INCLUDE ONLY:
+# - Actual_Tools_GDP/
+# - Datasets/
+# - docs/ (EXCEPT dist/cache/node_modules)
+# ========================================
+
+# --- Ignore everything by default ---
+/*
+
+# --- Explicitly include what we want ---
+!/Actual_Tools_GDP/
+!/Datasets/
+
+!/.gitignore
+!/README.md
+!/pyproject.toml
+!/requirements.txt
+
+# --- Ignore Testing folder completely ---
+/Testing/
+
+# --- Ignore submodules/external ---
+/GenieDatParser/
+/genieutils/
+/src/
+/tests/
+/.venv/
+/.agent/
+/agents/
+/Actual_Tools/
+/My_Examples/
+/summaries/
+
+# --- Data files at root ---
+*.dat
+*.ini
+#*.json for fields_discovery.json
+*.txt
+
+# --- Python cache ---
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+
+# --- IDE ---
+.idea/
+.vscode/
+*.iml
+
+# --- Type checker caches ---
+.mypy_cache/
+.pyright/
+.ruff_cache/
+
+# --- Build outputs ---
+build/
+dist/
+*.whl
+site/
+**/target/
+
+# --- Docs build artifacts ---
+docs/.vitepress/dist/
+docs/.vitepress/cache/
+docs/node_modules/
+
+# --- OS junk ---
+.DS_Store
+Thumbs.db
+
+# --- Logs/temp ---
+*.log
+*.tmp
+
+# --- Secrets ---
+.env
+.env.*
+secrets/
+*.pem
+*.key
+
+# --- Within Actual_Tools_GDP, ignore data files ---
+/Actual_Tools_GDP/*.dat
+/Actual_Tools_GDP/*.json
+/Actual_Tools_GDP/*.ini
+
+# --- OLD files to ignore ---
+*_OLD.py
+/Actual_Tools_GDP/Units/wrappers_OLD/
+
+
+!/.github/
+!/docs/package-lock.json
+!/goku_tools/
+
+!/docs/
+!/docs/**
+
+docs/node_modules/
+docs/.vitepress/dist/
+docs/.vitepress/cache/

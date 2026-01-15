@@ -1,0 +1,17 @@
+{
+  "name": "genietooling-docs",
+  "version": "1.0.0",
+  "description": "GenieTooling Documentation",
+  "type": "module",
+  "scripts": {
+    "docs:dev": "vitepress dev",
+    "docs:build": "vitepress build",
+    "docs:preview": "vitepress preview"
+  },
+  "keywords": ["aoe2", "genie", "modding", "documentation"],
+  "author": "GOKUMODDER",
+  "license": "MIT",
+  "devDependencies": {
+    "vitepress": "^1.5.0"
+  }
+}

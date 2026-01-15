@@ -1,0 +1,83 @@
+{
+  "units": {
+    "graphics": {
+      "standing_sprite_id1": {"target": "GraphicHandle", "manager": "graphic_manager", "nullable": true, "null_value": -1},
+      "standing_sprite_id2": {"target": "GraphicHandle", "manager": "graphic_manager", "nullable": true, "null_value": -1},
+      "dying_sprite_id": {"target": "GraphicHandle", "manager": "graphic_manager", "nullable": true, "null_value": -1},
+      "undead_sprite_id": {"target": "GraphicHandle", "manager": "graphic_manager", "nullable": true, "null_value": -1},
+      "creatable.special_graphic_id": {"target": "GraphicHandle", "manager": "graphic_manager", "nullable": true, "null_value": -1},
+      "dead_fish.walking_graphic_id": {"target": "GraphicHandle", "manager": "graphic_manager", "nullable": true, "null_value": -1},
+      "dead_fish.running_graphic_id": {"target": "GraphicHandle", "manager": "graphic_manager", "nullable": true, "null_value": -1},
+      "type_50.attack_graphic_id": {"target": "GraphicHandle", "manager": "graphic_manager", "nullable": true, "null_value": -1},
+      "type_50.attack_graphic_2_id": {"target": "GraphicHandle", "manager": "graphic_manager", "nullable": true, "null_value": -1},
+      "building.snow_graphic_id": {"target": "GraphicHandle", "manager": "graphic_manager", "nullable": true, "null_value": -1},
+      "building.construction_graphic_id": {"target": "GraphicHandle", "manager": "graphic_manager", "nullable": true, "null_value": -1},
+      "creatable.garrison_graphic_id": {"target": "GraphicHandle", "manager": "graphic_manager", "nullable": true, "null_value": -1},
+      "building.destruction_graphic_id": {"target": "GraphicHandle", "manager": "graphic_manager", "nullable": true, "null_value": -1},
+      "building.destruction_rubble_graphic_id": {"target": "GraphicHandle", "manager": "graphic_manager", "nullable": true, "null_value": -1},
+      "creatable.idle_attack_graphic_id": {"target": "GraphicHandle", "manager": "graphic_manager", "nullable": true, "null_value": -1},
+      "creatable.spawning_graphic_id": {"target": "GraphicHandle", "manager": "graphic_manager", "nullable": true, "null_value": -1},
+      "creatable.upgrade_graphic_id": {"target": "GraphicHandle", "manager": "graphic_manager", "nullable": true, "null_value": -1},
+      "creatable.hero_glow_graphic_id": {"target": "GraphicHandle", "manager": "graphic_manager", "nullable": true, "null_value": -1},
+      "building.research_graphic_id": {"target": "GraphicHandle", "manager": "graphic_manager", "nullable": true, "null_value": -1},
+      "building.research_complete_graphic_id": {"target": "GraphicHandle", "manager": "graphic_manager", "nullable": true, "null_value": -1}
+    },
+    "graphics_nested": {
+      "damage_graphics.graphic_id": {"target": "GraphicHandle", "manager": "graphic_manager", "nullable": true, "null_value": -1},
+      "tasks.proceeding_graphic_id": {"target": "GraphicHandle", "manager": "graphic_manager", "nullable": true, "null_value": -1},
+      "tasks.working_graphic_id": {"target": "GraphicHandle", "manager": "graphic_manager", "nullable": true, "null_value": -1},
+      "tasks.carrying_graphic_id": {"target": "GraphicHandle", "manager": "graphic_manager", "nullable": true, "null_value": -1}
+    },
+    "sounds": {
+      "selection_sound_id": {"target": "SoundHandle", "manager": "sound_manager", "nullable": true, "null_value": -1},
+      "dying_sound_id": {"target": "SoundHandle", "manager": "sound_manager", "nullable": true, "null_value": -1},
+      "train_sound_id": {"target": "SoundHandle", "manager": "sound_manager", "nullable": true, "null_value": -1},
+      "damage_sound_id1": {"target": "SoundHandle", "manager": "sound_manager", "nullable": true, "null_value": -1},
+      "bird.attack_sound_id": {"target": "SoundHandle", "manager": "sound_manager", "nullable": true, "null_value": -1},
+      "bird.move_sound_id": {"target": "SoundHandle", "manager": "sound_manager", "nullable": true, "null_value": -1},
+      "building.construction_sound_id": {"target": "SoundHandle", "manager": "sound_manager", "nullable": true, "null_value": -1},
+      "building.transform_sound_id": {"target": "SoundHandle", "manager": "sound_manager", "nullable": true, "null_value": -1}
+    },
+    "sounds_nested": {
+      "tasks.resource_gather_sound_id": {"target": "SoundHandle", "manager": "sound_manager", "nullable": true, "null_value": -1},
+      "tasks.resource_deposit_sound_id": {"target": "SoundHandle", "manager": "sound_manager", "nullable": true, "null_value": -1}
+    },
+    "unit_refs": {
+      "type_50.projectile_unit_id": {"target": "UnitHandle", "manager": "unit_manager", "nullable": true, "null_value": -1},
+      "creatable.secondary_projectile_unit_id": {"target": "UnitHandle", "manager": "unit_manager", "nullable": true, "null_value": -1},
+      "creatable.charge_projectile_unit_id": {"target": "UnitHandle", "manager": "unit_manager", "nullable": true, "null_value": -1},
+      "dead_unit_id": {"target": "UnitHandle", "manager": "unit_manager", "nullable": true, "null_value": -1},
+      "blood_unit_id": {"target": "UnitHandle", "manager": "unit_manager", "nullable": true, "null_value": -1},
+      "dead_fish.tracking_unit_id": {"target": "UnitHandle", "manager": "unit_manager", "nullable": true, "null_value": -1},
+      "building.stack_unit_id": {"target": "UnitHandle", "manager": "unit_manager", "nullable": true, "null_value": -1},
+      "building.head_unit_id": {"target": "UnitHandle", "manager": "unit_manager", "nullable": true, "null_value": -1},
+      "building.transform_unit_id": {"target": "UnitHandle", "manager": "unit_manager", "nullable": true, "null_value": -1},
+      "building.salvage_unit_id": {"target": "UnitHandle", "manager": "unit_manager", "nullable": true, "null_value": -1},
+      "building.pile_unit_id": {"target": "UnitHandle", "manager": "unit_manager", "nullable": true, "null_value": -1}
+    },
+    "unit_refs_nested": {
+      "drop_sites.unit_id": {"target": "UnitHandle", "manager": "unit_manager", "nullable": true, "null_value": -1},
+      "train_locations.unit_id": {"target": "UnitHandle", "manager": "unit_manager", "nullable": true, "null_value": -1},
+      "annexes.unit_id": {"target": "UnitHandle", "manager": "unit_manager", "nullable": true, "null_value": -1}
+    }
+  },
+  "techs": {
+    "refs": {
+      "effect": {"target": "EffectHandle", "manager": "effect_manager", "nullable": true, "null_value": -1},
+      "civilization": {"target": "CivHandle", "manager": "civ_manager", "nullable": true, "null_value": -1}
+    },
+    "nested": {
+      "research_location.location": {"target": "UnitHandle", "manager": "unit_manager", "nullable": true, "null_value": -1},
+      "required_techs.tech": {"target": "TechHandle", "manager": "tech_manager", "nullable": true, "null_value": -1},
+      "costs.type": {"target": "ResourceId", "manager": null, "nullable": true, "null_value": -1}
+    }
+  },
+  "graphics": {
+    "refs": {
+      "sound": {"target": "SoundHandle", "manager": "sound_manager", "nullable": true, "null_value": -1}
+    },
+    "nested": {
+      "deltas.graphic": {"target": "GraphicHandle", "manager": "graphic_manager", "nullable": true, "null_value": -1}
+    }
+  }
+}
