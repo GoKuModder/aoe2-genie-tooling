@@ -205,8 +205,10 @@ class GraphicHandle:
         new_delta.offset_y = offset_y
         new_delta.display_angle = display_angle
         
-        # Append to sprite's delta list
-        self._sprite.deltas.append(new_delta)
+        # CRITICAL: Don't use append()! bfp_rs lists share internal storage.
+        current_deltas = list(self._sprite.deltas)
+        current_deltas.append(new_delta)
+        self._sprite.deltas = current_deltas  # setattr triggers bfp_rs copy
         
         # Update count
         self._sprite.num_deltas = len(self._sprite.deltas)
@@ -414,7 +416,11 @@ class GraphicHandle:
         angle_sound.sound_id3 = sound_id_3
         angle_sound.wwise_sound_id3 = wwise_sound_id_3
         
-        self._sprite.facet_attack_sounds.append(angle_sound)
+        # CRITICAL: Don't use append()! bfp_rs lists share internal storage.
+        current_sounds = list(self._sprite.facet_attack_sounds)
+        current_sounds.append(angle_sound)
+        self._sprite.facet_attack_sounds = current_sounds  # setattr triggers bfp_rs copy
+        
         self._sprite.facets_have_attack_sounds = True
         # Ensure num_facets matches the sounds list if sounds are used
         self._sprite.num_facets = len(self._sprite.facet_attack_sounds)

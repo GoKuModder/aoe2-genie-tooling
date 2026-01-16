@@ -110,6 +110,11 @@ class TasksManager:
             work_value1 = kwargs.pop('work_value_1')
         if 'work_value_2' in kwargs:
             work_value2 = kwargs.pop('work_value_2')
+        # Map aliased names to underlying UnitTask field names
+        if 'work_flag_2' in kwargs:
+            kwargs['work_mode'] = kwargs.pop('work_flag_2')
+        if 'building_pick' in kwargs:
+            kwargs['build_task_flag'] = kwargs.pop('building_pick')
 
         task_idx = -1
         for u in self._units:
