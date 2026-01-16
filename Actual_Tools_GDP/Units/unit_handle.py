@@ -1246,6 +1246,10 @@ class UnitHandle:
         """Remove attack by index from all units."""
         return self.attacks.remove(attack_id)
 
+    def remove_all_attacks(self) -> None:
+        """Remove all attacks from this unit."""
+        self.attacks.clear()
+
     def set_attack(self, class_: int, amount: int) -> Optional[AttackHandle]:
         """Set attack for class (update existing or add new). Returns handle."""
         return self.attacks.set(class_, amount)
