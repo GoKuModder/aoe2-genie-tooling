@@ -28,10 +28,33 @@ class TaskHandle:
     carrying_graphic_id: int
     enabled: int
     
-    # Additional task properties accessible via __getattr__
+    # Additional task properties
     search_wait_time: float
-    work_flag_2: int
+    work_flag_2: int  # Alias for work_mode. MUST be 2001 for speed_charge.
+    work_mode: int
     unused_flag: int
+    
+    # Build task properties
+    building_pick: bool  # Alias for build_task_flag
+    build_task_flag: bool
+    auto_search_targets: bool
+    
+    # Other task properties
+    productivity_resource: int
+    unused_resource: int
+    proceeding_graphic_id: int
+    resource_gather_sound_id: int
+    resource_deposit_sound_id: int
+    gather_type: int
+    enable_targeting: int
+    target_resource_flag: bool
+    move_sprite_id: int
+    proceed_sprite_id: int
+    work_sprite_id: int
+    carry_sprite_id: int
+    wwise_resource_gather_sound_id: int
+    wwise_resource_deposit_sound_id: int
+    resource_which_enables_task: int
 
 
 class AttackHandle:
