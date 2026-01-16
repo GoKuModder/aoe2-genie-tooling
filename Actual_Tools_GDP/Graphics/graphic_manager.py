@@ -316,12 +316,14 @@ class GraphicManager:
         new_sprite.deltas = []
         new_sprite.facet_attack_sounds = []
         
-        # Ensure list capacity
-        while len(self.workspace.dat.sprites) <= graphic_id:
-            self.workspace.dat.sprites.append(None)
+        # Extend the sprites list if needed (append to end only)
+        # Direct indexed assignment at existing indices is safe
+        sprites = self.workspace.dat.sprites
+        while len(sprites) <= graphic_id:
+            sprites.append(None)
         
-        # Assign to target slot
-        self.workspace.dat.sprites[graphic_id] = new_sprite
+        # Direct assignment at index
+        sprites[graphic_id] = new_sprite
         
         return GraphicHandle(self.workspace, graphic_id)
     
@@ -354,11 +356,14 @@ class GraphicManager:
         
         copied.id = target_id
         
-        # Ensure capacity
-        while len(self.workspace.dat.sprites) <= target_id:
-            self.workspace.dat.sprites.append(None)
+        # Extend the sprites list if needed (append to end only)
+        # Direct indexed assignment at existing indices is safe
+        sprites = self.workspace.dat.sprites
+        while len(sprites) <= target_id:
+            sprites.append(None)
         
-        self.workspace.dat.sprites[target_id] = copied
+        # Direct assignment at index (this triggers bfp_rs copy for the element)
+        sprites[target_id] = copied
         
         return GraphicHandle(self.workspace, target_id)
     
@@ -370,10 +375,7 @@ class GraphicManager:
         
         new_sprite = Sprite(ver=source.ver)
         
-        # CRITICAL: Copy structural attributes FIRST (these determine list sizes)
-        # These must be set before any list assignments
-        new_sprite.num_facets = source.num_facets
-        new_sprite.facets_have_attack_sounds = source.facets_have_attack_sounds
+
         
         # Other attributes to copy
         attrs = [
@@ -397,21 +399,22 @@ class GraphicManager:
         new_sprite.num_deltas = source.num_deltas
         new_sprite.deltas = [self._copy_delta(d) for d in source.deltas]
         
-        # Copy facet attack sounds (structure should now match after setting num_facets)
+        # Copy facet attack sounds safely
+        # CRITICAL: bfp_rs validation prevents assigning list if size doesn't match num_facets expectation.
+        # Strategy: Assign empty (safe), then append individually, then update metadata.
         if source.facets_have_attack_sounds and hasattr(source, 'facet_attack_sounds'):
-            try:
-                new_sprite.facet_attack_sounds = [
-                    self._copy_facet_sound(s) for s in source.facet_attack_sounds
-                ]
-            except ValueError:
-                # If still fails, try individual assignment
-                for i, sound in enumerate(source.facet_attack_sounds):
-                    if i < len(new_sprite.facet_attack_sounds):
-                        copied = self._copy_facet_sound(sound)
-                        for attr in ['sound_delay1', 'sound_id1', 'wwise_sound_id1',
-                                    'sound_delay2', 'sound_id2', 'wwise_sound_id2',
-                                    'sound_delay3', 'sound_id3', 'wwise_sound_id3']:
-                            setattr(new_sprite.facet_attack_sounds[i], attr, getattr(copied, attr))
+            new_sprite.facet_attack_sounds = [] # Break store linkage & init to 0
+            
+            for sound in source.facet_attack_sounds:
+                new_sprite.facet_attack_sounds.append(self._copy_facet_sound(sound))
+            
+            # Sync metadata AFTER populating
+            new_sprite.num_facets = len(new_sprite.facet_attack_sounds)
+            new_sprite.facets_have_attack_sounds = True
+        else:
+            new_sprite.facet_attack_sounds = []
+            new_sprite.num_facets = source.num_facets
+            new_sprite.facets_have_attack_sounds = False
         
         return new_sprite
 

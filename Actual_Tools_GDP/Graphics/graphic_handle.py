@@ -416,13 +416,22 @@ class GraphicHandle:
         angle_sound.sound_id3 = sound_id_3
         angle_sound.wwise_sound_id3 = wwise_sound_id_3
         
-        # CRITICAL: Don't use append()! bfp_rs lists share internal storage.
+        # CRITICAL: bfp_rs validation is strict on list assignment vs num_facets.
+        # Strategy: Use Reset-Append to bypass assignment check and break storage sharing.
+        
+        # 1. Backup existing sounds (triggers copy)
         current_sounds = list(self._sprite.facet_attack_sounds)
         current_sounds.append(angle_sound)
-        self._sprite.facet_attack_sounds = current_sounds  # setattr triggers bfp_rs copy
         
+        # 2. Clear to break storage linkage & satisfy "Expected: 0" check if uninitialized
+        self._sprite.facet_attack_sounds = []
+        
+        # 3. Append individually (bypasses strict size check)
+        for sound in current_sounds:
+            self._sprite.facet_attack_sounds.append(sound)
+            
+        # 4. Sync metadata
         self._sprite.facets_have_attack_sounds = True
-        # Ensure num_facets matches the sounds list if sounds are used
         self._sprite.num_facets = len(self._sprite.facet_attack_sounds)
     
     @property
