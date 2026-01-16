@@ -264,6 +264,15 @@ class TaskHandle:
         self._task.work_mode = value
     
     @property
+    def work_flag_2(self) -> int:
+        """Alias for work_mode. MUST be 2001 for speed_charge to work."""
+        return self._task.work_mode
+        
+    @work_flag_2.setter
+    def work_flag_2(self, value: int) -> None:
+        self._task.work_mode = value
+    
+    @property
     def enable_targeting(self) -> int:
         return self._task.enable_targeting
         
@@ -293,6 +302,15 @@ class TaskHandle:
         
     @build_task_flag.setter
     def build_task_flag(self, value: bool) -> None:
+        self._task.build_task_flag = bool(value)
+    
+    @property
+    def building_pick(self) -> bool:
+        """Alias for build_task_flag. Used in Build tasks."""
+        return self._task.build_task_flag
+        
+    @building_pick.setter
+    def building_pick(self, value: bool) -> None:
         self._task.build_task_flag = bool(value)
         
     @property

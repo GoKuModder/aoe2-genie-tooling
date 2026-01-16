@@ -370,26 +370,48 @@ class GraphicManager:
         
         new_sprite = Sprite(ver=source.ver)
         
-        # Attributes to copy
+        # CRITICAL: Copy structural attributes FIRST (these determine list sizes)
+        # These must be set before any list assignments
+        new_sprite.num_facets = source.num_facets
+        new_sprite.facets_have_attack_sounds = source.facets_have_attack_sounds
+        
+        # Other attributes to copy
         attrs = [
             'name', 'file_name', 'particle_effect_name', 'id',
-            'num_frames', 'num_facets', 'frame_rate', 'speed_mult',
+            'num_frames', 'frame_rate', 'speed_mult',
             'slp_id', 'is_loaded', 'force_player_color', 'layer',
             'color_table', 'transparent_selection', 'bounding_box',
-            'sound_id', 'wwise_sound_id', 'facets_have_attack_sounds',
-            'replay_delay', 'sequence_type', 'mirroring_mode', 'editor_mode'
+            'sound_id', 'wwise_sound_id',
+            'replay_delay', 'sequence_type', 'mirroring_mode', 'editor_mode',
+            'first_frame',  # DE1 version-specific
         ]
         
         for attr in attrs:
-            setattr(new_sprite, attr, getattr(source, attr))
+            if hasattr(source, attr):
+                try:
+                    setattr(new_sprite, attr, getattr(source, attr))
+                except Exception:
+                    pass  # Skip version-specific attrs that fail
         
         # Copy deltas
         new_sprite.num_deltas = source.num_deltas
         new_sprite.deltas = [self._copy_delta(d) for d in source.deltas]
         
-        # Copy angle sounds
-        if hasattr(source, 'facet_attack_sounds'):
-            new_sprite.facet_attack_sounds = [self._copy_facet_sound(s) for s in source.facet_attack_sounds]
+        # Copy facet attack sounds (structure should now match after setting num_facets)
+        if source.facets_have_attack_sounds and hasattr(source, 'facet_attack_sounds'):
+            try:
+                new_sprite.facet_attack_sounds = [
+                    self._copy_facet_sound(s) for s in source.facet_attack_sounds
+                ]
+            except ValueError:
+                # If still fails, try individual assignment
+                for i, sound in enumerate(source.facet_attack_sounds):
+                    if i < len(new_sprite.facet_attack_sounds):
+                        copied = self._copy_facet_sound(sound)
+                        for attr in ['sound_delay1', 'sound_id1', 'wwise_sound_id1',
+                                    'sound_delay2', 'sound_id2', 'wwise_sound_id2',
+                                    'sound_delay3', 'sound_id3', 'wwise_sound_id3']:
+                            setattr(new_sprite.facet_attack_sounds[i], attr, getattr(copied, attr))
         
         return new_sprite
 

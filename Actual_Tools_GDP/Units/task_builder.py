@@ -203,9 +203,33 @@ class TaskBuilder:
         """
         return self._add(132, work_value_1=transform_unit_id, **kwargs)
     
-    def speed_charge(self, work_value_1: float = 0.0, work_value_2: float = 0.0, **kwargs) -> Optional["TaskHandle"]:
-        """Action Type 133 - Speed Charge"""
-        return self._add(133, work_value_1=work_value_1, work_value_2=work_value_2, **kwargs)
+    def speed_charge(
+        self, 
+        work_value_1: float = 0.0, 
+        work_value_2: float = 0.0,
+        work_range: float = 0.0,
+        work_flag_2: int = 2001,
+        **kwargs
+    ) -> Optional["TaskHandle"]:
+        """
+        Action Type 133 - Speed Charge (Charge Attack in Editor)
+        
+        Requires "Special Ability" attribute to be 3.
+        
+        Args:
+            work_value_1: Minimum distance from target for speed up to start
+            work_value_2: Maximum distance from target for speed up to start
+            work_range: Multiplier on the unit speed while charging
+            work_flag_2: MUST be 2001 for the task to work (default: 2001)
+        """
+        return self._add(
+            133, 
+            work_value_1=work_value_1, 
+            work_value_2=work_value_2,
+            work_range=work_range,
+            work_flag_2=work_flag_2,
+            **kwargs
+        )
     
     def transform_unit(self, **kwargs) -> Optional["TaskHandle"]:
         """Action Type 134 - Transform Unit"""
