@@ -387,11 +387,11 @@ class GraphicManager:
         ]
         
         for attr in attrs:
-            if hasattr(source, attr):
-                try:
+            try:
+                if hasattr(source, attr):
                     setattr(new_sprite, attr, getattr(source, attr))
-                except Exception:
-                    pass  # Skip version-specific attrs that fail
+            except Exception:
+                pass  # Skip version-specific attrs that fail
         
         # Copy deltas
         new_sprite.num_deltas = source.num_deltas
