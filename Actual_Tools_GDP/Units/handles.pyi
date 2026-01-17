@@ -32,7 +32,8 @@ class TaskHandle:
     search_wait_time: float
     work_flag_2: int  # Alias for work_mode. MUST be 2001 for speed_charge.
     work_mode: int
-    unused_flag: int
+    combat_level: int  # Used in combat tasks
+    unused_flag: int  # Alias for combat_level (Genie Editor naming)
     
     # Build task properties
     building_pick: bool  # Alias for build_task_flag

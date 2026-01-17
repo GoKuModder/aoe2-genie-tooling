@@ -63,9 +63,37 @@ class TaskBuilder:
         """Action Type 6 - Graze"""
         return self._add(6, **kwargs)
     
-    def combat(self, class_id: int = -1, **kwargs) -> Optional["TaskHandle"]:
-        """Action Type 7 - Combat"""
-        return self._add(7, class_id=class_id, **kwargs)
+    def combat(
+        self, 
+        class_id: int = -1, 
+        target_diplomacy: int = 5,  # Gaia + Neutral + Enemy
+        search_wait_time: float = 3.0,
+        combat_level: int = 1,  # unused_flag
+        enable_targeting: int = 1,
+        auto_search_targets: bool = True,
+        **kwargs
+    ) -> Optional["TaskHandle"]:
+        """
+        Action Type 7 - Combat
+        
+        Args:
+            class_id: Target unit class ID (-1 for any).
+            target_diplomacy: Target diplomacy (5=Gaia+Neutral+Enemy).
+            search_wait_time: Time to wait between searches.
+            combat_level: Combat level flag (1 for combat units).
+            enable_targeting: Enable targeting (1 to enable).
+            auto_search_targets: Auto search for targets.
+        """
+        return self._add(
+            7, 
+            class_id=class_id, 
+            target_diplomacy=target_diplomacy,
+            search_wait_time=search_wait_time,
+            combat_level=combat_level,
+            enable_targeting=enable_targeting,
+            auto_search_targets=auto_search_targets,
+            **kwargs
+        )
     
     def shoot(self, **kwargs) -> Optional["TaskHandle"]:
         """Action Type 8 - Shoot"""

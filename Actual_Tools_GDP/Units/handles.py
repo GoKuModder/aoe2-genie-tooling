@@ -293,6 +293,25 @@ class TaskHandle:
     def gather_type(self, value: int) -> None:
         for t in self._tasks:
             t.gather_type = value
+    
+    @property
+    def combat_level(self) -> int:
+        return self._task.combat_level
+        
+    @combat_level.setter
+    def combat_level(self, value: int) -> None:
+        for t in self._tasks:
+            t.combat_level = value
+    
+    @property
+    def unused_flag(self) -> int:
+        """Alias for combat_level. Used in combat tasks."""
+        return self._task.combat_level
+        
+    @unused_flag.setter
+    def unused_flag(self, value: int) -> None:
+        for t in self._tasks:
+            t.combat_level = value
         
     @property
     def work_mode(self) -> int:
