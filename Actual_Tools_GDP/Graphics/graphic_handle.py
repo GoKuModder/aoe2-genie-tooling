@@ -67,6 +67,13 @@ class GraphicHandle:
         """
         if name.startswith('_'):
             object.__setattr__(self, name, value)
+        # Check if this class has a property descriptor for the name
+        elif hasattr(type(self), name) and isinstance(getattr(type(self), name), property):
+            prop = getattr(type(self), name)
+            if prop.fset is not None:
+                prop.fset(self, value)
+            else:
+                raise AttributeError(f"property '{name}' has no setter")
         else:
             setattr(self._sprite, name, value)
     
