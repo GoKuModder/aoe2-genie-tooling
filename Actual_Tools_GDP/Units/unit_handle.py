@@ -1322,7 +1322,7 @@ class UnitHandle:
 
     def create_task(
         self,
-        task_type: int = 0,
+        task_type: int = 1,  # CRITICAL: Must be 1, not 0! (0 causes game crash)
         id: int = 0,
         is_default: int = 0,
         action_type: int = 0,

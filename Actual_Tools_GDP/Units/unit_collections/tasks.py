@@ -211,3 +211,32 @@ class TasksManager:
             if handle.task_type == task_type:
                 return handle
         return None
+
+    def remove_by_action_type(self, action_type: int) -> int:
+        """
+        Remove all tasks with the specified action_type from all units.
+        
+        Args:
+            action_type: The action type to filter tasks by (e.g., 101 for Build, 133 for Speed Charge).
+            
+        Returns:
+            Number of tasks removed (from the primary unit's perspective).
+        """
+        # Find indices of tasks to remove (from primary unit)
+        ti = self._get_task_info()
+        if not ti or not ti.tasks:
+            return 0
+        
+        # Collect indices to remove (in reverse order to avoid index shifting)
+        indices_to_remove = [
+            i for i, task in enumerate(ti.tasks) 
+            if task.action_type == action_type
+        ]
+        
+        # Remove from all units, highest index first
+        count = 0
+        for idx in reversed(indices_to_remove):
+            if self.remove(idx):
+                count += 1
+        
+        return count
