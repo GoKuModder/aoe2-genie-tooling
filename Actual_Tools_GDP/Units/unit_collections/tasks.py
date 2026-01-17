@@ -48,11 +48,18 @@ class TasksManager:
         return len(ti.tasks) if ti and ti.tasks else 0
 
     def __getitem__(self, index: int) -> TaskHandle:
-        """Get TaskHandle by index."""
+        """Get TaskHandle by index (wrapping tasks from all civs at that index)."""
         ti = self._get_task_info()
-        if ti and 0 <= index < len(ti.tasks):
-            return TaskHandle(ti.tasks[index], index)
-        raise IndexError(f"Task index {index} out of range (0-{len(self)-1})")
+        if not ti or index < 0 or index >= len(ti.tasks):
+            raise IndexError(f"Task index {index} out of range (0-{len(self)-1})")
+        
+        # Collect tasks at this index from ALL units
+        all_tasks = []
+        for u in self._units:
+            if hasattr(u, "task_info") and u.task_info and index < len(u.task_info.tasks):
+                all_tasks.append(u.task_info.tasks[index])
+        
+        return TaskHandle(all_tasks, index)
 
     def __iter__(self) -> Iterator[TaskHandle]:
         """Iterate over TaskHandles for all tasks."""
@@ -117,8 +124,19 @@ class TasksManager:
             kwargs['build_task_flag'] = kwargs.pop('building_pick')
 
         task_idx = -1
-        for u in self._units:
+        # DEBUG: Trace tasks add
+        processed_count = 0
+        shared_ptrs = set()
+        
+        for i, u in enumerate(self._units):
             if hasattr(u, "task_info") and u.task_info:
+                processed_count += 1
+                # Check pointer if possible, or just ID
+                # ptr = id(u.task_info) # Python ID of wrapper, not struct
+                
+                # Check duplicate prevention?
+                # If we already modified this struct via another unit?
+                
                 # Create with version from unit
                 new_task = UnitTask(ver=u.ver)
                 new_task.task_type = task_type
@@ -141,12 +159,17 @@ class TasksManager:
                 
                 # CRITICAL: Don't use append()! bfp_rs lists share internal storage.
                 current_tasks = list(u.task_info.tasks)
+                
+                # OPTIMIZATION: Check if we just added this exact task (pointers shared)?
+                # If current_tasks already has this task at end? 
+                # No, new_task is new object.
+                
                 current_tasks.append(new_task)
                 u.task_info.tasks = current_tasks  # setattr triggers bfp_rs copy
                 
                 if task_idx == -1:
                     task_idx = len(u.task_info.tasks) - 1
-
+        
         return self[task_idx]
 
     def remove(self, index: int) -> bool:

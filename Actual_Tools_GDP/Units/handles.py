@@ -37,18 +37,33 @@ __all__ = [
 
 class TaskHandle:
     """
-    Wrapper for a UnitTask with its index.
+    Wrapper for UnitTasks across multiple civilizations.
 
+    Getters read from the primary task (first in list).
+    Setters update ALL tasks to ensure multi-civ consistency.
+    
     Attributes:
         task_id: Index of this task in the parent's tasks list.
         All Task properties are accessible directly.
     """
 
-    __slots__ = ("_task", "_task_id")
+    __slots__ = ("_tasks", "_task_id")
 
-    def __init__(self, task: "UnitTask", task_id: int) -> None:
-        object.__setattr__(self, "_task", task)
+    def __init__(self, tasks: List["UnitTask"], task_id: int) -> None:
+        """
+        Initialize with a list of tasks (one per civ).
+        
+        Args:
+            tasks: List of UnitTask objects, one per civilization.
+            task_id: Index of this task in the task list.
+        """
+        object.__setattr__(self, "_tasks", tasks if isinstance(tasks, list) else [tasks])
         object.__setattr__(self, "_task_id", task_id)
+
+    @property
+    def _task(self) -> "UnitTask":
+        """Primary task for reading values (backward compatibility)."""
+        return self._tasks[0] if self._tasks else None
 
     def __repr__(self) -> str:
         task_type = getattr(self._task, 'task_type', 0)
@@ -66,7 +81,8 @@ class TaskHandle:
 
     @task_type.setter
     def task_type(self, value: int) -> None:
-        self._task.task_type = value
+        for t in self._tasks:
+            t.task_type = value
 
     @property
     def id(self) -> int:
@@ -75,7 +91,8 @@ class TaskHandle:
 
     @id.setter
     def id(self, value: int) -> None:
-        self._task.id = value
+        for t in self._tasks:
+            t.id = value
 
     @property
     def is_default(self) -> int:
@@ -83,7 +100,8 @@ class TaskHandle:
 
     @is_default.setter
     def is_default(self, value: int) -> None:
-        self._task.is_default = bool(value)
+        for t in self._tasks:
+            t.is_default = bool(value)
 
     @property
     def action_type(self) -> int:
@@ -91,7 +109,8 @@ class TaskHandle:
 
     @action_type.setter
     def action_type(self, value: int) -> None:
-        self._task.action_type = value
+        for t in self._tasks:
+            t.action_type = value
 
     @property
     def class_id(self) -> int:
@@ -99,7 +118,8 @@ class TaskHandle:
 
     @class_id.setter
     def class_id(self, value: int) -> None:
-        self._task.unit_class_id = value
+        for t in self._tasks:
+            t.unit_class_id = value
 
     @property
     def unit_id(self) -> int:
@@ -107,7 +127,8 @@ class TaskHandle:
 
     @unit_id.setter
     def unit_id(self, value: int) -> None:
-        self._task.unit_type = value
+        for t in self._tasks:
+            t.unit_type = value
 
     @property
     def terrain_id(self) -> int:
@@ -115,7 +136,8 @@ class TaskHandle:
 
     @terrain_id.setter
     def terrain_id(self, value: int) -> None:
-        self._task.terrain_type = value
+        for t in self._tasks:
+            t.terrain_type = value
 
     @property
     def resource_in(self) -> int:
@@ -123,7 +145,8 @@ class TaskHandle:
 
     @resource_in.setter
     def resource_in(self, value: int) -> None:
-        self._task.resource_in = value
+        for t in self._tasks:
+            t.resource_in = value
 
     @property
     def resource_out(self) -> int:
@@ -131,7 +154,8 @@ class TaskHandle:
 
     @resource_out.setter
     def resource_out(self, value: int) -> None:
-        self._task.resource_out = value
+        for t in self._tasks:
+            t.resource_out = value
 
     @property
     def work_value_1(self) -> float:
@@ -139,7 +163,8 @@ class TaskHandle:
 
     @work_value_1.setter
     def work_value_1(self, value: float) -> None:
-        self._task.work_value1 = value
+        for t in self._tasks:
+            t.work_value1 = value
 
     @property
     def work_value_2(self) -> float:
@@ -147,7 +172,8 @@ class TaskHandle:
 
     @work_value_2.setter
     def work_value_2(self, value: float) -> None:
-        self._task.work_value2 = value
+        for t in self._tasks:
+            t.work_value2 = value
 
     @property
     def work_range(self) -> float:
@@ -155,7 +181,8 @@ class TaskHandle:
 
     @work_range.setter
     def work_range(self, value: float) -> None:
-        self._task.work_range = value
+        for t in self._tasks:
+            t.work_range = value
 
     @property
     def target_diplomacy(self) -> int:
@@ -163,7 +190,8 @@ class TaskHandle:
 
     @target_diplomacy.setter
     def target_diplomacy(self, value: int) -> None:
-        self._task.target_diplomacy = value
+        for t in self._tasks:
+            t.target_diplomacy = value
 
     # Core graphic mapping fixes (UnitTask struct uses these names)
     @property
@@ -172,7 +200,8 @@ class TaskHandle:
 
     @working_graphic_id.setter
     def working_graphic_id(self, value: int) -> None:
-        self._task.work_sprite_id = value
+        for t in self._tasks:
+            t.work_sprite_id = value
 
     @property
     def carrying_graphic_id(self) -> int:
@@ -180,7 +209,8 @@ class TaskHandle:
 
     @carrying_graphic_id.setter
     def carrying_graphic_id(self, value: int) -> None:
-        self._task.carry_sprite_id = value
+        for t in self._tasks:
+            t.carry_sprite_id = value
 
     # New Property aliases for TaskBuilder
     @property
@@ -189,7 +219,8 @@ class TaskHandle:
 
     @work_sprite_id.setter
     def work_sprite_id(self, value: int) -> None:
-        self._task.work_sprite_id = value
+        for t in self._tasks:
+            t.work_sprite_id = value
 
     @property
     def carry_sprite_id(self) -> int:
@@ -197,7 +228,8 @@ class TaskHandle:
 
     @carry_sprite_id.setter
     def carry_sprite_id(self, value: int) -> None:
-        self._task.carry_sprite_id = value
+        for t in self._tasks:
+            t.carry_sprite_id = value
         
     @property
     def productivity_resource(self) -> int:
@@ -205,7 +237,8 @@ class TaskHandle:
         
     @productivity_resource.setter
     def productivity_resource(self, value: int) -> None:
-        self._task.productivity_resource = value
+        for t in self._tasks:
+            t.productivity_resource = value
         
     @property
     def unused_resource(self) -> int:
@@ -213,7 +246,8 @@ class TaskHandle:
         
     @unused_resource.setter
     def unused_resource(self, value: int) -> None:
-        self._task.unused_resource = value
+        for t in self._tasks:
+            t.unused_resource = value
         
     @property
     def search_wait_time(self) -> float:
@@ -221,7 +255,8 @@ class TaskHandle:
         
     @search_wait_time.setter
     def search_wait_time(self, value: float) -> None:
-        self._task.search_wait_time = value
+        for t in self._tasks:
+            t.search_wait_time = value
         
     @property
     def proceeding_graphic_id(self) -> int:
@@ -229,7 +264,8 @@ class TaskHandle:
         
     @proceeding_graphic_id.setter
     def proceeding_graphic_id(self, value: int) -> None:
-        self._task.proceed_sprite_id = value
+        for t in self._tasks:
+            t.proceed_sprite_id = value
         
     @property
     def resource_gather_sound_id(self) -> int:
@@ -237,7 +273,8 @@ class TaskHandle:
         
     @resource_gather_sound_id.setter
     def resource_gather_sound_id(self, value: int) -> None:
-        self._task.resource_gather_sound_id = value
+        for t in self._tasks:
+            t.resource_gather_sound_id = value
         
     @property
     def resource_deposit_sound_id(self) -> int:
@@ -245,7 +282,8 @@ class TaskHandle:
         
     @resource_deposit_sound_id.setter
     def resource_deposit_sound_id(self, value: int) -> None:
-        self._task.resource_deposit_sound_id = value
+        for t in self._tasks:
+            t.resource_deposit_sound_id = value
     
     @property
     def gather_type(self) -> int:
@@ -253,7 +291,8 @@ class TaskHandle:
         
     @gather_type.setter
     def gather_type(self, value: int) -> None:
-        self._task.gather_type = value
+        for t in self._tasks:
+            t.gather_type = value
         
     @property
     def work_mode(self) -> int:
@@ -261,7 +300,8 @@ class TaskHandle:
         
     @work_mode.setter
     def work_mode(self, value: int) -> None:
-        self._task.work_mode = value
+        for t in self._tasks:
+            t.work_mode = value
     
     @property
     def work_flag_2(self) -> int:
@@ -270,7 +310,8 @@ class TaskHandle:
         
     @work_flag_2.setter
     def work_flag_2(self, value: int) -> None:
-        self._task.work_mode = value
+        for t in self._tasks:
+            t.work_mode = value
     
     @property
     def enable_targeting(self) -> int:
@@ -278,7 +319,8 @@ class TaskHandle:
         
     @enable_targeting.setter
     def enable_targeting(self, value: int) -> None:
-        self._task.enable_targeting = value
+        for t in self._tasks:
+            t.enable_targeting = value
         
     @property
     def auto_search_targets(self) -> bool:
@@ -286,7 +328,8 @@ class TaskHandle:
         
     @auto_search_targets.setter
     def auto_search_targets(self, value: bool) -> None:
-        self._task.auto_search_targets = bool(value)
+        for t in self._tasks:
+            t.auto_search_targets = bool(value)
     
     @property
     def target_resource_flag(self) -> bool:
@@ -294,7 +337,8 @@ class TaskHandle:
         
     @target_resource_flag.setter
     def target_resource_flag(self, value: bool) -> None:
-        self._task.target_resource_flag = bool(value)
+        for t in self._tasks:
+            t.target_resource_flag = bool(value)
         
     @property
     def build_task_flag(self) -> bool:
@@ -302,7 +346,8 @@ class TaskHandle:
         
     @build_task_flag.setter
     def build_task_flag(self, value: bool) -> None:
-        self._task.build_task_flag = bool(value)
+        for t in self._tasks:
+            t.build_task_flag = bool(value)
     
     @property
     def building_pick(self) -> bool:
@@ -311,7 +356,8 @@ class TaskHandle:
         
     @building_pick.setter
     def building_pick(self, value: bool) -> None:
-        self._task.build_task_flag = bool(value)
+        for t in self._tasks:
+            t.build_task_flag = bool(value)
         
     @property
     def move_sprite_id(self) -> int:
@@ -319,7 +365,8 @@ class TaskHandle:
         
     @move_sprite_id.setter
     def move_sprite_id(self, value: int) -> None:
-        self._task.move_sprite_id = value
+        for t in self._tasks:
+            t.move_sprite_id = value
         
     @property
     def proceed_sprite_id(self) -> int:
@@ -327,7 +374,8 @@ class TaskHandle:
         
     @proceed_sprite_id.setter
     def proceed_sprite_id(self, value: int) -> None:
-        self._task.proceed_sprite_id = value
+        for t in self._tasks:
+            t.proceed_sprite_id = value
         
     @property
     def wwise_resource_gather_sound_id(self) -> int:
@@ -335,7 +383,8 @@ class TaskHandle:
         
     @wwise_resource_gather_sound_id.setter
     def wwise_resource_gather_sound_id(self, value: int) -> None:
-        self._task.wwise_resource_gather_sound_id = value
+        for t in self._tasks:
+            t.wwise_resource_gather_sound_id = value
         
     @property
     def wwise_resource_deposit_sound_id(self) -> int:
@@ -343,7 +392,8 @@ class TaskHandle:
         
     @wwise_resource_deposit_sound_id.setter
     def wwise_resource_deposit_sound_id(self, value: int) -> None:
-        self._task.wwise_resource_deposit_sound_id = value
+        for t in self._tasks:
+            t.wwise_resource_deposit_sound_id = value
         
     @property
     def resource_which_enables_task(self) -> int:
@@ -351,7 +401,8 @@ class TaskHandle:
         
     @resource_which_enables_task.setter
     def resource_which_enables_task(self, value: int) -> None:
-        self._task.resource_which_enables_task = value
+        for t in self._tasks:
+            t.resource_which_enables_task = value
 
     @property
     def enabled(self) -> int:
@@ -378,7 +429,9 @@ class TaskHandle:
             else:
                 raise AttributeError(f"property '{name}' has no setter")
         elif hasattr(self._task, name):
-            setattr(self._task, name, value)
+            # CRITICAL: Update ALL tasks, not just the primary one
+            for t in self._tasks:
+                setattr(t, name, value)
         else:
             raise AttributeError(f"'{type(self).__name__}' has no attribute '{name}'")
 
