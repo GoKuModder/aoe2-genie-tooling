@@ -1300,6 +1300,9 @@ class UnitHandle:
         """Remove damage graphic by index from all units."""
         return self.damage_graphics.remove(damage_graphic_id)
 
+    def remove_all_damage_graphics(self) -> None:
+        """Remove all damage graphics from this unit."""
+        self.damage_graphics.clear()
     # =========================================================================
     # TASK METHODS (with handles)
     # =========================================================================
