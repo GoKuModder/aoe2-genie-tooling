@@ -113,12 +113,25 @@ class GraphicHandle:
         
     @property
     def frame_duration(self) -> float:
-        """Alias for frame_rate."""
+        """Alias for frame_rate (per-frame duration)."""
         return self._sprite.frame_rate
     
     @frame_duration.setter
     def frame_duration(self, value: float) -> None:
         self._sprite.frame_rate = value
+    
+    @property
+    def animation_duration(self) -> float:
+        """Total animation duration (frame_count * frame_duration)."""
+        return self._sprite.num_frames * self._sprite.frame_rate
+    
+    @animation_duration.setter
+    def animation_duration(self, value: float) -> None:
+        """Set total duration by calculating frame_rate from frame_count."""
+        if self._sprite.num_frames > 0:
+            self._sprite.frame_rate = value / self._sprite.num_frames
+        else:
+            self._sprite.frame_rate = value  # Fallback if no frames
         
     @property
     def speed_multiplier(self) -> float:
