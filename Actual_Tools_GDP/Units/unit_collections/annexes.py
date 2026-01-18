@@ -65,6 +65,24 @@ class AnnexesManager:
         
         return self[index]
 
+    def get(self, index: int) -> int:
+        """
+        Get the unit_id of the annex at specified index.
+        
+        Args:
+            index: Annex index (0-3).
+            
+        Returns:
+            Unit ID of the annex, or -1 if not set.
+        """
+        if index < 0 or index >= self.MAX_ANNEXES:
+            raise IndexError(f"Annex index must be 0-{self.MAX_ANNEXES-1}")
+        
+        bi = self._get_building_info()
+        if bi and bi.building_annex:
+            return bi.building_annex[index].unit_id
+        return -1
+
     def clear(self, index: int) -> None:
         """Clear annex at index for all units."""
         self.set(index, -1, 0.0, 0.0)
