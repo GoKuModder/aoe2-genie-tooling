@@ -65,23 +65,66 @@ class AnnexesManager:
         
         return self[index]
 
-    def get(self, index: int) -> int:
+    def get_annex(self, index: int) -> Optional[BuildingAnnexHandle]:
         """
-        Get the unit_id of the annex at specified index.
+        Get the annex object at specified index.
         
         Args:
             index: Annex index (0-3).
             
         Returns:
-            Unit ID of the annex, or -1 if not set.
+            BuildingAnnexHandle if valid, None otherwise.
         """
         if index < 0 or index >= self.MAX_ANNEXES:
-            raise IndexError(f"Annex index must be 0-{self.MAX_ANNEXES-1}")
+            return None
         
         bi = self._get_building_info()
         if bi and bi.building_annex:
-            return bi.building_annex[index].unit_id
-        return -1
+            return BuildingAnnexHandle(bi.building_annex[index], index)
+        return None
+
+    def get_unit(self, index: int) -> Optional[Any]:
+        """
+        Get the UnitHandle for the annex at specified index.
+        
+        Args:
+            index: Annex index (0-3).
+            
+        Returns:
+            UnitHandle for the annex unit, or None if not set.
+        """
+        from Actual_Tools_GDP.Units.unit_handle import UnitHandle
+        
+        if index < 0 or index >= self.MAX_ANNEXES:
+            return None
+        
+        bi = self._get_building_info()
+        if bi and bi.building_annex:
+            unit_id = bi.building_annex[index].unit_id
+            if unit_id >= 0:
+                # Get workspace from first unit
+                if self._units and hasattr(self._units[0], '_workspace'):
+                    return UnitHandle(self._units[0]._workspace, unit_id)
+        return None
+
+    def get_annex_coordinates(self, index: int) -> Optional[tuple]:
+        """
+        Get the coordinates (x, y) of the annex at specified index.
+        
+        Args:
+            index: Annex index (0-3).
+            
+        Returns:
+            Tuple (x, y) of displacement coordinates, or None if invalid.
+        """
+        if index < 0 or index >= self.MAX_ANNEXES:
+            return None
+        
+        bi = self._get_building_info()
+        if bi and bi.building_annex:
+            annex = bi.building_annex[index]
+            return (annex.displacement_x, annex.displacement_y)
+        return None
 
     def clear(self, index: int) -> None:
         """Clear annex at index for all units."""
