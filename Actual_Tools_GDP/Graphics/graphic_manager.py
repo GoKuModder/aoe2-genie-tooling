@@ -300,6 +300,13 @@ class GraphicManager:
         # Direct assignment at index
         sprites[graphic_id] = new_sprite
         
+        # Register in workspace registry
+        self.workspace.registry.register_graphic(
+            name=name,
+            graphic_id=graphic_id,
+            file_name=file_name
+        )
+        
         return GraphicHandle(self.workspace, graphic_id)
     
     def copy(self, source_id: int, target_id: Optional[int] = None) -> GraphicHandle:
@@ -339,6 +346,13 @@ class GraphicManager:
         
         # Direct assignment at index (this triggers bfp_rs copy for the element)
         sprites[target_id] = copied
+        
+        # Register in workspace registry
+        self.workspace.registry.register_graphic(
+            name=copied.name if copied.name else f"graphic_{target_id}",
+            graphic_id=target_id,
+            file_name=copied.file_name if hasattr(copied, 'file_name') else ""
+        )
         
         return GraphicHandle(self.workspace, target_id)
     
