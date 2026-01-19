@@ -217,6 +217,33 @@ class UnitHandle:
         for u in self._get_units():
             u.type_ = value
 
+    def change_unit_type(self, new_type: int) -> None:
+        """
+        Safely change unit type (structures sync at save time).
+        
+        Args:
+            new_type: Target type:
+                10 = EyeCandy
+                20 = Animated (Tree, Flag)
+                30 = Moving (Dead, Fish, Birds)
+                40 = Acting (Has tasks)
+                50 = Combat
+                60 = Projectile
+                70 = Creatable (Can be trained)
+                80 = Building
+        
+        Example:
+            # Convert Creatable unit to Building
+            unit.change_unit_type(80)
+            workspace.save("output.dat")  # Structures sync here
+        """
+        # Update type field
+        for u in self._get_units():
+            u.type_ = new_type
+        
+        # Mark for later validation
+        self._workspace._type_changed_units.add(self._unit_id)
+
     @property
     def enabled(self) -> int:
         """Whether unit is enabled."""

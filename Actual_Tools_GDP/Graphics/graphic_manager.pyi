@@ -54,7 +54,7 @@ class GraphicManager:
         wwise_sound_id: int = 0,
         frame_count: int = 1,
         angle_count: int = 1,
-        speed_multiplier: float = 1.0,
+        speed_multiplier: float = 0.0,
         frame_duration: float = 0.1,
         replay_delay: float = 0.0,
         sequence_type: int = 0,

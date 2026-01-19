@@ -88,6 +88,9 @@ class GenieWorkspace:
         self.validator = Validator()
         self.id_tracker = IDTracker()
         
+        # Dirty tracking for unit type changes
+        self._type_changed_units = set()  # Unit IDs that need structure sync
+        
         # Managers (private, accessed via properties)
         self._unit_manager = UnitManager(self)
         self._graphic_manager = GraphicManager(self)
@@ -214,6 +217,20 @@ class GenieWorkspace:
             if issues:
                 self.logger.error(f"Validation failed with {len(issues)} issues")
                 raise ValidationError(f"Validation failed: {issues[0]}")
+        
+        # CRITICAL: Sync unit structures to types before writing
+        if self._type_changed_units:
+            from Actual_Tools_GDP.Units.unit_type_validator import sync_structures_to_type
+            
+            for unit_id in self._type_changed_units:
+                for civ in self.dat.civilizations:
+                    if unit_id < len(civ.units):
+                        unit = civ.units[unit_id]
+                        if unit:
+                            sync_structures_to_type(unit, civilizations=self.dat.civilizations)
+            
+            # Clear dirty set after validation
+            self._type_changed_units.clear()
         
         # Save via FileIO
         self.file_io.save(str(out))

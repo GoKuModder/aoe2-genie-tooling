@@ -180,31 +180,6 @@ class GraphicManager:
         file_name: str,
         name: Optional[str] = None,
         graphic_id: Optional[int] = None,
-        frame_count: int = 1,
-        angle_count: int = 1,
-        frame_duration: float = 0.1,
-        speed_multiplier: float = 1.0,
-    ) -> GraphicHandle:
-        """
-        Add a new graphic to the DAT file.
-        
-        Args:
-            file_name: The SLP/SMX file name (e.g., "hero_attack.slp")
-            name: Internal name. If None, uses file_name
-            graphic_id: Target ID. If None, appends to end
-            frame_count: Number of animation frames
-            angle_count: Number of angles/facings
-            frame_duration: Duration per frame in seconds
-            speed_multiplier: Animation speed multiplier
-            
-        Returns:
-            GraphicHandle for the new graphic
-        """
-    def add_graphic(
-        self,
-        file_name: str,
-        name: Optional[str] = None,
-        graphic_id: Optional[int] = None,
         slp_id: int = -1,
         is_loaded: bool = False,
         old_color_flag: int = 0,
@@ -216,7 +191,7 @@ class GraphicManager:
         wwise_sound_id: int = 0,
         frame_count: int = 1,
         angle_count: int = 1,
-        speed_multiplier: float = 1.0,
+        speed_multiplier: float = 0.0,  # CRITICAL: Must be 0 - non-zero breaks animations/dying sprites
         frame_duration: float = 0.1,
         replay_delay: float = 0.0,
         sequence_type: int = 0,
