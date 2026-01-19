@@ -85,6 +85,7 @@ secrets/
 /Actual_Tools_GDP/*.dat
 /Actual_Tools_GDP/*.json
 /Actual_Tools_GDP/*.ini
+/Actual_Tools_GDP/test_*.py  # Test scripts
 
 # --- OLD files to ignore ---
 *_OLD.py

@@ -61,6 +61,10 @@ class UnitHandle:
     @type_.setter
     def type_(self, value: int) -> None: ...
 
+    def change_unit_type(self, new_type: int) -> None:
+        """Safely change unit type (structures sync at save time)."""
+        ...
+
     @property
     def enabled(self) -> int: ...
     @enabled.setter
