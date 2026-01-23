@@ -1,5 +1,29 @@
 """Type stubs for TechHandle - enables IDE autocomplete"""
-from typing import Any, Optional
+from typing import Any, Optional, Tuple
+
+
+class CostBuilder:
+    """Builder for setting tech costs."""
+    
+    def cost_1(self, resource_type: int, amount: int, deduct: bool = True) -> None:
+        """
+        Set cost slot 1.
+        
+        Args:
+            resource_type: 0=Food, 1=Wood, 2=Stone, 3=Gold
+            amount: Quantity
+            deduct: Whether to deduct (default True)
+        """
+        ...
+    
+    def cost_2(self, resource_type: int, amount: int, deduct: bool = True) -> None:
+        """Set cost slot 2."""
+        ...
+    
+    def cost_3(self, resource_type: int, amount: int, deduct: bool = True) -> None:
+        """Set cost slot 3."""
+        ...
+
 
 class TechHandle:
     """Handle for a single tech."""
@@ -9,6 +33,17 @@ class TechHandle:
         """Get the tech ID."""
         ...
     
+    @property
+    def set_cost(self) -> CostBuilder:
+        """
+        Builder for setting costs.
+        
+        Example:
+            tech.set_cost.cost_1(3, 100)  # 100 Gold
+            tech.set_cost.cost_2(0, 50)   # 50 Food
+        """
+        ...
+
     @property
     def name(self) -> str:
         """Get the tech name."""
@@ -53,7 +88,19 @@ class TechHandle:
 
     @property
     def costs(self) -> list:
-        """Get the cost array (3 TechCost objects). Use cost_1, cost_2, cost_3 for cleaner access."""
+        """Get the cost array (3 TechCost objects). Use set_cost.cost_1() etc for easier modification."""
+        ...
+
+    def clear_cost(self, slot: int) -> None:
+        """Clear a cost slot (set to 0 quantity)."""
+        ...
+
+    def clear_all_costs(self) -> None:
+        """Clear all cost slots."""
+        ...
+
+    def get_cost(self, slot: int) -> Tuple[int, int, int]:
+        """Get cost at slot as tuple (resource_id, quantity, deduct_flag)."""
         ...
 
     @property

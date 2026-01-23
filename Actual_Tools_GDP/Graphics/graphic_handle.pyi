@@ -34,6 +34,7 @@ class GraphicHandle:
     speed_multiplier: float         # Alias for speed_mult
     frame_rate: float               # Animation duration (internal)
     frame_duration: float           # Alias for frame_rate
+    animation_duration: float       # Total animation time (frame_count * frame_duration)
     replay_delay: float             # Replay delay
     sequence_type: int              # Sequence type
     sound_id: int                   # Sound ID (single sound)
