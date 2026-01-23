@@ -13,6 +13,38 @@ if TYPE_CHECKING:
 __all__ = ["TechHandle"]
 
 
+class CostBuilder:
+    """Builder for setting tech costs with nice API: tech.set_cost.cost_1(type, amount)"""
+    
+    def __init__(self, tech_handle: 'TechHandle') -> None:
+        self._tech_handle = tech_handle
+    
+    def cost_1(self, resource_type: int, amount: int, deduct: bool = True) -> None:
+        """
+        Set cost slot 1.
+        
+        Args:
+            resource_type: 0=Food, 1=Wood, 2=Stone, 3=Gold
+            amount: Quantity
+            deduct: Whether to deduct (default True)
+        """
+        self._set(0, resource_type, amount, deduct)
+    
+    def cost_2(self, resource_type: int, amount: int, deduct: bool = True) -> None:
+        """Set cost slot 2."""
+        self._set(1, resource_type, amount, deduct)
+    
+    def cost_3(self, resource_type: int, amount: int, deduct: bool = True) -> None:
+        """Set cost slot 3."""
+        self._set(2, resource_type, amount, deduct)
+    
+    def _set(self, slot: int, resource_type: int, amount: int, deduct: bool) -> None:
+        costs = self._tech_handle._tech.costs
+        costs[slot].resource_id = resource_type
+        costs[slot].quantity = amount
+        costs[slot].deduct_flag = 1 if deduct else 0
+
+
 class TechHandle:
     """
     Handle for a single tech.
@@ -35,6 +67,17 @@ class TechHandle:
     def workspace(self) -> GenieWorkspace:
         """Get the workspace."""
         return self._workspace
+
+    @property
+    def set_cost(self) -> CostBuilder:
+        """
+        Builder for setting costs.
+        
+        Example:
+            tech.set_cost.cost_1(3, 100)  # 100 Gold
+            tech.set_cost.cost_2(0, 50)   # 50 Food
+        """
+        return CostBuilder(self)
 
     @property
     def name(self) -> str:
@@ -95,8 +138,41 @@ class TechHandle:
 
     @property
     def costs(self) -> list:
-        """Get the cost array (3 TechCost objects). Use cost_1, cost_2, cost_3 for cleaner access."""
+        """Get the cost array (3 TechCost objects). Use set_cost.cost_1() etc for easier modification."""
         return self._tech.costs
+
+    def clear_cost(self, slot: int) -> None:
+        """
+        Clear a cost slot (set to 0 quantity).
+        
+        Args:
+            slot: Cost slot (0, 1, or 2)
+        """
+        if not (0 <= slot <= 2):
+            raise ValueError(f"slot must be 0-2, got {slot}")
+        self._tech.costs[slot].resource_id = 0
+        self._tech.costs[slot].quantity = 0
+        self._tech.costs[slot].deduct_flag = 0
+
+    def clear_all_costs(self) -> None:
+        """Clear all cost slots."""
+        for i in range(3):
+            self.clear_cost(i)
+
+    def get_cost(self, slot: int) -> tuple:
+        """
+        Get cost at slot as tuple.
+        
+        Args:
+            slot: Cost slot (0, 1, or 2)
+            
+        Returns:
+            Tuple of (resource_id, quantity, deduct_flag)
+        """
+        if not (0 <= slot <= 2):
+            raise ValueError(f"slot must be 0-2, got {slot}")
+        c = self._tech.costs[slot]
+        return (c.resource_id, c.quantity, c.deduct_flag)
 
     @property
     def required_tech_ids(self) -> tuple:
