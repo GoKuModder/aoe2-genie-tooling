@@ -19,7 +19,7 @@ exclude = [
 
 [project]
 name = "aoe2-genie-tooling"
-version = "1.2.3"
+version = "1.2.4"
 authors = [{ name = "GoKuModder" }]
 description = "High-level Python toolkit for editing AoE2 DE DAT files"
 readme = "README.md"
