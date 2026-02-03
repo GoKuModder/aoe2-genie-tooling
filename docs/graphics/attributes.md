@@ -35,7 +35,8 @@ graphic.file_name = "custom.slp"
 | `frame_count` | `int` | RW | Number of animation frames |
 | `angle_count` | `int` | RW | Number of angles/facets |
 | `frame_duration` | `float` | RW | Duration per frame (seconds) |
-| `speed_multiplier` | `float` | RW | Animation speed multiplier |
+| `animation_duration` | `float` | RW | Total animation time (auto-calculates frame_rate) |
+| `speed_multiplier` | `float` | RW | Animation speed multiplier (use 0.0 for static) |
 | `replay_delay` | `float` | RW | Delay before replay |
 | `first_frame` | `int` | RW | Starting frame index |
 | `sequence_type` | `int` | RW | Animation sequence type |
@@ -58,7 +59,11 @@ Some attributes have alternate names for convenience:
 graphic.frame_count = 15
 graphic.angle_count = 8
 graphic.frame_duration = 0.08  # 80ms per frame
-graphic.speed_multiplier = 1.5  # 50% faster
+graphic.speed_multiplier = 0.0  # Recommended: 0.0 for static graphics
+
+# Alternative: Set total animation time (auto-calculates frame_duration)
+graphic.animation_duration = 1.2  # 1.2 seconds total
+# Internally: frame_duration = 1.2 / 15 = 0.08 seconds
 ```
 
 ---

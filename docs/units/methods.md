@@ -269,15 +269,19 @@ See [Tasks](tasks.md) for details.
 ### Damage Graphic Methods
 
 | Method | Description |
-|--------|-------------|
+|--------|--------------|
 | `add_damage_graphic(graphic_id, damage_percent, apply_mode)` | Add damage state graphic |
 | `get_damage_graphic(damage_graphic_id)` | Get damage graphic by index |
 | `remove_damage_graphic(damage_graphic_id)` | Remove damage graphic |
+| `remove_all_damage_graphics()` | Clear all damage graphics |
 
 **Example:**
 ```python
 # Show burning graphic at 25% HP
 unit.add_damage_graphic(graphic_id=500, damage_percent=25, apply_mode=0)
+
+# Clear all damage graphics
+unit.remove_all_damage_graphics()
 ```
 
 ---
@@ -335,5 +339,30 @@ unit.resource_1(type=0, amount=10.0, flag=2)
 ### Utility Methods
 
 | Method | Description |
-|--------|-------------|
+|--------|--------------|
 | `invalidate_cache()` | Clear cached data (call after changing `civ_ids`) |
+| `change_unit_type(new_type)` | Safely change unit type (structures sync at save) |
+
+---
+
+### `change_unit_type(new_type)`
+
+Safely change a unit's type. Automatically handles structure synchronization (e.g., adding `building_info` when converting to Building type 80).
+
+```python
+def change_unit_type(new_type: int) -> None
+```
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `new_type` | `int` | Target unit type (10-80) |
+
+**Example:**
+```python
+# Convert a Creatable (70) to Building (80)
+unit = unit_manager.get(500)
+unit.change_unit_type(80)
+workspace.save("modded.dat")  # Structures sync during save
+```
+
+**Note:** Structure synchronization happens automatically during `workspace.save()`. The system adds missing required structures without removing existing ones (game tolerates both).

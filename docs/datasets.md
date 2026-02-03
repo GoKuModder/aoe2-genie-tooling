@@ -7,8 +7,8 @@ Using these enums instead of raw integers makes code more readable and reduces e
 ## Quick Example
 
 ```python
-from Actual_Tools_GDP import GenieWorkspace
-from Actual_Tools_GDP.Datasets import Attribute, Resource, Task, UnitClass
+from aoe2_genie_tooling import GenieWorkspace
+from aoe2_genie_tooling.Datasets import Attribute, Resource, Task, UnitClass
 
 workspace = GenieWorkspace.load("empires2_x2_p1.dat")
 
@@ -31,7 +31,7 @@ effect.add_command.attribute_modifier_add(
 Unit attribute IDs used in effect commands.
 
 ```python
-from Actual_Tools_GDP.Datasets import Attribute
+from aoe2_genie_tooling.Datasets import Attribute
 ```
 
 | Enum | Value | Description |
@@ -84,7 +84,7 @@ effect.add_command.attribute_modifier_multiply(
 Resource type IDs.
 
 ```python
-from Actual_Tools_GDP.Datasets import Resource
+from aoe2_genie_tooling.Datasets import Resource
 ```
 
 | Enum | Value | Description |
@@ -124,7 +124,7 @@ effect.add_command.resource_modifier(
 Unit task/action type IDs for TaskBuilder.
 
 ```python
-from Actual_Tools_GDP.Datasets import Task
+from aoe2_genie_tooling.Datasets import Task
 ```
 
 | Enum | Value | Description |
@@ -171,7 +171,7 @@ unit.add_task.combat(class_id=0)  # Same as Task.COMBAT
 Unit class IDs for targeting.
 
 ```python
-from Actual_Tools_GDP.Datasets import UnitClass
+from aoe2_genie_tooling.Datasets import UnitClass
 ```
 
 | Enum | Value | Description |
@@ -211,7 +211,7 @@ effect.add_command.attribute_modifier_add(
 Effect command type IDs.
 
 ```python
-from Actual_Tools_GDP.Datasets import Effect
+from aoe2_genie_tooling.Datasets import Effect
 ```
 
 | Enum | Value | Description |
@@ -246,7 +246,7 @@ effect.add_command.attribute_modifier_add(a=4, b=0, d=10)
 ## Importing Multiple Datasets
 
 ```python
-from Actual_Tools_GDP.Datasets import (
+from aoe2_genie_tooling.Datasets import (
     Attribute,
     Resource,
     Task,

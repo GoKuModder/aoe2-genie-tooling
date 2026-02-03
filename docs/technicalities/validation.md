@@ -63,8 +63,8 @@ This checks:
 The workspace can be configured with different validation levels:
 
 ```python
-from Actual_Tools_GDP import GenieWorkspace
-from Actual_Tools_GDP.Base.config import ValidationLevel
+from aoe2_genie_tooling import GenieWorkspace
+from aoe2_genie_tooling.Base.config import ValidationLevel
 
 # No validation (fastest)
 workspace = GenieWorkspace.load("input.dat", validation=ValidationLevel.NO_VALIDATION)
@@ -154,7 +154,7 @@ else:
 Using enums from `Datasets` helps prevent invalid values:
 
 ```python
-from Actual_Tools_GDP.Datasets import Attribute
+from aoe2_genie_tooling.Datasets import Attribute
 
 # Good - enum catches typos at write time
 effect.add_command.attribute_modifier_add(b=Attribute.HIT_POINTS)

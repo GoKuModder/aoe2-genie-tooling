@@ -1,6 +1,6 @@
 # ========================================
 # INCLUDE ONLY:
-# - Actual_Tools_GDP/
+# - aoe2_genie_tooling/
 # - Datasets/
 # - docs/ (EXCEPT dist/cache/node_modules)
 # ========================================
@@ -9,7 +9,7 @@
 /*
 
 # --- Explicitly include what we want ---
-!/Actual_Tools_GDP/
+!/aoe2_genie_tooling/
 !/Datasets/
 
 !/.gitignore
@@ -81,15 +81,15 @@ secrets/
 *.pem
 *.key
 
-# --- Within Actual_Tools_GDP, ignore data files ---
-/Actual_Tools_GDP/*.dat
-/Actual_Tools_GDP/*.json
-/Actual_Tools_GDP/*.ini
-/Actual_Tools_GDP/test_*.py  # Test scripts
+# --- Within aoe2_genie_tooling, ignore data files ---
+/aoe2_genie_tooling/*.dat
+/aoe2_genie_tooling/*.json
+/aoe2_genie_tooling/*.ini
+/aoe2_genie_tooling/test_*.py  # Test scripts
 
 # --- OLD files to ignore ---
 *_OLD.py
-/Actual_Tools_GDP/Units/wrappers_OLD/
+/aoe2_genie_tooling/Units/wrappers_OLD/
 
 
 !/.github/

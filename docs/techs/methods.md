@@ -138,20 +138,54 @@ tech_manager.clear_clipboard()
 
 ### Cost Management
 
-#### `set_cost(slot, resource_id, amount, deduct_flag=1)`
+#### `set_cost.cost_1(resource_type, amount, deduct=True)`
 
-Set a cost slot.
+Set cost slot 1 using the CostBuilder pattern.
 
 | Parameter | Type | Default | Description |
 |-----------|------|---------|-------------|
-| `slot` | `int` | Required | Cost slot (0, 1, or 2) |
-| `resource_id` | `int` | Required | Resource type |
+| `resource_type` | `int` | Required | 0=Food, 1=Wood, 2=Stone, 3=Gold |
 | `amount` | `int` | Required | Amount required |
-| `deduct_flag` | `int` | `1` | Whether to deduct |
+| `deduct` | `bool` | `True` | Whether to deduct resource |
 
 ```python
-tech.set_cost(0, resource_id=0, amount=100)  # 100 food
-tech.set_cost(1, resource_id=3, amount=50)   # 50 gold
+# Set costs using builder pattern
+tech.set_cost.cost_1(3, 100)        # 100 Gold
+tech.set_cost.cost_2(0, 50)         # 50 Food
+tech.set_cost.cost_3(1, 75, False)  # 75 Wood, don't deduct
+```
+
+---
+
+#### `clear_cost(slot)`
+
+Clear a specific cost slot.
+
+```python
+tech.clear_cost(0)  # Clear slot 1
+```
+
+---
+
+#### `clear_all_costs()`
+
+Clear all cost slots.
+
+```python
+tech.clear_all_costs()
+```
+
+---
+
+#### `get_cost(slot)`
+
+Get cost at slot as tuple.
+
+**Returns:** `Tuple[int, int, int]` - (resource_id, quantity, deduct_flag)
+
+```python
+resource, amount, deduct = tech.get_cost(0)
+print(f"Cost 1: {amount} of resource {resource}")
 ```
 
 ---

@@ -4,7 +4,7 @@ Utility functions for RECodeGenerator.
 from __future__ import annotations
 import re
 from typing import Any, Dict, List, Set, Tuple
-from Actual_Tools_GDP.Base.core.field_metadata import FieldReference, get_flat_fields
+from aoe2_genie_tooling.Base.core.field_metadata import FieldReference, get_flat_fields
 from .constants import SKIP_PROPERTIES, SKIP_PREFIXES
 
 UNIT_FIELD_REFS = get_flat_fields("units")

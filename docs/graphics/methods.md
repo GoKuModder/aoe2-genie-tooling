@@ -65,7 +65,7 @@ def add_graphic(
 | `frame_count` | `int` | `1` | Animation frames |
 | `angle_count` | `int` | `1` | Number of angles |
 | `frame_duration` | `float` | `0.1` | Duration per frame |
-| `speed_multiplier` | `float` | `1.0` | Animation speed |
+| `speed_multiplier` | `float` | `0.0` | Animation speed (0.0 recommended) |
 | `sound_id` | `int` | `-1` | Attached sound |
 | `layer` | `int` | `0` | Rendering layer |
 
@@ -274,7 +274,7 @@ graphic.clear_deltas()
 
 #### `set_attack_sounds(...)`
 
-Set attack sounds for this graphic.
+Set attack sounds for this graphic (deprecated, use `add_angle_sound`).
 
 ```python
 graphic.set_attack_sounds(
@@ -289,6 +289,43 @@ graphic.set_attack_sounds(
 
 ---
 
+#### `add_angle_sound(...)`
+
+Add an angle-specific sound entry with up to 3 sounds per angle.
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `frame_num` | `int` | `0` | Frame to trigger sound 1 |
+| `sound_id` | `int` | `-1` | Sound ID 1 |
+| `wwise_sound_id` | `int` | `0` | Wwise sound ID 1 (DE) |
+| `frame_num_2` | `int` | `0` | Frame to trigger sound 2 |
+| `sound_id_2` | `int` | `-1` | Sound ID 2 |
+| `wwise_sound_id_2` | `int` | `0` | Wwise sound ID 2 (DE) |
+| `frame_num_3` | `int` | `0` | Frame to trigger sound 3 |
+| `sound_id_3` | `int` | `-1` | Sound ID 3 |
+| `wwise_sound_id_3` | `int` | `0` | Wwise sound ID 3 (DE) |
+
+```python
+# Add attack sounds for all angles
+for i in range(graphic.angle_count):
+    graphic.add_angle_sound(
+        frame_num=5,
+        sound_id=50,
+    )
+```
+
+---
+
+#### `clear_angle_sounds()`
+
+Remove all angle-specific sounds.
+
+```python
+graphic.clear_angle_sounds()
+```
+
+---
+
 ### `exists()`
 
 Check if this graphic entry exists.
@@ -297,3 +334,4 @@ Check if this graphic entry exists.
 if graphic.exists():
     print(f"Graphic: {graphic.name}")
 ```
+

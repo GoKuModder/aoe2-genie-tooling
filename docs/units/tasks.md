@@ -294,9 +294,35 @@ unit.remove_task(0)  # Remove first task
 | `proceeding_graphic` | `int` | Visual effect graphic |
 | `carry_check` | `int` | Carry check flag |
 | `search_wait_time` | `float` | Wait time between searches |
+| `combat_level` | `int` | Combat level/priority |
+| `unused_flag` | `int` | Alias for combat_level (Genie Editor naming) |
 
 ```python
 task = unit.get_task(0)
 task.work_range = 8.0
 task.enabled = 1
+task.combat_level = 1  # Set combat priority
 ```
+
+---
+
+## TasksManager Methods
+
+Access tasks via `unit.tasks`:
+
+### `remove_by_action_type(action_type)`
+
+Remove all tasks matching an action type.
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `action_type` | `int` | Action type to remove |
+
+**Returns:** `int` - Number of tasks removed
+
+```python
+# Remove all combat tasks
+removed = unit.tasks.remove_by_action_type(7)
+print(f"Removed {removed} combat tasks")
+```
+

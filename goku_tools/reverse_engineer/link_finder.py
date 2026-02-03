@@ -23,7 +23,7 @@ from typing import TYPE_CHECKING, Dict, List, Optional, Set, Tuple
 from collections import defaultdict
 
 if TYPE_CHECKING:
-    from Actual_Tools_GDP.Base.workspace import GenieWorkspace
+    from aoe2_genie_tooling.Base.workspace import GenieWorkspace
 
 __all__ = ["LinkFinder", "UnitLinks", "LinkFinderConfig"]
 
@@ -100,7 +100,7 @@ class LinkFinder:
         )
         
         # Load field metadata
-        from Actual_Tools_GDP.Base.core.field_metadata import get_flat_fields
+        from aoe2_genie_tooling.Base.core.field_metadata import get_flat_fields
         self.unit_fields = get_flat_fields("units")
         
         # Categorize fields
@@ -366,7 +366,7 @@ class LinkFinder:
 if __name__ == "__main__":
     import sys
     sys.path.insert(0, ".")
-    from Actual_Tools_GDP.Base.workspace import GenieWorkspace
+    from aoe2_genie_tooling.Base.workspace import GenieWorkspace
     
     # Example usage
     print("Loading workspace...")

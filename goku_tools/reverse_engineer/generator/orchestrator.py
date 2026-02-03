@@ -278,7 +278,7 @@ def generate_master_module(folder_location: Path, groups: List[Any], independent
         'if str(base_dir) not in sys.path:',
         '    sys.path.insert(0, str(base_dir))',
         '',
-        'from Actual_Tools_GDP.Base.workspace import GenieWorkspace',
+        'from aoe2_genie_tooling.Base.workspace import GenieWorkspace',
         '',
     ]
     
@@ -383,7 +383,7 @@ def generate_group_code(ws: Any, group: Any, folder_location: Path, config: Any)
         f'Units for group: {group.name}',
         f'Unit IDs: {sorted(group.unit_ids)}',
         '"""',
-        'from Actual_Tools_GDP.Base.workspace import GenieWorkspace',
+        'from aoe2_genie_tooling.Base.workspace import GenieWorkspace',
         '',
     ]
     
@@ -400,7 +400,7 @@ def generate_group_code(ws: Any, group: Any, folder_location: Path, config: Any)
         f'Graphics for group: {group.name}',
         f'Graphic IDs: {sorted(group.graphic_ids)}',
         '"""',
-        'from Actual_Tools_GDP.Base.workspace import GenieWorkspace',
+        'from aoe2_genie_tooling.Base.workspace import GenieWorkspace',
         '',
     ]
     
@@ -417,7 +417,7 @@ def generate_group_code(ws: Any, group: Any, folder_location: Path, config: Any)
         f'Sounds for group: {group.name}',
         f'Sound IDs: {sorted(group.sound_ids)}',
         '"""',
-        'from Actual_Tools_GDP.Base.workspace import GenieWorkspace',
+        'from aoe2_genie_tooling.Base.workspace import GenieWorkspace',
         '',
     ]
     
@@ -448,7 +448,7 @@ def generate_independent_code(ws: Any, independent: IndependentObjects, folder_l
         'Independent Units',
         f'Unit IDs: {sorted(independent.unit_ids)}',
         '"""',
-        'from Actual_Tools_GDP.Base.workspace import GenieWorkspace',
+        'from aoe2_genie_tooling.Base.workspace import GenieWorkspace',
         '',
     ]
     
@@ -464,7 +464,7 @@ def generate_independent_code(ws: Any, independent: IndependentObjects, folder_l
         'Independent Graphics',
         f'Graphic IDs: {sorted(independent.graphic_ids)}',
         '"""',
-        'from Actual_Tools_GDP.Base.workspace import GenieWorkspace',
+        'from aoe2_genie_tooling.Base.workspace import GenieWorkspace',
         '',
     ]
     
@@ -480,7 +480,7 @@ def generate_independent_code(ws: Any, independent: IndependentObjects, folder_l
         'Independent Sounds',
         f'Sound IDs: {sorted(independent.sound_ids)}',
         '"""',
-        'from Actual_Tools_GDP.Base.workspace import GenieWorkspace',
+        'from aoe2_genie_tooling.Base.workspace import GenieWorkspace',
         '',
     ]
     

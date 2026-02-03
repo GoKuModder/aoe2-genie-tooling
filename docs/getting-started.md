@@ -1,6 +1,6 @@
 # Getting Started
 
-This guide will walk you through installing `Actual_Tools_GDP` and making your first DAT file modification.
+This guide will walk you through installing `aoe2_genie_tooling` and making your first DAT file modification.
 
 ## Installation
 
@@ -13,7 +13,7 @@ pip install aoe2-genie-tooling
 The entry point for all operations is the `GenieWorkspace` class:
 
 ```python
-from Actual_Tools_GDP import GenieWorkspace
+from aoe2_genie_tooling import GenieWorkspace
 
 # Load from file path
 workspace = GenieWorkspace.load("path/to/empires2_x2_p1.dat")
@@ -44,7 +44,7 @@ Each manager returns **Handle** objects that provide a high-level interface for 
 Let's modify the Archer's hit points:
 
 ```python
-from Actual_Tools_GDP import GenieWorkspace
+from aoe2_genie_tooling import GenieWorkspace
 
 # Load the DAT file
 workspace = GenieWorkspace.load("empires2_x2_p1.dat")

@@ -27,7 +27,7 @@ Full documentation is available in the `docs/` directory or at [https://gokumodd
 ## Quick Start
 
 ```python
-from Actual_Tools_GDP import GenieWorkspace
+from aoe2_genie_tooling import GenieWorkspace
 
 # Load workspace
 workspace = GenieWorkspace.load("empires2_x2_p1.dat")
@@ -199,7 +199,7 @@ unit.move_sound = sound.id
 ## Complete Example: Custom Unit with Assets
 
 ```python
-from Actual_Tools_GDP import GenieWorkspace
+from aoe2_genie_tooling import GenieWorkspace
 from Datasets import Resource, UnitClass
 
 workspace = GenieWorkspace.load("empires2_x2_p1.dat")

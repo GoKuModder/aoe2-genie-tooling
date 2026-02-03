@@ -1,6 +1,6 @@
 # Error Handling
 
-`Actual_Tools_GDP` provides specific exception types to help you handle errors gracefully.
+`aoe2_genie_tooling` provides specific exception types to help you handle errors gracefully.
 
 ## Exception Types
 
@@ -9,7 +9,7 @@
 Raised when an ID is out of range or references a non-existent object.
 
 ```python
-from Actual_Tools_GDP.Base.core.exceptions import InvalidIdError
+from aoe2_genie_tooling.Base.core.exceptions import InvalidIdError
 
 try:
     unit = workspace.unit_manager.get(99999)  # ID doesn't exist
@@ -34,7 +34,7 @@ except InvalidIdError as e:
 Raised when data validation fails.
 
 ```python
-from Actual_Tools_GDP.Base.core.exceptions import ValidationError
+from aoe2_genie_tooling.Base.core.exceptions import ValidationError
 
 try:
     # Some operation that fails validation
@@ -50,7 +50,7 @@ except ValidationError as e:
 Raised when trying to clone from a non-existent template.
 
 ```python
-from Actual_Tools_GDP.Base.core.exceptions import TemplateNotFoundError
+from aoe2_genie_tooling.Base.core.exceptions import TemplateNotFoundError
 
 try:
     # Trying to clone from a unit that doesn't exist
@@ -66,7 +66,7 @@ except TemplateNotFoundError as e:
 Raised when creating a unit at an ID that's already occupied.
 
 ```python
-from Actual_Tools_GDP.Base.core.exceptions import UnitIdConflictError
+from aoe2_genie_tooling.Base.core.exceptions import UnitIdConflictError
 
 try:
     # ID 4 (Archer) already exists
@@ -84,7 +84,7 @@ except UnitIdConflictError as e:
 Raised when an operation would create gaps in ID sequences.
 
 ```python
-from Actual_Tools_GDP.Base.core.exceptions import GapNotAllowedError
+from aoe2_genie_tooling.Base.core.exceptions import GapNotAllowedError
 
 try:
     # Creating at ID 5000 when max is 2000 would create gaps
@@ -117,7 +117,7 @@ if unit:
 ### Use try/except for Critical Operations
 
 ```python
-from Actual_Tools_GDP.Base.core.exceptions import InvalidIdError, TemplateNotFoundError
+from aoe2_genie_tooling.Base.core.exceptions import InvalidIdError, TemplateNotFoundError
 
 def create_custom_unit(workspace, name, base_id):
     try:
@@ -150,7 +150,7 @@ else:
 ## Importing Exceptions
 
 ```python
-from Actual_Tools_GDP.Base.core.exceptions import (
+from aoe2_genie_tooling.Base.core.exceptions import (
     GenieToolsError,        # Base exception for all library errors
     InvalidIdError,
     ValidationError,

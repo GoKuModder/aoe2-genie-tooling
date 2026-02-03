@@ -5,7 +5,7 @@ The Graphics module manages sprites and animations used for unit visuals, buildi
 ## Quick Example
 
 ```python
-from Actual_Tools_GDP import GenieWorkspace
+from aoe2_genie_tooling import GenieWorkspace
 
 workspace = GenieWorkspace.load("empires2_x2_p1.dat")
 

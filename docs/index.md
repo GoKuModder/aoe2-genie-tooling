@@ -40,7 +40,7 @@ features:
 ## Quick Example
 
 ```python
-from Actual_Tools_GDP import GenieWorkspace
+from aoe2_genie_tooling import GenieWorkspace
 
 # Load workspace
 workspace = GenieWorkspace.load("empires2_x2_p1.dat")
@@ -67,7 +67,7 @@ workspace.save("output.dat")
 ## Installation
 
 ```bash
-pip install genieutils
+pip install aoe2-genie-tooling
 ```
 
 ## Documentation

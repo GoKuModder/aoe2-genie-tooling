@@ -19,7 +19,7 @@ from .generator.orchestrator import (
 )
 
 if TYPE_CHECKING:
-    from Actual_Tools_GDP.Base.workspace import GenieWorkspace
+    from aoe2_genie_tooling.Base.workspace import GenieWorkspace
     from goku_tools.reverse_engineer.link_finder import LinkFinder, UnitLinks
 
 __all__ = ["RECodeGenerator", "UnitGroup", "IndependentObjects", "generate_from_dat"]
@@ -49,7 +49,7 @@ def generate_from_dat(
     Returns:
         Tuple of (groups, independent_objects)
     """
-    from Actual_Tools_GDP.Base.workspace import GenieWorkspace
+    from aoe2_genie_tooling.Base.workspace import GenieWorkspace
     from goku_tools.reverse_engineer.link_finder import LinkFinder
 
     dat_path = Path(dat_path)

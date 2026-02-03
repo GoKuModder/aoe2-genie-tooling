@@ -1,6 +1,6 @@
 # Technicalities
 
-This section covers advanced topics and internal mechanisms of `Actual_Tools_GDP`.
+This section covers advanced topics and internal mechanisms of `aoe2_genie_tooling`.
 
 These topics are optional reading - you don't need to understand them to use the library effectively, but they can help with edge cases and advanced usage.
 
