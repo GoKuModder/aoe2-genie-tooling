@@ -12,6 +12,8 @@
 !/aoe2_genie_tooling/
 !/Datasets/
 
+
+!/LICENSE
 !/.gitignore
 !/README.md
 !/pyproject.toml
