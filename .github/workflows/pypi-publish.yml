@@ -1,0 +1,59 @@
+name: Publish Python 🐍 distribution to PyPI
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  build:
+    name: Build distribution 📦
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.x"
+        
+    - name: Install build dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install build
+        
+    - name: Build a binary wheel and a source tarball
+      run: python -m build
+      
+    - name: Store the distribution packages
+      uses: actions/upload-artifact@v4
+      with:
+        name: python-package-distributions
+        path: dist/
+
+  publish-to-pypi:
+    name: Publish to PyPI 🚀
+    needs:
+    - build
+    runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/p/aoe2-genie-tooling
+    permissions:
+      id-token: write  # IMPORTANT: Mandatory for trusted publishing
+
+    steps:
+    - name: Download all the dists
+      uses: actions/download-artifact@v4
+      with:
+        name: python-package-distributions
+        path: dist/
+        
+    - name: Publish distribution 📦 to PyPI
+      uses: pypa/gh-action-pypi-publish@release/v1
+      with:
+        # If using Trusted Publishing, this is all you need.
+        # If using an API Token, add PYPI_API_TOKEN to your repo secrets 
+        # and uncomment the next line (or use environment secrets):
+        # password: ${{ secrets.PYPI_API_TOKEN }}
+        packages_dir: dist/
